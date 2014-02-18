@@ -12,7 +12,7 @@ import justclust.datastructures.Data;
 import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
@@ -34,8 +34,8 @@ public class ClusterONEClusteringAlgorithm implements ClusteringAlgorithmPluginI
         return "This clustering algorithm plug-in clusters the current network with the ClusterONE clustering algorithm.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
-        return new ArrayList<PluginConfigurationControl>();
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
+        return new ArrayList<PluginConfigurationControlInterface>();
     }
 
     /**
@@ -77,11 +77,11 @@ public class ClusterONEClusteringAlgorithm implements ClusteringAlgorithmPluginI
 
     }
 
-    public boolean hierarchicalClustering() {
+    public boolean isHierarchicalClustering() {
         return false;
     }
 
-    public ArrayList<DendrogramCluster> rootDendrogramClusters() {
+    public ArrayList<DendrogramCluster> getRootDendrogramClusters() {
         return null;
     }
 }

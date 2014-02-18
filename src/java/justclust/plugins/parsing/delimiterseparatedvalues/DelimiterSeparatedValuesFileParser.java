@@ -10,7 +10,7 @@ import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 
@@ -21,14 +21,14 @@ public class DelimiterSeparatedValuesFileParser implements FileParserPluginInter
     public ComboBoxControl comboBoxControl;
 
     public String getFileType() throws Exception {
-        return "Delimiter-separated values file (.CSV, .TAB, .TSV)";
+        return "Delimiter-separated values file (.csv, .tab, .tsv)";
     }
 
     public String getDescription() throws Exception {
         return "This file parser plug-in parses files containing values seperated by any delimiter, such as comma-separated values (.csv) files and tab-separated values (.tsv, .tab) files.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
         comboBoxControl = new ComboBoxControl();
         comboBoxControl.label = "Delimiter Between Values:";
@@ -37,7 +37,7 @@ public class DelimiterSeparatedValuesFileParser implements FileParserPluginInter
         comboBoxControl.options.add("Tabs");
         comboBoxControl.selectedOptionIndex = 0;
 
-        ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+        ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
         controls.add(comboBoxControl);
 
         return controls;

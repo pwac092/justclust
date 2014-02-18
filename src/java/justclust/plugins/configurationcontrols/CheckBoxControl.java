@@ -8,7 +8,7 @@ package justclust.plugins.configurationcontrols;
  *
  * @author wuaz008
  */
-public class CheckBoxControl implements PluginConfigurationControl {
+public class CheckBoxControl implements PluginConfigurationControlInterface {
     
     public String label;
     public boolean checked;

@@ -43,7 +43,7 @@ import justclust.customcomponents.HelpButton;
 import justclust.datastructures.Node;
 import justclust.menubar.clusternetwork.ClusterNetworkJDialog;
 import justclust.menubar.newnetworkfromfile.NewNetworkFromFileJDialog;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 
 public class MicroarrayHeatMapJDialog extends JDialog {
 

@@ -64,7 +64,7 @@ import justclust.customcomponents.HelpButton;
 import justclust.menubar.clusternetwork.ClusterNetworkJDialog;
 import justclust.menubar.newnetworkfromfile.NewNetworkFromFileJDialog;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 
@@ -145,7 +145,7 @@ public class ManagePluginsJDialog extends JDialog {
         loadParsingPluginsJButton.setFont(font);
         parsingPluginsJPanel.add(loadParsingPluginsJButton);
 
-        loadedParsingPluginsJLabel = new JLabel("Loaded Parsing Plug-ins:");
+        loadedParsingPluginsJLabel = new JLabel("File Types for Loaded Parsing Plug-ins:");
         loadedParsingPluginsJLabel.setFont(font);
         parsingPluginsJPanel.add(loadedParsingPluginsJLabel);
 

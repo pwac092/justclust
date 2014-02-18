@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
 /**
@@ -22,7 +22,7 @@ public interface ClusteringAlgorithmPluginInterface {
 
     public String getDescription() throws Exception;
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception;
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception;
 
     /**
      * This method signature defines a method which performs a clustering
@@ -30,7 +30,7 @@ public interface ClusteringAlgorithmPluginInterface {
      */
     public void clusterNetwork(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception;
 
-    public boolean hierarchicalClustering();
+    public boolean isHierarchicalClustering();
     
-    public ArrayList<DendrogramCluster> rootDendrogramClusters();
+    public ArrayList<DendrogramCluster> getRootDendrogramClusters();
 }

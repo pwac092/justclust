@@ -20,7 +20,7 @@ import justclust.datastructures.Data;
 import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 
@@ -42,13 +42,13 @@ public class CytoscapeEdgeWeightedSpringEmbeddedVisualisationLayout implements V
         return "This visualisation layout plug-in lays-out the graphical representation of the current network with the edge-weighted spring embedded layout from Cytoscape.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
         textFieldControl = new TextFieldControl();
         textFieldControl.label = "Number of Layout Passes:";
         textFieldControl.text = "2";
 
-        ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+        ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
         controls.add(textFieldControl);
 
         return controls;

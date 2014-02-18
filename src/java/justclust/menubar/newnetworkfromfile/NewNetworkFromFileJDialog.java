@@ -49,7 +49,7 @@ import justclust.customcomponents.HelpButton;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 
@@ -96,7 +96,7 @@ public class NewNetworkFromFileJDialog extends JDialog {
     // createNetworkJButton is clicked.
     // they are updated to contain the information input by the user to
     // configure the plug-in being used.
-    public ArrayList<PluginConfigurationControl> pluginConfigurationControls;
+    public ArrayList<PluginConfigurationControlInterface> pluginConfigurationControls;
     // pluginConfigurationJComponents contains JComponents which are used by the
     // user to enter information to configure the plug-in being used.
     // each entry of the outer ArrayList (an inner ArrayList) corresponds to a
@@ -316,7 +316,7 @@ public class NewNetworkFromFileJDialog extends JDialog {
                         .toArray(new String[fileParserDisplayNames
                         .size()])));
 
-                NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControl>();
+                NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControlInterface>();
 
 //                // the plug-in description is set to contain no characters here so that,
 //                // if there is an error in loading the description, this description
@@ -409,7 +409,7 @@ public class NewNetworkFromFileJDialog extends JDialog {
 //                // components which correspond to the pluginConfigurationControls
 //                // are created and added to the NewNetworkFromFileJDialog
 //                NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents = new ArrayList<ArrayList<JComponent>>();
-//                for (PluginConfigurationControl control : NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls) {
+//                for (PluginConfigurationControlInterface control : NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls) {
 //                    if (control instanceof CheckBoxControl) {
 //                        ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
 //                        JLabel jLabel = new JLabel(((CheckBoxControl) control).label);

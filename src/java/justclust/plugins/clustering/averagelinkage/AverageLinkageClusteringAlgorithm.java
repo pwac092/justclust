@@ -6,7 +6,7 @@ import justclust.datastructures.Data;
 import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.toolbar.dendrogram.DendrogramCluster;
@@ -36,10 +36,10 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
         return "This clustering algorithm plug-in clusters the current network with an average-linkage clustering algorithm.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
-        ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
-        
+        ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
+
         clusterAmountTextFieldControl = new TextFieldControl();
         clusterAmountTextFieldControl.label = "Number of Clusters:";
         clusterAmountTextFieldControl.text = "50";
@@ -205,6 +205,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                             }
                             edges.add(l, edges.get(j));
                             edges.remove(j);
+                            j--;
                             break;
                         }
                     }
@@ -214,9 +215,9 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
             DendrogramCluster dendrogramCluster = new DendrogramCluster();
             dendrogramCluster.distance = edges.get(i).weight;
             dendrogramCluster.left =
-                    dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node1.cluster));;
+                    dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node1.cluster));
             dendrogramCluster.right =
-                    dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node2.cluster));;
+                    dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node2.cluster));
             dendrogramClusters.remove(networkClusters.indexOf(edges.get(i).node1.cluster));
             dendrogramClusters.add(networkClusters.indexOf(edges.get(i).node1.cluster), dendrogramCluster);
             dendrogramClusters.remove(networkClusters.indexOf(edges.get(i).node2.cluster));
@@ -229,8 +230,9 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                 node.cluster = edges.get(i).node1.cluster;
             }
             i++;
+
         }
-        
+
         ArrayList<Node> networkNodesCopy = new ArrayList<Node>();
         for (Node node : networkNodes) {
             Node nodeCopy = new Node();
@@ -325,6 +327,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                             }
                             networkEdgesCopy.add(l, networkEdgesCopy.get(j));
                             networkEdgesCopy.remove(j);
+                            j--;
                             break;
                         }
                     }
@@ -334,9 +337,9 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
             DendrogramCluster dendrogramCluster = new DendrogramCluster();
             dendrogramCluster.distance = networkEdgesCopy.get(i).weight;
             dendrogramCluster.left =
-                    dendrogramClusters.get(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node1.cluster));;
+                    dendrogramClusters.get(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node1.cluster));
             dendrogramCluster.right =
-                    dendrogramClusters.get(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node2.cluster));;
+                    dendrogramClusters.get(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node2.cluster));
             dendrogramClusters.remove(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node1.cluster));
             dendrogramClusters.add(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node1.cluster), dendrogramCluster);
             dendrogramClusters.remove(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node2.cluster));
@@ -349,17 +352,20 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                 node.cluster = networkEdgesCopy.get(i).node1.cluster;
             }
             i++;
+
         }
 
         rootDendrogramClusters = dendrogramClusters;
-        
+
     }
 
-    public boolean hierarchicalClustering() {
+    @Override
+    public boolean isHierarchicalClustering() {
         return true;
     }
 
-    public ArrayList<DendrogramCluster> rootDendrogramClusters() {
+    @Override
+    public ArrayList<DendrogramCluster> getRootDendrogramClusters() {
         return rootDendrogramClusters;
     }
 }

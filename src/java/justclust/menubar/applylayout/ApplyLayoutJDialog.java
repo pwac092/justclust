@@ -46,7 +46,7 @@ import justclust.customcomponents.HelpButton;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 
@@ -66,7 +66,7 @@ public class ApplyLayoutJDialog extends JDialog {
     // applyLayoutJButton is clicked.
     // they are updated to contain the information input by the user to
     // configure the plug-in being used.
-    public ArrayList<PluginConfigurationControl> pluginConfigurationControls;
+    public ArrayList<PluginConfigurationControlInterface> pluginConfigurationControls;
     // pluginConfigurationJComponents contains JComponents which are used by the
     // user to enter information to configure the plug-in being used.
     // each entry of the outer ArrayList (an inner ArrayList) corresponds to a

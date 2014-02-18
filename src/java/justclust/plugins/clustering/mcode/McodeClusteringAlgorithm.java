@@ -11,7 +11,7 @@ import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import static justclust.plugins.clustering.mcode.McodeParameterSet.NETWORK;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.toolbar.dendrogram.DendrogramCluster;
@@ -51,9 +51,9 @@ public class McodeClusteringAlgorithm implements ClusteringAlgorithmPluginInterf
         return "This clustering algorithm plug-in clusters the current network with the MCODE clustering algorithm.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
-        ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+        ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
 
         includeLoopsControl = new CheckBoxControl();
         includeLoopsControl.label = "Include Loops:";
@@ -131,11 +131,11 @@ public class McodeClusteringAlgorithm implements ClusteringAlgorithmPluginInterf
 
     }
 
-    public boolean hierarchicalClustering() {
+    public boolean isHierarchicalClustering() {
         return false;
     }
 
-    public ArrayList<DendrogramCluster> rootDendrogramClusters() {
+    public ArrayList<DendrogramCluster> getRootDendrogramClusters() {
         return null;
     }
 }

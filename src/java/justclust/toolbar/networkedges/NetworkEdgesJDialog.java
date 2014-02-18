@@ -48,7 +48,7 @@ import justclust.DialogSizesAndPositions;
 import justclust.customcomponents.HelpButton;
 import justclust.menubar.clusternetwork.ClusterNetworkJDialog;
 import justclust.menubar.newnetworkfromfile.NewNetworkFromFileJDialog;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 
 public class NetworkEdgesJDialog extends JDialog {
 

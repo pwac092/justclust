@@ -19,7 +19,7 @@ import justclust.datastructures.Data;
 import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 
 /**
@@ -36,8 +36,8 @@ public class CytoscapeCircularVisualisationLayout implements VisualisationLayout
         return "This visualisation layout plug-in lays-out the graphical representation of the current network with the circular layout from Cytoscape.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
-        return new ArrayList<PluginConfigurationControl>();
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
+        return new ArrayList<PluginConfigurationControlInterface>();
     }
     public ArrayList<Node> networkNodes;
     public ArrayList<Edge> networkEdges;

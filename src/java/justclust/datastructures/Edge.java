@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 // this class implements Serializable because instances of the class are saved
 // to a file when the user saves their session.
-public class Edge implements Serializable {
+public class Edge implements Serializable, Comparable<Edge> {
 
     // the graphical representation of the edge
     public PPath graphicalEdge;
@@ -44,4 +44,24 @@ public class Edge implements Serializable {
     // be discovered easily from this field (each Data instance corresponds to
     // exactly one graph).
     public Data data;
+
+    public Edge() {
+    }
+
+    public Edge(Node node1, Node node2, double weight) {
+        this.node1 = node1;
+        this.node2 = node2;
+        this.weight = weight;
+    }
+
+    @Override
+    public int compareTo(Edge t) {
+        if (this.weight < t.weight) {
+            return -1;
+        } else if (this.weight == t.weight) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
 }

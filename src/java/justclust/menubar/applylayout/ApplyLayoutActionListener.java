@@ -43,7 +43,7 @@ import justclust.graphdrawing.CustomGraphEditor;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.parsing.FileParserPluginInterface;
@@ -137,13 +137,13 @@ public class ApplyLayoutActionListener implements ActionListener {
                 ApplyLayoutJDialog.classInstance.pluginClassInstance = ApplyLayoutJDialog.classInstance.pluginClass.newInstance();
                 Method method = ApplyLayoutJDialog.classInstance.pluginClass.getMethod("getConfigurationControls",
                         new Class[]{});
-                ApplyLayoutJDialog.classInstance.pluginConfigurationControls = (ArrayList<PluginConfigurationControl>) method.invoke(ApplyLayoutJDialog.classInstance.pluginClassInstance, new Object[]{});
+                ApplyLayoutJDialog.classInstance.pluginConfigurationControls = (ArrayList<PluginConfigurationControlInterface>) method.invoke(ApplyLayoutJDialog.classInstance.pluginClassInstance, new Object[]{});
 
             } catch (Exception exception) {
 
                 exception.printStackTrace();
 
-                ApplyLayoutJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControl>();
+                ApplyLayoutJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControlInterface>();
 
                 JOptionPane.showMessageDialog(
                         ApplyLayoutJDialog.classInstance,
@@ -191,7 +191,7 @@ public class ApplyLayoutActionListener implements ActionListener {
             }
 
             // there are no pluginConfigurationControls
-            ApplyLayoutJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControl>();
+            ApplyLayoutJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControlInterface>();
 
         }
 
@@ -215,7 +215,7 @@ public class ApplyLayoutActionListener implements ActionListener {
         // components which correspond to the pluginConfigurationControls
         // are created and added to the ApplyLayoutJDialog
         ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents = new ArrayList<ArrayList<JComponent>>();
-        for (PluginConfigurationControl control : ApplyLayoutJDialog.classInstance.pluginConfigurationControls) {
+        for (PluginConfigurationControlInterface control : ApplyLayoutJDialog.classInstance.pluginConfigurationControls) {
             if (control instanceof CheckBoxControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
                 JLabel jLabel = new JLabel(((CheckBoxControl) control).label);

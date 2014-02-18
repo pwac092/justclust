@@ -8,7 +8,7 @@ package justclust.plugins.configurationcontrols;
  *
  * @author wuaz008
  */
-public class FileSystemPathControl implements PluginConfigurationControl {
+public class FileSystemPathControl implements PluginConfigurationControlInterface {
 
     public String label;
     public String text;

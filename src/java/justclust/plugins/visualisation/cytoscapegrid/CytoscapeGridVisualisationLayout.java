@@ -13,7 +13,7 @@ import justclust.datastructures.Cluster;
 import justclust.datastructures.Data;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
@@ -33,7 +33,7 @@ public class CytoscapeGridVisualisationLayout implements VisualisationLayoutPlug
         return "This visualisation layout plug-in lays-out the graphical representation of the current network with the grid layout from Cytoscape.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
         horizontalSpacingControl = new TextFieldControl();
         horizontalSpacingControl.label = "Horizontal Node Spacing:";
@@ -43,7 +43,7 @@ public class CytoscapeGridVisualisationLayout implements VisualisationLayoutPlug
         verticalSpacingControl.label = "Vertical Node Spacing:";
         verticalSpacingControl.text = "40";
 
-        ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+        ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
         controls.add(horizontalSpacingControl);
         controls.add(verticalSpacingControl);
 

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 
 /**
  * This interface defines classes which have instances which act as file
@@ -16,7 +16,7 @@ public interface FileParserPluginInterface {
 
     public String getDescription() throws Exception;
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception;
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception;
 
     /**
      * This method signature defines a method which parses a file.

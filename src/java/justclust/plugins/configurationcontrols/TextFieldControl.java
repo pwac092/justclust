@@ -8,7 +8,7 @@ package justclust.plugins.configurationcontrols;
  *
  * @author wuaz008
  */
-public class TextFieldControl implements PluginConfigurationControl {
+public class TextFieldControl implements PluginConfigurationControlInterface {
     
     public String label;
     public String text;

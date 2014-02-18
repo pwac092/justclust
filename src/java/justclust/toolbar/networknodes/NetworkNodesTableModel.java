@@ -66,7 +66,7 @@ import justclust.toolbar.networkedges.NetworkEdgesTableCellRenderer;
 import justclust.toolbar.networkedges.NetworkEdgesTableModel;
 import justclust.toolbar.searchnetwork.SearchNetworkJDialog;
 import justclust.toolbar.searchnetwork.SearchNetworkTableCellEditor;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.toolbar.dendrogram.DendrogramJDialog;
 import justclust.toolbar.heatmap.HeatMapJDialog;
 

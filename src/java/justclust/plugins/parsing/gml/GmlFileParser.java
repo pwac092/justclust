@@ -13,7 +13,7 @@ import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.clustering.mcode.McodeClusteringAlgorithm;
 import static justclust.plugins.clustering.mcode.McodeClusteringAlgorithm.classInstance;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.parsing.FileParserPluginInterface;
 
 /**
@@ -39,8 +39,8 @@ public class GmlFileParser implements FileParserPluginInterface {
         return "This file parser plug-in parses GML (.gml) files.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
-        return new ArrayList<PluginConfigurationControl>();
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
+        return new ArrayList<PluginConfigurationControlInterface>();
     }
 
     public void parseFile(File file, ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges) throws Exception {

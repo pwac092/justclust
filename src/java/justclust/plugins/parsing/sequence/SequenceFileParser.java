@@ -15,7 +15,7 @@ import justclust.datastructures.Data;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 
@@ -53,9 +53,9 @@ public class SequenceFileParser implements FileParserPluginInterface {
 
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
-        ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+        ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
 
         fileSystemPathControl = new FileSystemPathControl();
         fileSystemPathControl.label = "BLAST Binary Files Path:";

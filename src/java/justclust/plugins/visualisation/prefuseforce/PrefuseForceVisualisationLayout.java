@@ -16,7 +16,7 @@ import justclust.datastructures.Data;
 import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 import prefuse.util.force.DragForce;
@@ -43,13 +43,13 @@ public class PrefuseForceVisualisationLayout implements VisualisationLayoutPlugi
         return "This visualisation layout plug-in lays-out the graphical representation of the current network with the force layout from prefuse.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
         textFieldControl = new TextFieldControl();
         textFieldControl.label = "Number of Iterations:";
         textFieldControl.text = "100";
 
-        ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+        ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
         controls.add(textFieldControl);
 
         return controls;

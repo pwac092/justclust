@@ -40,7 +40,7 @@ import static justclust.menubar.applylayout.ApplyLayoutMouseListener.classInstan
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 

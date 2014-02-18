@@ -26,7 +26,7 @@ import javax.swing.SwingUtilities;
 
 import justclust.datastructures.Data;
 import justclust.customcomponents.BrowseButton;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 
 public class LoadSessionJPanel extends JPanel {
 

@@ -8,5 +8,5 @@ package justclust.plugins.configurationcontrols;
  *
  * @author wuaz008
  */
-public interface PluginConfigurationControl {
+public interface PluginConfigurationControlInterface {
 }

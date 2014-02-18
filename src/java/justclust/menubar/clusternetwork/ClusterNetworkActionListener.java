@@ -43,7 +43,7 @@ import justclust.graphdrawing.CustomGraphEditor;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.parsing.FileParserPluginInterface;
@@ -149,13 +149,13 @@ public class ClusterNetworkActionListener implements ActionListener {
                 ClusterNetworkJDialog.classInstance.pluginClassInstance = ClusterNetworkJDialog.classInstance.pluginClass.newInstance();
                 Method method = ClusterNetworkJDialog.classInstance.pluginClass.getMethod("getConfigurationControls",
                         new Class[]{});
-                ClusterNetworkJDialog.classInstance.pluginConfigurationControls = (ArrayList<PluginConfigurationControl>) method.invoke(ClusterNetworkJDialog.classInstance.pluginClassInstance, new Object[]{});
+                ClusterNetworkJDialog.classInstance.pluginConfigurationControls = (ArrayList<PluginConfigurationControlInterface>) method.invoke(ClusterNetworkJDialog.classInstance.pluginClassInstance, new Object[]{});
 
             } catch (Exception exception) {
 
                 exception.printStackTrace();
 
-                ClusterNetworkJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControl>();
+                ClusterNetworkJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControlInterface>();
 
                 JOptionPane.showMessageDialog(
                         ClusterNetworkJDialog.classInstance,
@@ -203,7 +203,7 @@ public class ClusterNetworkActionListener implements ActionListener {
             }
 
             // there are no pluginConfigurationControls
-            ClusterNetworkJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControl>();
+            ClusterNetworkJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControlInterface>();
 
         }
 
@@ -227,7 +227,7 @@ public class ClusterNetworkActionListener implements ActionListener {
         // components which correspond to the pluginConfigurationControls
         // are created and added to the ClusterNetworkJDialog
         ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents = new ArrayList<ArrayList<JComponent>>();
-        for (PluginConfigurationControl control : ClusterNetworkJDialog.classInstance.pluginConfigurationControls) {
+        for (PluginConfigurationControlInterface control : ClusterNetworkJDialog.classInstance.pluginConfigurationControls) {
             if (control instanceof CheckBoxControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
                 JLabel jLabel = new JLabel(((CheckBoxControl) control).label);
@@ -515,18 +515,20 @@ public class ClusterNetworkActionListener implements ActionListener {
                 data.timeTakenToClusterNetwork = new Date().getTime() - clusteringAlgorithmStartTime;
 
                 method = ClusterNetworkJDialog.classInstance.pluginClass.getMethod(
-                        "hierarchicalClustering", new Class[]{});
+                        "isHierarchicalClustering", new Class[]{});
                 data.hierarchicalClustering = (boolean) method.invoke(
                         ClusterNetworkJDialog.classInstance.pluginClassInstance, new Object[]{});
 
                 method = ClusterNetworkJDialog.classInstance.pluginClass.getMethod(
-                        "rootDendrogramClusters", new Class[]{});
+                        "getRootDendrogramClusters", new Class[]{});
                 data.rootDendrogramClusters = (ArrayList<DendrogramCluster>) method.invoke(
                         ClusterNetworkJDialog.classInstance.pluginClassInstance, new Object[]{});
 
 
             } catch (Exception exception) {
-
+                
+                exception.printStackTrace();
+                
                 ClusterNetworkJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
                 JustclustJFrame.classInstance.statusBarJLabel.setText("");

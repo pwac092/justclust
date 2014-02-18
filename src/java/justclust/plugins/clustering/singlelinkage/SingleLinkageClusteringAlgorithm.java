@@ -6,7 +6,7 @@ import justclust.datastructures.Data;
 import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.toolbar.dendrogram.DendrogramCluster;
@@ -37,9 +37,9 @@ public class SingleLinkageClusteringAlgorithm implements
         return "This clustering algorithm plug-in clusters the current network with a single-linkage clustering algorithm.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
-        ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+        ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
         
         clusterAmountTextFieldControl = new TextFieldControl();
         clusterAmountTextFieldControl.label = "Number of Clusters:";
@@ -132,9 +132,9 @@ public class SingleLinkageClusteringAlgorithm implements
                 DendrogramCluster dendrogramCluster = new DendrogramCluster();
                 dendrogramCluster.distance = edges.get(i).weight;
                 dendrogramCluster.left =
-                        dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node1.cluster));;
+                        dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node1.cluster));
                 dendrogramCluster.right =
-                        dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node2.cluster));;
+                        dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node2.cluster));
                 dendrogramClusters.remove(networkClusters.indexOf(edges.get(i).node1.cluster));
                 dendrogramClusters.add(networkClusters.indexOf(edges.get(i).node1.cluster), dendrogramCluster);
                 dendrogramClusters.remove(networkClusters.indexOf(edges.get(i).node2.cluster));
@@ -201,11 +201,11 @@ public class SingleLinkageClusteringAlgorithm implements
 
     }
 
-    public boolean hierarchicalClustering() {
+    public boolean isHierarchicalClustering() {
         return true;
     }
 
-    public ArrayList<DendrogramCluster> rootDendrogramClusters() {
+    public ArrayList<DendrogramCluster> getRootDendrogramClusters() {
         return rootDendrogramClusters;
     }
 }

@@ -46,7 +46,7 @@ import justclust.graphdrawing.CustomGraphEditor;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.TextFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.toolbar.dendrogram.DendrogramJDialog;
@@ -152,11 +152,11 @@ public class NewNetworkFromFileActionListener implements ActionListener {
                 NewNetworkFromFileJDialog.classInstance.pluginClassInstance = NewNetworkFromFileJDialog.classInstance.pluginClass.newInstance();
                 Method method = NewNetworkFromFileJDialog.classInstance.pluginClass.getMethod("getConfigurationControls",
                         new Class[]{});
-                NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls = (ArrayList<PluginConfigurationControl>) method.invoke(NewNetworkFromFileJDialog.classInstance.pluginClassInstance, new Object[]{});
+                NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls = (ArrayList<PluginConfigurationControlInterface>) method.invoke(NewNetworkFromFileJDialog.classInstance.pluginClassInstance, new Object[]{});
 
             } catch (Exception exception) {
 
-                NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControl>();
+                NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControlInterface>();
 
                 JOptionPane.showMessageDialog(
                         NewNetworkFromFileJDialog.classInstance,
@@ -204,7 +204,7 @@ public class NewNetworkFromFileActionListener implements ActionListener {
             }
 
             // there are no pluginConfigurationControls
-            NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControl>();
+            NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls = new ArrayList<PluginConfigurationControlInterface>();
 
         }
 
@@ -228,7 +228,7 @@ public class NewNetworkFromFileActionListener implements ActionListener {
         // components which correspond to the pluginConfigurationControls
         // are created and added to the NewNetworkFromFileJDialog
         NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents = new ArrayList<ArrayList<JComponent>>();
-        for (PluginConfigurationControl control : NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls) {
+        for (PluginConfigurationControlInterface control : NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls) {
             if (control instanceof CheckBoxControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
                 JLabel jLabel = new JLabel(((CheckBoxControl) control).label);
@@ -425,12 +425,12 @@ public class NewNetworkFromFileActionListener implements ActionListener {
                 data.timeTakenToCreateNetwork = new Date().getTime() - fileParserStartTime;
 
                 method = NewNetworkFromFileJDialog.classInstance.pluginClass.getMethod(
-                        "microarrayData", new Class[]{});
+                        "isMicroarrayData", new Class[]{});
                 data.microarrayData = (boolean) method.invoke(
                         NewNetworkFromFileJDialog.classInstance.pluginClassInstance, new Object[]{});
 
                 method = NewNetworkFromFileJDialog.classInstance.pluginClass.getMethod(
-                        "microarrayHeaders", new Class[]{});
+                        "getMicroarrayHeaders", new Class[]{});
                 data.microarrayHeaders = (ArrayList<String>) method.invoke(
                         NewNetworkFromFileJDialog.classInstance.pluginClassInstance, new Object[]{});
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author wuaz008
  */
-public class ComboBoxControl implements PluginConfigurationControl {
+public class ComboBoxControl implements PluginConfigurationControlInterface {
     
     public String label;
     public ArrayList<String> options;

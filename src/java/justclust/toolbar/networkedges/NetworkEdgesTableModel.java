@@ -52,7 +52,7 @@ import justclust.toolbar.networkclusters.NetworkClustersTableModel;
 import justclust.toolbar.networknodes.NetworkNodesJDialog;
 import justclust.toolbar.networknodes.NetworkNodesTableModel;
 import justclust.toolbar.searchnetwork.SearchNetworkJDialog;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.toolbar.dendrogram.DendrogramJDialog;
 import justclust.toolbar.heatmap.HeatMapJDialog;
 

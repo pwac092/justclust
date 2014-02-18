@@ -8,7 +8,7 @@ import java.util.Scanner;
 import justclust.datastructures.Data;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
-import justclust.plugins.configurationcontrols.PluginConfigurationControl;
+import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.parsing.FileParserPluginInterface;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
@@ -33,8 +33,8 @@ public class MicroarrayFileParser implements FileParserPluginInterface {
                 + "Pearson's product-moment correlation is used to calculate the correlation between microarray entries.";
     }
 
-    public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
-        return new ArrayList<PluginConfigurationControl>();
+    public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
+        return new ArrayList<PluginConfigurationControlInterface>();
     }
 
     /**
