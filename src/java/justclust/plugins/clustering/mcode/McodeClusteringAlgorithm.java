@@ -12,8 +12,9 @@ import justclust.datastructures.Node;
 import static justclust.plugins.clustering.mcode.McodeParameterSet.NETWORK;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
 /**
@@ -27,13 +28,13 @@ public class McodeClusteringAlgorithm implements ClusteringAlgorithmPluginInterf
     // maxDepthControl are fields so that the getConfigurationControls and
     // clusterNetwork methods can share their text and checked fields
     public CheckBoxControl includeLoopsControl;
-    public TextFieldControl degreeCutoffControl;
+    public IntegerFieldControl degreeCutoffControl;
     public CheckBoxControl haircutControl;
     public CheckBoxControl fluffControl;
-    public TextFieldControl nodeScoreCutoffControl;
-    public TextFieldControl fluffNodeDensityCutoffControl;
-    public TextFieldControl KCoreControl;
-    public TextFieldControl maxDepthControl;
+    public DoubleFieldControl nodeScoreCutoffControl;
+    public DoubleFieldControl fluffNodeDensityCutoffControl;
+    public IntegerFieldControl KCoreControl;
+    public IntegerFieldControl maxDepthControl;
     public static McodeClusteringAlgorithm classInstance;
     public ArrayList<Node> networkNodes;
     public ArrayList<Edge> networkEdges;
@@ -60,9 +61,9 @@ public class McodeClusteringAlgorithm implements ClusteringAlgorithmPluginInterf
         includeLoopsControl.checked = false;
         controls.add(includeLoopsControl);
 
-        degreeCutoffControl = new TextFieldControl();
+        degreeCutoffControl = new IntegerFieldControl();
         degreeCutoffControl.label = "Degree Cutoff:";
-        degreeCutoffControl.text = "2";
+        degreeCutoffControl.value = 2;
         controls.add(degreeCutoffControl);
 
         haircutControl = new CheckBoxControl();
@@ -75,24 +76,24 @@ public class McodeClusteringAlgorithm implements ClusteringAlgorithmPluginInterf
         fluffControl.checked = false;
         controls.add(fluffControl);
 
-        fluffNodeDensityCutoffControl = new TextFieldControl();
+        fluffNodeDensityCutoffControl = new DoubleFieldControl();
         fluffNodeDensityCutoffControl.label = "Fluff Node Density Cutoff:";
-        fluffNodeDensityCutoffControl.text = "0.1";
+        fluffNodeDensityCutoffControl.value = 0.1;
         controls.add(fluffNodeDensityCutoffControl);
 
-        nodeScoreCutoffControl = new TextFieldControl();
+        nodeScoreCutoffControl = new DoubleFieldControl();
         nodeScoreCutoffControl.label = "Node Score Cutoff:";
-        nodeScoreCutoffControl.text = "0.2";
+        nodeScoreCutoffControl.value = 0.2;
         controls.add(nodeScoreCutoffControl);
 
-        KCoreControl = new TextFieldControl();
+        KCoreControl = new IntegerFieldControl();
         KCoreControl.label = "K-Core:";
-        KCoreControl.text = "2";
+        KCoreControl.value = 2;
         controls.add(KCoreControl);
 
-        maxDepthControl = new TextFieldControl();
+        maxDepthControl = new IntegerFieldControl();
         maxDepthControl.label = "Max. Depth:";
-        maxDepthControl.text = "100";
+        maxDepthControl.value = 100;
         controls.add(maxDepthControl);
 
         return controls;
@@ -116,14 +117,14 @@ public class McodeClusteringAlgorithm implements ClusteringAlgorithmPluginInterf
                 NETWORK,
                 new Long[0],
                 includeLoopsControl.checked,
-                Integer.parseInt(degreeCutoffControl.text),
-                Integer.parseInt(KCoreControl.text),
+                degreeCutoffControl.value,
+                KCoreControl.value,
                 false,
-                Integer.parseInt(maxDepthControl.text),
-                Double.parseDouble(nodeScoreCutoffControl.text),
+                maxDepthControl.value,
+                nodeScoreCutoffControl.value,
                 fluffControl.checked,
                 haircutControl.checked,
-                Double.parseDouble(fluffNodeDensityCutoffControl.text)),
+                fluffNodeDensityCutoffControl.value),
                 mcodeUtil.getCurrentResultId(), (long) 0);
         McodeAlgorithm mcodeAlgorithm = new McodeAlgorithm((long) 0, mcodeUtil);
         McodeAnalyzeTask mcodeAnalyzeTask = new McodeAnalyzeTask(0, mcodeUtil.getCurrentResultId(), mcodeAlgorithm, mcodeUtil);

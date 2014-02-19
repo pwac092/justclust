@@ -8,8 +8,8 @@ package justclust.plugins.configurationcontrols;
  *
  * @author wuaz008
  */
-public class TextFieldControl implements PluginConfigurationControlInterface {
+public class DoubleFieldControl implements PluginConfigurationControlInterface {
     
     public String label;
-    public String text;
+    public double value;
 }

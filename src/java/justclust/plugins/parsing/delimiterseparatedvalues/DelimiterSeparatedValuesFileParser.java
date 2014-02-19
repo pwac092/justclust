@@ -11,7 +11,7 @@ import justclust.datastructures.Node;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 
 public class DelimiterSeparatedValuesFileParser implements FileParserPluginInterface {

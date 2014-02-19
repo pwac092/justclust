@@ -40,7 +40,7 @@ import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;

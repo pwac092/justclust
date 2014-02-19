@@ -21,7 +21,8 @@ import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 
 /**
@@ -30,9 +31,7 @@ import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
  */
 public class CytoscapeEdgeWeightedSpringEmbeddedVisualisationLayout implements VisualisationLayoutPluginInterface {
 
-    // textFieldControl allows the getConfigurationControls and applyLayout
-    // methods to share the text field of this TextFieldControl
-    public TextFieldControl textFieldControl;
+    public IntegerFieldControl integerFieldControl;
 
     public String getName() throws Exception {
         return "Cytoscape edge-weighted spring embedded visualisation layout";
@@ -44,12 +43,12 @@ public class CytoscapeEdgeWeightedSpringEmbeddedVisualisationLayout implements V
 
     public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
-        textFieldControl = new TextFieldControl();
-        textFieldControl.label = "Number of Layout Passes:";
-        textFieldControl.text = "2";
+        integerFieldControl = new IntegerFieldControl();
+        integerFieldControl.label = "Number of Layout Passes:";
+        integerFieldControl.value = 2;
 
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
-        controls.add(textFieldControl);
+        controls.add(integerFieldControl);
 
         return controls;
 
@@ -193,7 +192,7 @@ public class CytoscapeEdgeWeightedSpringEmbeddedVisualisationLayout implements V
             // this comment is not applicable here
 ////         Set defaults -- this is done here insted of in the constructor
 ////         to allow users to change m_numLayoutPasses
-            int m_numLayoutPasses = Integer.parseInt(textFieldControl.text);
+            int m_numLayoutPasses = integerFieldControl.value;
             m_nodeDistanceSpringScalars = new double[m_numLayoutPasses];
             for (int i = 0; i < m_numLayoutPasses; i++) {
                 m_nodeDistanceSpringScalars[i] = 1.0;

@@ -16,7 +16,8 @@ import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
 /**
@@ -29,11 +30,11 @@ public class DBScan implements
     /**
      * This is the value used to compute the neighborhood
      */
-    private TextFieldControl epsilon;
+    private DoubleFieldControl epsilon;
     /**
      * Minimum number of elements for a cluster to be considered
      */
-    private TextFieldControl min_size;
+    private IntegerFieldControl min_size;
 
     public DBScan() {
     }
@@ -52,17 +53,18 @@ public class DBScan implements
 
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
 
-        this.epsilon = new TextFieldControl();
+        this.epsilon = new DoubleFieldControl();
         this.epsilon.label = "Minimum similarity to consider a point a neighbour of another given:";
-        this.epsilon.text = "0.1";
+        this.epsilon.value = 0.1;
         controls.add(this.epsilon);
 
-        this.min_size = new TextFieldControl();
+        this.min_size = new IntegerFieldControl();
         this.min_size.label = "Minimum number of points required to form a cluster:";
-        this.min_size.text = "2";
+        this.min_size.value = 2;
         controls.add(this.min_size);
 
         return controls;
+
     }
 
     /**
@@ -88,8 +90,8 @@ public class DBScan implements
 
     @Override
     public void clusterNetwork(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception {
-        double eps = Double.parseDouble(this.epsilon.text);
-        int minPoints = Integer.parseInt(this.min_size.text);
+        double eps = this.epsilon.value;
+        int minPoints = this.min_size.value;
 
         Map<Node, Boolean> isInACluster = new HashMap<Node, Boolean>();
         Map<Node, Boolean> visited = new HashMap<Node, Boolean>();
@@ -128,6 +130,7 @@ public class DBScan implements
     }
 
     private Cluster expandCluster(Node n, List<Node> neighbours, double epsilon, int minPoints, Map<Node, Boolean> visited, Map<Node, Boolean> isInACluster) {
+
         Cluster cluster = new Cluster();
         cluster.nodes = new ArrayList<Node>();
 

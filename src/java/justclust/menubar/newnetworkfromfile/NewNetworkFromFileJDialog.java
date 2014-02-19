@@ -50,7 +50,7 @@ import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 
 /**
@@ -459,14 +459,14 @@ public class NewNetworkFromFileJDialog extends JDialog {
 //                        arrayList.add(browseButton);
 //                        NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
 //                    }
-//                    if (control instanceof TextFieldControl) {
+//                    if (control instanceof DoubleFieldControl) {
 //                        ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
-//                        JLabel jLabel = new JLabel(((TextFieldControl) control).label);
+//                        JLabel jLabel = new JLabel(((DoubleFieldControl) control).label);
 //                        Font font = new Font("Dialog", Font.PLAIN, 12);
 //                        jLabel.setFont(font);
 //                        NewNetworkFromFileJDialog.classInstance.newNetworkDialogJPanel.add(jLabel);
 //                        arrayList.add(jLabel);
-//                        JTextField jTextField = new JTextField(((TextFieldControl) control).text);
+//                        JTextField jTextField = new JTextField(((DoubleFieldControl) control).text);
 //                        NewNetworkFromFileJDialog.classInstance.newNetworkDialogJPanel.add(jTextField);
 //                        arrayList.add(jTextField);
 //                        NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);

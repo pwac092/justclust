@@ -7,7 +7,8 @@ import justclust.JustclustJFrame;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 
 /**
  * This class has a method which rearranges the components of a
@@ -126,7 +127,8 @@ public class ApplyLayoutComponentListener implements
                 // same code
                 if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof CheckBoxControl
                         || ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof ComboBoxControl
-                        || ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof TextFieldControl) {
+                        || ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl
+                        || ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
                     ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(0).setBounds(
                             10 + 1 + 10,
                             (int) Math.round((double) ApplyLayoutJDialog.classInstance.applyLayoutDialogJPanel.getHeight() * 1 / 2

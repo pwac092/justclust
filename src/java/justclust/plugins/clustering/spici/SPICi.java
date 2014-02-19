@@ -16,7 +16,7 @@ import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
 /**
@@ -32,8 +32,8 @@ public class SPICi implements
 
     Map<Node, Double> weightedDegreePerNode;
     Set<Node> alreadyUsed;
-    private TextFieldControl densityThreshold;
-    private TextFieldControl supportThreshold;
+    private DoubleFieldControl densityThreshold;
+    private DoubleFieldControl supportThreshold;
     double Ts, Td;
 
     public SPICi() {
@@ -55,14 +55,14 @@ public class SPICi implements
     @Override
     public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
-        densityThreshold = new TextFieldControl();
+        densityThreshold = new DoubleFieldControl();
         densityThreshold.label = "Density threshold Td:";
-        densityThreshold.text = "0.5";
+        densityThreshold.value = 0.5;
         controls.add(densityThreshold);
 
-        supportThreshold = new TextFieldControl();
+        supportThreshold = new DoubleFieldControl();
         supportThreshold.label = "Support threshold Ts:";
-        supportThreshold.text = "0.5";
+        supportThreshold.value = 0.5;
         controls.add(supportThreshold);
 
         return controls;
@@ -159,8 +159,8 @@ public class SPICi implements
     @Override
     public void clusterNetwork(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception {
         Map<Node, Double> DegreeQ = initializeQueue(networkNodes);
-        this.Ts = Double.parseDouble(this.supportThreshold.text);
-        this.Td = Double.parseDouble(this.densityThreshold.text);
+        this.Ts = this.supportThreshold.value;
+        this.Td = this.densityThreshold.value;
 
         for (Edge e : networkEdges) {
             this.maxWeight = Math.max(this.maxWeight, e.weight);

@@ -44,8 +44,9 @@ import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 
@@ -249,6 +250,18 @@ public class ApplyLayoutActionListener implements ActionListener {
                 arrayList.add(jComboBox);
                 ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
             }
+            if (control instanceof DoubleFieldControl) {
+                ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
+                JLabel jLabel = new JLabel(((DoubleFieldControl) control).label);
+                Font font = new Font("Dialog", Font.PLAIN, 12);
+                jLabel.setFont(font);
+                ApplyLayoutJDialog.classInstance.applyLayoutDialogJPanel.add(jLabel);
+                arrayList.add(jLabel);
+                JTextField jTextField = new JTextField(String.valueOf(((DoubleFieldControl) control).value));
+                ApplyLayoutJDialog.classInstance.applyLayoutDialogJPanel.add(jTextField);
+                arrayList.add(jTextField);
+                ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
+            }
             if (control instanceof FileSystemPathControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
                 JLabel jLabel = new JLabel(((FileSystemPathControl) control).label);
@@ -265,14 +278,14 @@ public class ApplyLayoutActionListener implements ActionListener {
                 arrayList.add(browseButton);
                 ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
             }
-            if (control instanceof TextFieldControl) {
+            if (control instanceof IntegerFieldControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
-                JLabel jLabel = new JLabel(((TextFieldControl) control).label);
+                JLabel jLabel = new JLabel(((IntegerFieldControl) control).label);
                 Font font = new Font("Dialog", Font.PLAIN, 12);
                 jLabel.setFont(font);
                 ApplyLayoutJDialog.classInstance.applyLayoutDialogJPanel.add(jLabel);
                 arrayList.add(jLabel);
-                JTextField jTextField = new JTextField(((TextFieldControl) control).text);
+                JTextField jTextField = new JTextField(String.valueOf(((IntegerFieldControl) control).value));
                 ApplyLayoutJDialog.classInstance.applyLayoutDialogJPanel.add(jTextField);
                 arrayList.add(jTextField);
                 ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
@@ -375,26 +388,111 @@ public class ApplyLayoutActionListener implements ActionListener {
 
             JustclustJFrame.classInstance.statusBarJLabel.setText("Applying layout...");
 
+            int i = 0;
             try {
 
                 // pass the user specified information for configuring the
                 // plug-in to the plug-in by updating fields of the
                 // PluginConfigurationControls based on the contents of the
                 // corresponding JComponents
-                for (int i = 0; i < ApplyLayoutJDialog.classInstance.pluginConfigurationControls.size(); i++) {
+                for (; i < ApplyLayoutJDialog.classInstance.pluginConfigurationControls.size(); i++) {
                     if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof CheckBoxControl) {
                         ((CheckBoxControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).checked = ((JCheckBox) ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).isSelected();
                     }
                     if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof ComboBoxControl) {
                         ((ComboBoxControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).selectedOptionIndex = ((JComboBox) ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getSelectedIndex();
                     }
+                    if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl) {
+                        ((DoubleFieldControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).value = Double.parseDouble(((JTextField) ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
+                    }
                     if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof FileSystemPathControl) {
+                        File file = new File(((JTextField) ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
+                        if (!file.exists()) {
+                            throw new Exception();
+                        }
+                        boolean directoriesOnly = ((FileSystemPathControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).directoriesOnly;
+                        if (!directoriesOnly && file.isDirectory()) {
+                            throw new Exception();
+                        }
+                        if (directoriesOnly && file.isFile()) {
+                            throw new Exception();
+                        }
                         ((FileSystemPathControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).text = ((JTextField) ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText();
                     }
-                    if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof TextFieldControl) {
-                        ((TextFieldControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).text = ((JTextField) ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText();
+                    if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
+                        ((IntegerFieldControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).value = Integer.parseInt(((JTextField) ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
                     }
                 }
+
+            } catch (Exception exception) {
+
+                ApplyLayoutJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+                JustclustJFrame.classInstance.statusBarJLabel.setText("");
+
+                // the applyLayoutJProgressBar is remove from the
+                // applyLayoutDialogJPanel
+                ApplyLayoutJDialog.classInstance.applyLayoutDialogJPanel.remove(ApplyLayoutJDialog.classInstance.applyLayoutJProgressBar);
+
+                // if ApplyLayoutJDialog.classInstance.visualisationLayoutJComboBox.getSelectedIndex() > 0,
+                // then a plug-in has been selected
+                if (ApplyLayoutJDialog.classInstance.visualisationLayoutJComboBox.getSelectedIndex() > 0) {
+                    // set the y coordinate of the ApplyLayoutJDialog so that it remains
+                    // centered around the point it currently is around when its height
+                    // is decreased.
+                    // the difference in height between the new height and old height
+                    // is halved and added to the current y coordinate of the
+                    // ApplyLayoutJDialog.
+                    // also, decrease the height of the ApplyLayoutJDialog.
+                    ApplyLayoutJDialog.classInstance.setBounds(
+                            ApplyLayoutJDialog.classInstance.getLocation().x,
+                            ApplyLayoutJDialog.classInstance.getLocation().y
+                            + Math.round((10 + 25) / 2),
+                            ApplyLayoutJDialog.classInstance.getWidth(),
+                            ApplyLayoutJDialog.classInstance.getInsets().top
+                            + 10 + 16 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 1 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 60 + 10 + (25 + 10 + 25 + 10) * ApplyLayoutJDialog.classInstance.pluginConfigurationControls.size() + 1 + 10 + 25 + 10
+                            + ApplyLayoutJDialog.classInstance.getInsets().bottom);
+                } else {
+                    // set the y coordinate of the ApplyLayoutJDialog so that it remains
+                    // centered around the point it currently is around when its height
+                    // is decreased.
+                    // the difference in height between the new height and old height
+                    // is halved and added to the current y coordinate of the
+                    // ApplyLayoutJDialog.
+                    // also, decrease the height of the ApplyLayoutJDialog.
+                    ApplyLayoutJDialog.classInstance.setBounds(
+                            ApplyLayoutJDialog.classInstance.getLocation().x,
+                            ApplyLayoutJDialog.classInstance.getLocation().y
+                            + Math.round((10 + 25) / 2),
+                            ApplyLayoutJDialog.classInstance.getWidth(),
+                            ApplyLayoutJDialog.classInstance.getInsets().top
+                            + 10 + 16 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 1 + 10 + 25 + 10
+                            + ApplyLayoutJDialog.classInstance.getInsets().bottom);
+                }
+
+                ApplyLayoutJDialog.classInstance.applyLayoutJButton.setEnabled(true);
+                
+                if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl) {
+                    JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((DoubleFieldControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a double");
+                }
+                if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof FileSystemPathControl) {
+                    boolean directoriesOnly = ((FileSystemPathControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).directoriesOnly;
+                    if (!directoriesOnly) {
+                        JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((FileSystemPathControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a file");
+                    }
+                    if (directoriesOnly) {
+                        JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((FileSystemPathControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a directory");
+                    }
+                }
+                if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
+                    JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((IntegerFieldControl) ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires an integer");
+                }
+
+                return;
+
+            }
+
+            try {
 
                 // get the current Data instance for the following code to use
                 int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
@@ -469,13 +567,13 @@ public class ApplyLayoutActionListener implements ActionListener {
 
             // position the labels in the new layout
             ArrayList<PText> labels = (ArrayList<PText>) currentCustomGraphEditor.labelLayer.getAllNodes();
-            for (int i = 1; i < currentCustomGraphEditor.labelLayer.getAllNodes().size(); i++) {
-                PText label = (PText) labels.get(i);
+            for (int j = 1; j < currentCustomGraphEditor.labelLayer.getAllNodes().size(); j++) {
+                PText label = (PText) labels.get(j);
                 double x = 0;
                 double y = 0;
                 ArrayList<PPath> labelNodes = (ArrayList<PPath>) label.getAttribute("nodes");
-                for (int j = 0; j < labelNodes.size(); j++) {
-                    PPath node = (PPath) labelNodes.get(j);
+                for (int k = 0; k < labelNodes.size(); k++) {
+                    PPath node = (PPath) labelNodes.get(k);
                     x += (node.getX() + 10) / labelNodes.size();
                     y += (node.getY() + 10) / labelNodes.size();
                 }
@@ -485,8 +583,8 @@ public class ApplyLayoutActionListener implements ActionListener {
 
             // position the edges in the new layout
             ArrayList<PPath> edges = (ArrayList<PPath>) currentCustomGraphEditor.edgeLayer.getAllNodes();
-            for (int i = 1; i < currentCustomGraphEditor.edgeLayer.getAllNodes().size(); i++) {
-                PPath edge = (PPath) edges.get(i);
+            for (int j = 1; j < currentCustomGraphEditor.edgeLayer.getAllNodes().size(); j++) {
+                PPath edge = (PPath) edges.get(j);
                 PPath node1 = (PPath) edge.getAttribute("node1");
                 PPath node2 = (PPath) edge.getAttribute("node2");
 //                Point2D start = node1.getFullBoundsReference().getCenter2D();

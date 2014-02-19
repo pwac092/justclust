@@ -38,7 +38,7 @@ import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.parsing.FileParserPluginInterface;
 
@@ -64,7 +64,8 @@ public class ClusterNetworkMouseListener implements MouseListener {
         // the user if it has.
         if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls != null) {
             for (int i = 0; i < ClusterNetworkJDialog.classInstance.pluginConfigurationControls.size(); i++) {
-                if (me.getComponent() == ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(2)) {
+                if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof FileSystemPathControl &&
+                        me.getComponent() == ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(2)) {
 
                     // this code presents a JFileChooser to the user and then,
                     // if the user has chosen a path, populates the

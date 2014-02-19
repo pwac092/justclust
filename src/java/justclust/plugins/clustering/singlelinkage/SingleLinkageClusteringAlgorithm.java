@@ -7,8 +7,9 @@ import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
 /**
@@ -18,11 +19,8 @@ import justclust.toolbar.dendrogram.DendrogramCluster;
 public class SingleLinkageClusteringAlgorithm implements
         ClusteringAlgorithmPluginInterface {
 
-    // clusterAmountTextFieldControl and minimumEdgeWeightTextFieldControl allow
-    // the getConfigurationControls and clusterNetwork methods to share the text
-    // fields of these TextFieldControls
-    public TextFieldControl clusterAmountTextFieldControl;
-    public TextFieldControl minimumEdgeWeightTextFieldControl;
+    public IntegerFieldControl clusterAmountIntegerFieldControl;
+    public IntegerFieldControl minimumEdgeWeightIntegerFieldControl;
     public ArrayList<DendrogramCluster> rootDendrogramClusters;
 
     /**
@@ -41,15 +39,15 @@ public class SingleLinkageClusteringAlgorithm implements
 
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
         
-        clusterAmountTextFieldControl = new TextFieldControl();
-        clusterAmountTextFieldControl.label = "Number of Clusters:";
-        clusterAmountTextFieldControl.text = "50";
-        controls.add(clusterAmountTextFieldControl);
+        clusterAmountIntegerFieldControl = new IntegerFieldControl();
+        clusterAmountIntegerFieldControl.label = "Number of Clusters:";
+        clusterAmountIntegerFieldControl.value = 50;
+        controls.add(clusterAmountIntegerFieldControl);
 
-        minimumEdgeWeightTextFieldControl = new TextFieldControl();
-        minimumEdgeWeightTextFieldControl.label = "Minimum Edge Weight for Combining Clusters:";
-        minimumEdgeWeightTextFieldControl.text = "0";
-        controls.add(minimumEdgeWeightTextFieldControl);
+        minimumEdgeWeightIntegerFieldControl = new IntegerFieldControl();
+        minimumEdgeWeightIntegerFieldControl.label = "Minimum Edge Weight for Combining Clusters:";
+        minimumEdgeWeightIntegerFieldControl.value = 0;
+        controls.add(minimumEdgeWeightIntegerFieldControl);
 
         return controls;
 
@@ -125,8 +123,8 @@ public class SingleLinkageClusteringAlgorithm implements
         // At each stage in the single linkage clustering algorithm, the closest
         // two Clusters are merged.
         int i = 0;
-        while (networkClusters.size() > Integer.parseInt(clusterAmountTextFieldControl.text)
-                && edges.get(i).weight >= Integer.parseInt(minimumEdgeWeightTextFieldControl.text)) {
+        while (networkClusters.size() > clusterAmountIntegerFieldControl.value
+                && edges.get(i).weight >= minimumEdgeWeightIntegerFieldControl.value) {
             if (edges.get(i).node1.cluster != edges.get(i).node2.cluster) {
 
                 DendrogramCluster dendrogramCluster = new DendrogramCluster();

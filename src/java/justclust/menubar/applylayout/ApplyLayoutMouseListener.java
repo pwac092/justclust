@@ -40,7 +40,7 @@ import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
@@ -67,7 +67,8 @@ public class ApplyLayoutMouseListener implements MouseListener {
         // the user if it has.
         if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls != null) {
             for (int i = 0; i < ApplyLayoutJDialog.classInstance.pluginConfigurationControls.size(); i++) {
-                if (me.getComponent() == ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(2)) {
+                if (ApplyLayoutJDialog.classInstance.pluginConfigurationControls.get(i) instanceof FileSystemPathControl &&
+                        me.getComponent() == ApplyLayoutJDialog.classInstance.pluginConfigurationJComponents.get(i).get(2)) {
 
                     // this code presents a JFileChooser to the user and then,
                     // if the user has chosen a path, populates the

@@ -7,7 +7,7 @@ import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
@@ -18,10 +18,10 @@ import justclust.toolbar.dendrogram.DendrogramCluster;
 public class MCLClusteringAlgorithm implements
         ClusteringAlgorithmPluginInterface {
 
-    public TextFieldControl maximumResidualTextFieldControl;
-    public TextFieldControl pGammaTextFieldControl;
-    public TextFieldControl loopGainTextFieldControl;
-    public TextFieldControl maximumZeroTextFieldControl;
+    public DoubleFieldControl maximumResidualDoubleFieldControl;
+    public DoubleFieldControl pGammaDoubleFieldControl;
+    public DoubleFieldControl loopGainDoubleFieldControl;
+    public DoubleFieldControl maximumZeroDoubleFieldControl;
 
     /**
      * This method returns a display name for the clustering algorithm which a
@@ -39,25 +39,25 @@ public class MCLClusteringAlgorithm implements
 
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
 
-        maximumResidualTextFieldControl = new TextFieldControl();
-        maximumResidualTextFieldControl.label = "Maximum Difference Between Row Elements and Row Square Sum:";
-        maximumResidualTextFieldControl.text = "0.001";
-        controls.add(maximumResidualTextFieldControl);
+        maximumResidualDoubleFieldControl = new DoubleFieldControl();
+        maximumResidualDoubleFieldControl.label = "Maximum Difference Between Row Elements and Row Square Sum:";
+        maximumResidualDoubleFieldControl.value = 0.001;
+        controls.add(maximumResidualDoubleFieldControl);
 
-        pGammaTextFieldControl = new TextFieldControl();
-        pGammaTextFieldControl.label = "Inflation Exponent for Gamma Operator:";
-        pGammaTextFieldControl.text = "2.0";
-        controls.add(pGammaTextFieldControl);
+        pGammaDoubleFieldControl = new DoubleFieldControl();
+        pGammaDoubleFieldControl.label = "Inflation Exponent for Gamma Operator:";
+        pGammaDoubleFieldControl.value = 2.0;
+        controls.add(pGammaDoubleFieldControl);
 
-        loopGainTextFieldControl = new TextFieldControl();
-        loopGainTextFieldControl.label = "Loop Gain Values for Cycles:";
-        loopGainTextFieldControl.text = "0";
-        controls.add(loopGainTextFieldControl);
+        loopGainDoubleFieldControl = new DoubleFieldControl();
+        loopGainDoubleFieldControl.label = "Loop Gain Values for Cycles:";
+        loopGainDoubleFieldControl.value = 0;
+        controls.add(loopGainDoubleFieldControl);
 
-        maximumZeroTextFieldControl = new TextFieldControl();
-        maximumZeroTextFieldControl.label = "Maximum Value Considered Zero for Pruning Operations:";
-        maximumZeroTextFieldControl.text = "0.001";
-        controls.add(maximumZeroTextFieldControl);
+        maximumZeroDoubleFieldControl = new DoubleFieldControl();
+        maximumZeroDoubleFieldControl.label = "Maximum Value Considered Zero for Pruning Operations:";
+        maximumZeroDoubleFieldControl.value = 0.001;
+        controls.add(maximumZeroDoubleFieldControl);
 
         return controls;
 
@@ -68,7 +68,10 @@ public class MCLClusteringAlgorithm implements
      */
     public void clusterNetwork(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception {
 
-        MCL mcl = new MCL();
+        MCL mcl = new MCL(maximumResidualDoubleFieldControl.value,
+                pGammaDoubleFieldControl.value,
+                loopGainDoubleFieldControl.value,
+                maximumZeroDoubleFieldControl.value);
         ArrayList<Cluster> output = mcl.cluster(networkNodes);
         for (Cluster cluster : output) {
             networkClusters.add(cluster);

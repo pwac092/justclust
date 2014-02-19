@@ -47,7 +47,8 @@ import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.toolbar.dendrogram.DendrogramJDialog;
 import justclust.toolbar.filterclusters.FilterClustersJDialog;
@@ -262,6 +263,18 @@ public class NewNetworkFromFileActionListener implements ActionListener {
                 arrayList.add(jComboBox);
                 NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
             }
+            if (control instanceof DoubleFieldControl) {
+                ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
+                JLabel jLabel = new JLabel(((DoubleFieldControl) control).label);
+                Font font = new Font("Dialog", Font.PLAIN, 12);
+                jLabel.setFont(font);
+                NewNetworkFromFileJDialog.classInstance.newNetworkDialogJPanel.add(jLabel);
+                arrayList.add(jLabel);
+                JTextField jTextField = new JTextField(String.valueOf(((DoubleFieldControl) control).value));
+                NewNetworkFromFileJDialog.classInstance.newNetworkDialogJPanel.add(jTextField);
+                arrayList.add(jTextField);
+                NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
+            }
             if (control instanceof FileSystemPathControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
                 JLabel jLabel = new JLabel(((FileSystemPathControl) control).label);
@@ -278,14 +291,14 @@ public class NewNetworkFromFileActionListener implements ActionListener {
                 arrayList.add(browseButton);
                 NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
             }
-            if (control instanceof TextFieldControl) {
+            if (control instanceof IntegerFieldControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
-                JLabel jLabel = new JLabel(((TextFieldControl) control).label);
+                JLabel jLabel = new JLabel(((IntegerFieldControl) control).label);
                 Font font = new Font("Dialog", Font.PLAIN, 12);
                 jLabel.setFont(font);
                 NewNetworkFromFileJDialog.classInstance.newNetworkDialogJPanel.add(jLabel);
                 arrayList.add(jLabel);
-                JTextField jTextField = new JTextField(((TextFieldControl) control).text);
+                JTextField jTextField = new JTextField(String.valueOf(((IntegerFieldControl) control).value));
                 NewNetworkFromFileJDialog.classInstance.newNetworkDialogJPanel.add(jTextField);
                 arrayList.add(jTextField);
                 NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
@@ -390,26 +403,111 @@ public class NewNetworkFromFileActionListener implements ActionListener {
             // a new instance of the Data class is created
             Data data = new Data();
 
+            int i = 0;
             try {
 
                 // pass the user specified information for configuring the
                 // plug-in to the plug-in by updating fields of the
                 // PluginConfigurationControls based on the contents of the
                 // corresponding JComponents
-                for (int i = 0; i < NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.size(); i++) {
+                for (; i < NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.size(); i++) {
                     if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof CheckBoxControl) {
                         ((CheckBoxControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).checked = ((JCheckBox) NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).isSelected();
                     }
                     if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof ComboBoxControl) {
                         ((ComboBoxControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).selectedOptionIndex = ((JComboBox) NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getSelectedIndex();
                     }
+                    if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl) {
+                        ((DoubleFieldControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).value = Double.parseDouble(((JTextField) NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
+                    }
                     if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof FileSystemPathControl) {
+                        File file = new File(((JTextField) NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
+                        if (!file.exists()) {
+                            throw new Exception();
+                        }
+                        boolean directoriesOnly = ((FileSystemPathControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).directoriesOnly;
+                        if (!directoriesOnly && file.isDirectory()) {
+                            throw new Exception();
+                        }
+                        if (directoriesOnly && file.isFile()) {
+                            throw new Exception();
+                        }
                         ((FileSystemPathControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).text = ((JTextField) NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText();
                     }
-                    if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof TextFieldControl) {
-                        ((TextFieldControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).text = ((JTextField) NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText();
+                    if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
+                        ((IntegerFieldControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).value = Integer.parseInt(((JTextField) NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
                     }
                 }
+
+            } catch (Exception exception) {
+
+                NewNetworkFromFileJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+                JustclustJFrame.classInstance.statusBarJLabel.setText("");
+
+                // the createNetworkJProgressBar is removed from the
+                // newNetworkDialogJPanel
+                NewNetworkFromFileJDialog.classInstance.newNetworkDialogJPanel.remove(NewNetworkFromFileJDialog.classInstance.createNetworkJProgressBar);
+
+                // if NewNetworkFromFileJDialog.classInstance.fileParserJComboBox.getSelectedIndex() > 0,
+                // then a plug-in has been selected
+                if (NewNetworkFromFileJDialog.classInstance.fileParserJComboBox.getSelectedIndex() > 0) {
+                    // set the y coordinate of the NewNetworkFromFileJDialog so that it remains
+                    // centered around the point it currently is around when its height
+                    // is decreased.
+                    // the difference in height between the new height and old height
+                    // is halved and added to the current y coordinate of the
+                    // NewNetworkFromFileJDialog.
+                    // also, decrease the height of the NewNetworkFromFileJDialog.
+                    NewNetworkFromFileJDialog.classInstance.setBounds(
+                            NewNetworkFromFileJDialog.classInstance.getLocation().x,
+                            NewNetworkFromFileJDialog.classInstance.getLocation().y
+                            + Math.round((10 + 25) / 2),
+                            NewNetworkFromFileJDialog.classInstance.getWidth(),
+                            NewNetworkFromFileJDialog.classInstance.getInsets().top
+                            + 10 + 16 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 1 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 1 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 60 + 10 + (25 + 10 + 25 + 10) * NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.size() + 1 + 10 + 25 + 10
+                            + NewNetworkFromFileJDialog.classInstance.getInsets().bottom);
+                } else {
+                    // set the y coordinate of the NewNetworkFromFileJDialog so that it remains
+                    // centered around the point it currently is around when its height
+                    // is decreased.
+                    // the difference in height between the new height and old height
+                    // is halved and added to the current y coordinate of the
+                    // NewNetworkFromFileJDialog.
+                    // also, decrease the height of the NewNetworkFromFileJDialog.
+                    NewNetworkFromFileJDialog.classInstance.setBounds(
+                            NewNetworkFromFileJDialog.classInstance.getLocation().x,
+                            NewNetworkFromFileJDialog.classInstance.getLocation().y
+                            + Math.round((10 + 25) / 2),
+                            NewNetworkFromFileJDialog.classInstance.getWidth(),
+                            NewNetworkFromFileJDialog.classInstance.getInsets().top
+                            + 10 + 16 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 1 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 1 + 10 + 25 + 10
+                            + NewNetworkFromFileJDialog.classInstance.getInsets().bottom);
+                }
+
+                NewNetworkFromFileJDialog.classInstance.createNetworkJButton.setEnabled(true);
+
+                if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl) {
+                    JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((DoubleFieldControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a double");
+                }
+                if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof FileSystemPathControl) {
+                    boolean directoriesOnly = ((FileSystemPathControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).directoriesOnly;
+                    if (!directoriesOnly) {
+                        JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((FileSystemPathControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a file");
+                    }
+                    if (directoriesOnly) {
+                        JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((FileSystemPathControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a directory");
+                    }
+                }
+                if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
+                    JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((IntegerFieldControl) NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires an integer");
+                }
+
+                return;
+
+            }
+
+            try {
 
                 // This code calls the parseFile method of the class file
                 // for the current file parser.
@@ -435,8 +533,6 @@ public class NewNetworkFromFileActionListener implements ActionListener {
                         NewNetworkFromFileJDialog.classInstance.pluginClassInstance, new Object[]{});
 
             } catch (Exception exception) {
-
-                exception.printStackTrace();
 
                 NewNetworkFromFileJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
@@ -590,14 +686,14 @@ public class NewNetworkFromFileActionListener implements ActionListener {
             // to find the indices of graphical nodes later in layouts.
             // the ordering is done so that the Nodes are displayed in order
             // in the NetworkNodesJDialog.
-            for (int i = 1; i < data.networkNodes.size(); i++) {
-                Node node = data.networkNodes.get(i);
-                int j;
-                for (j = i - 1; j >= 0
-                        && node.label.compareTo(data.networkNodes.get(j).label) < 0; j--) {
-                    data.networkNodes.set(j + 1, data.networkNodes.get(j));
+            for (int j = 1; j < data.networkNodes.size(); j++) {
+                Node node = data.networkNodes.get(j);
+                int k;
+                for (k = j - 1; k >= 0
+                        && node.label.compareTo(data.networkNodes.get(k).label) < 0; k--) {
+                    data.networkNodes.set(k + 1, data.networkNodes.get(k));
                 }
-                data.networkNodes.set(j + 1, node);
+                data.networkNodes.set(k + 1, node);
             }
 
             // this code sorts the Edges in the networkEdges data
@@ -608,15 +704,15 @@ public class NewNetworkFromFileActionListener implements ActionListener {
             // to find the indexes of graphical edges later in layouts.
             // the ordering is done so that the Edges are displayed in order
             // in the NetworkEdgesJDialog.
-//            for (int i = 1; i < data.networkEdges.size(); i++) {
-//                System.out.println("sorting edges " + i);
-//                Edge edge = data.networkEdges.get(i);
-//                int j;
-//                for (j = i - 1; j >= 0
-//                        && edge.weight > data.networkEdges.get(j).weight; j--) {
-//                    data.networkEdges.set(j + 1, data.networkEdges.get(j));
+//            for (int j = 1; j < data.networkEdges.size(); j++) {
+//                System.out.println("sorting edges " + j);
+//                Edge edge = data.networkEdges.get(j);
+//                int k;
+//                for (k = j - 1; k >= 0
+//                        && edge.weight > data.networkEdges.get(k).weight; k--) {
+//                    data.networkEdges.set(k + 1, data.networkEdges.get(k));
 //                }
-//                data.networkEdges.set(j + 1, edge);
+//                data.networkEdges.set(k + 1, edge);
 //            }
             Collections.sort(data.networkEdges, new Comparator<Edge>() {
                 public int compare(Edge o1, Edge o2) {

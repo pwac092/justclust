@@ -5,7 +5,8 @@ import java.awt.event.ComponentListener;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 
 /**
  * This class has a method which rearranges the components of a
@@ -147,7 +148,8 @@ public class NewNetworkFromFileComponentListener implements ComponentListener {
                 // same code
                 if (NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof CheckBoxControl
                         || NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof ComboBoxControl
-                        || NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof TextFieldControl) {
+                        || NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl
+                        || NewNetworkFromFileJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
                     NewNetworkFromFileJDialog.classInstance.pluginConfigurationJComponents.get(i).get(0).setBounds(
                             10 + 1 + 10,
                             (int) Math.round((double) NewNetworkFromFileJDialog.classInstance.newNetworkDialogJPanel.getHeight() * 1 / 2

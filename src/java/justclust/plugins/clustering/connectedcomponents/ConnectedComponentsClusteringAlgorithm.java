@@ -18,7 +18,8 @@ import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
 /**
@@ -31,11 +32,11 @@ public class ConnectedComponentsClusteringAlgorithm implements
     /**
      * Minimum similarity considered
      */
-    private TextFieldControl minSimilarity;
+    private DoubleFieldControl minSimilarity;
     /**
      * Minimum number of elements for a cluster to be considered
      */
-    private TextFieldControl minNumElements;
+    private IntegerFieldControl minNumElements;
 
     @Override
     public String getName() throws Exception {
@@ -52,14 +53,14 @@ public class ConnectedComponentsClusteringAlgorithm implements
 
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
 
-        this.minSimilarity = new TextFieldControl();
+        this.minSimilarity = new DoubleFieldControl();
         this.minSimilarity.label = "Minimum similarity to consider and edge for computing connected components";
-        this.minSimilarity.text = "0";
+        this.minSimilarity.value = 0;
         controls.add(this.minSimilarity);
 
-        this.minNumElements = new TextFieldControl();
+        this.minNumElements = new IntegerFieldControl();
         this.minNumElements.label = "Minimum number of points required to form a cluster:";
-        this.minNumElements.text = "2";
+        this.minNumElements.value = 2;
         controls.add(this.minNumElements);
 
         return controls;
@@ -102,8 +103,8 @@ public class ConnectedComponentsClusteringAlgorithm implements
 
     @Override
     public void clusterNetwork(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception {
-        double epsilon = Double.parseDouble(this.minSimilarity.text);
-        int minPoints = Integer.parseInt(this.minNumElements.text);
+        double epsilon = this.minSimilarity.value;
+        int minPoints = this.minNumElements.value;
 
         Map<Node, Boolean> visited = new HashMap<Node, Boolean>();
         // 1.- initialize all points as unvisited

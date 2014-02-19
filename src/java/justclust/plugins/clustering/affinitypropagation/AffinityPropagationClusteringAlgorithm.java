@@ -16,7 +16,8 @@ import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
 /**
@@ -27,10 +28,10 @@ import justclust.toolbar.dendrogram.DendrogramCluster;
  */
 public class AffinityPropagationClusteringAlgorithm implements ClusteringAlgorithmPluginInterface {
 
-    public TextFieldControl maxitTextFieldControl;
-    public TextFieldControl convitTextFieldControl;
-    public TextFieldControl prefTypeTextFieldControl;
-    public TextFieldControl dampingTextFieldControl;
+    public IntegerFieldControl maxitIntegerFieldControl;
+    public IntegerFieldControl convitIntegerFieldControl;
+    public IntegerFieldControl prefTypeIntegerFieldControl;
+    public DoubleFieldControl dampingDoubleFieldControl;
     /**
      * number of nodes
      */
@@ -79,25 +80,25 @@ public class AffinityPropagationClusteringAlgorithm implements ClusteringAlgorit
 
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
 
-        maxitTextFieldControl = new TextFieldControl();
-        maxitTextFieldControl.label = "Maxit:";
-        maxitTextFieldControl.text = "1000";
-        controls.add(maxitTextFieldControl);
+        maxitIntegerFieldControl = new IntegerFieldControl();
+        maxitIntegerFieldControl.label = "Maxit:";
+        maxitIntegerFieldControl.value = 1000;
+        controls.add(maxitIntegerFieldControl);
 
-        convitTextFieldControl = new TextFieldControl();
-        convitTextFieldControl.label = "Convit:";
-        convitTextFieldControl.text = "50";
-        controls.add(convitTextFieldControl);
+        convitIntegerFieldControl = new IntegerFieldControl();
+        convitIntegerFieldControl.label = "Convit:";
+        convitIntegerFieldControl.value = 50;
+        controls.add(convitIntegerFieldControl);
 
-        prefTypeTextFieldControl = new TextFieldControl();
-        prefTypeTextFieldControl.label = "Pref Type (1, 2 or 3):";
-        prefTypeTextFieldControl.text = "1";
-        controls.add(prefTypeTextFieldControl);
+        prefTypeIntegerFieldControl = new IntegerFieldControl();
+        prefTypeIntegerFieldControl.label = "Pref Type (1, 2 or 3):";
+        prefTypeIntegerFieldControl.value = 1;
+        controls.add(prefTypeIntegerFieldControl);
 
-        dampingTextFieldControl = new TextFieldControl();
-        dampingTextFieldControl.label = "Damping (range valid in [0.5, 1.0]):";
-        dampingTextFieldControl.text = "0.9";
-        controls.add(dampingTextFieldControl);
+        dampingDoubleFieldControl = new DoubleFieldControl();
+        dampingDoubleFieldControl.label = "Damping (range valid in [0.5, 1.0]):";
+        dampingDoubleFieldControl.value = 0.9;
+        controls.add(dampingDoubleFieldControl);
 
         return controls;
 
@@ -230,10 +231,10 @@ public class AffinityPropagationClusteringAlgorithm implements ClusteringAlgorit
     @Override
     public void clusterNetwork(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception {
 
-        int maxit = Integer.parseInt(maxitTextFieldControl.text);
-        int convit = Integer.parseInt(convitTextFieldControl.text);
-        int prefType = Integer.parseInt(prefTypeTextFieldControl.text);
-        double damping = Double.parseDouble(dampingTextFieldControl.text);
+        int maxit = maxitIntegerFieldControl.value;
+        int convit = convitIntegerFieldControl.value;
+        int prefType = prefTypeIntegerFieldControl.value;
+        double damping = dampingDoubleFieldControl.value;
 
         this.initialize(networkNodes, networkEdges, prefType);
 

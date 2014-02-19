@@ -14,16 +14,15 @@ import justclust.datastructures.Data;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 
 public class CytoscapeGridVisualisationLayout implements VisualisationLayoutPluginInterface {
 
-    // textFieldControl allows the getConfigurationControls and applyLayout
-    // methods to share the text field of this TextFieldControl
-    public TextFieldControl horizontalSpacingControl;
-    public TextFieldControl verticalSpacingControl;
+    public IntegerFieldControl horizontalSpacingControl;
+    public IntegerFieldControl verticalSpacingControl;
 
     public String getName() throws Exception {
         return "Cytoscape grid visualisation layout";
@@ -35,13 +34,13 @@ public class CytoscapeGridVisualisationLayout implements VisualisationLayoutPlug
 
     public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
-        horizontalSpacingControl = new TextFieldControl();
+        horizontalSpacingControl = new IntegerFieldControl();
         horizontalSpacingControl.label = "Horizontal Node Spacing:";
-        horizontalSpacingControl.text = "50";
+        horizontalSpacingControl.value = 50;
 
-        verticalSpacingControl = new TextFieldControl();
+        verticalSpacingControl = new IntegerFieldControl();
         verticalSpacingControl.label = "Vertical Node Spacing:";
-        verticalSpacingControl.text = "40";
+        verticalSpacingControl.value = 40;
 
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
         controls.add(horizontalSpacingControl);
@@ -53,8 +52,8 @@ public class CytoscapeGridVisualisationLayout implements VisualisationLayoutPlug
 
     public void applyLayout(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception {
 
-        double nodeHorizontalSpacing = Integer.parseInt(horizontalSpacingControl.text);
-        double nodeVerticalSpacing = Integer.parseInt(verticalSpacingControl.text);
+        double nodeHorizontalSpacing = horizontalSpacingControl.value;
+        double nodeVerticalSpacing = verticalSpacingControl.value;
 
         double currX = 0.0d;
         double currY = 0.0d;

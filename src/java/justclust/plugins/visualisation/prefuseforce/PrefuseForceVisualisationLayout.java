@@ -17,7 +17,8 @@ import justclust.datastructures.Cluster;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.plugins.visualisation.VisualisationLayoutPluginInterface;
 import prefuse.util.force.DragForce;
 import prefuse.util.force.ForceItem;
@@ -31,9 +32,7 @@ import prefuse.util.force.SpringForce;
  */
 public class PrefuseForceVisualisationLayout implements VisualisationLayoutPluginInterface {
 
-    // textFieldControl allows the getConfigurationControls and applyLayout
-    // methods to share the text field of this TextFieldControl
-    public TextFieldControl textFieldControl;
+    public IntegerFieldControl integerFieldControl;
 
     public String getName() throws Exception {
         return "Prefuse force visualisation layout";
@@ -45,12 +44,12 @@ public class PrefuseForceVisualisationLayout implements VisualisationLayoutPlugi
 
     public ArrayList<PluginConfigurationControlInterface> getConfigurationControls() throws Exception {
 
-        textFieldControl = new TextFieldControl();
-        textFieldControl.label = "Number of Iterations:";
-        textFieldControl.text = "100";
+        integerFieldControl = new IntegerFieldControl();
+        integerFieldControl.label = "Number of Iterations:";
+        integerFieldControl.value = 100;
 
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
-        controls.add(textFieldControl);
+        controls.add(integerFieldControl);
 
         return controls;
 
@@ -143,7 +142,7 @@ public class PrefuseForceVisualisationLayout implements VisualisationLayoutPlugi
             }
 
             // perform layout
-            int numIterations = Integer.parseInt(textFieldControl.text);
+            int numIterations = integerFieldControl.value;
             long timestep = 1000L;
             for (int i = 0; i < numIterations; i++) {
                 timestep *= (1.0 - i / (double) numIterations);

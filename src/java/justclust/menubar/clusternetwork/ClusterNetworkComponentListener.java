@@ -9,7 +9,8 @@ import javax.swing.SwingUtilities;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 
 /**
  * This class has a method which rearranges the components of a
@@ -128,7 +129,8 @@ public class ClusterNetworkComponentListener implements
                 // same code
                 if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof CheckBoxControl
                         || ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof ComboBoxControl
-                        || ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof TextFieldControl) {
+                        || ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl
+                        || ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
                     ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(0).setBounds(
                             10 + 1 + 10,
                             (int) Math.round((double) ClusterNetworkJDialog.classInstance.clusterNetworkDialogJPanel.getHeight() * 1 / 2

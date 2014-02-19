@@ -44,8 +44,9 @@ import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.plugins.parsing.FileParserPluginInterface;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 import justclust.toolbar.dendrogram.DendrogramJDialog;
@@ -261,6 +262,18 @@ public class ClusterNetworkActionListener implements ActionListener {
                 arrayList.add(jComboBox);
                 ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
             }
+            if (control instanceof DoubleFieldControl) {
+                ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
+                JLabel jLabel = new JLabel(((DoubleFieldControl) control).label);
+                Font font = new Font("Dialog", Font.PLAIN, 12);
+                jLabel.setFont(font);
+                ClusterNetworkJDialog.classInstance.clusterNetworkDialogJPanel.add(jLabel);
+                arrayList.add(jLabel);
+                JTextField jTextField = new JTextField(String.valueOf(((DoubleFieldControl) control).value));
+                ClusterNetworkJDialog.classInstance.clusterNetworkDialogJPanel.add(jTextField);
+                arrayList.add(jTextField);
+                ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
+            }
             if (control instanceof FileSystemPathControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
                 JLabel jLabel = new JLabel(((FileSystemPathControl) control).label);
@@ -277,14 +290,14 @@ public class ClusterNetworkActionListener implements ActionListener {
                 arrayList.add(browseButton);
                 ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
             }
-            if (control instanceof TextFieldControl) {
+            if (control instanceof IntegerFieldControl) {
                 ArrayList<JComponent> arrayList = new ArrayList<JComponent>();
-                JLabel jLabel = new JLabel(((TextFieldControl) control).label);
+                JLabel jLabel = new JLabel(((IntegerFieldControl) control).label);
                 Font font = new Font("Dialog", Font.PLAIN, 12);
                 jLabel.setFont(font);
                 ClusterNetworkJDialog.classInstance.clusterNetworkDialogJPanel.add(jLabel);
                 arrayList.add(jLabel);
-                JTextField jTextField = new JTextField(((TextFieldControl) control).text);
+                JTextField jTextField = new JTextField(String.valueOf(((IntegerFieldControl) control).value));
                 ClusterNetworkJDialog.classInstance.clusterNetworkDialogJPanel.add(jTextField);
                 arrayList.add(jTextField);
                 ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.add(arrayList);
@@ -483,26 +496,111 @@ public class ClusterNetworkActionListener implements ActionListener {
                 data.networkEdges.set(j + 1, edge);
             }
 
+            int i = 0;
             try {
 
                 // pass the user specified information for configuring the
                 // plug-in to the plug-in by updating fields of the
                 // PluginConfigurationControls based on the contents of the
                 // corresponding JComponents
-                for (int i = 0; i < ClusterNetworkJDialog.classInstance.pluginConfigurationControls.size(); i++) {
+                for (; i < ClusterNetworkJDialog.classInstance.pluginConfigurationControls.size(); i++) {
                     if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof CheckBoxControl) {
                         ((CheckBoxControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).checked = ((JCheckBox) ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).isSelected();
                     }
                     if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof ComboBoxControl) {
                         ((ComboBoxControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).selectedOptionIndex = ((JComboBox) ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getSelectedIndex();
                     }
+                    if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl) {
+                        ((DoubleFieldControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).value = Double.parseDouble(((JTextField) ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
+                    }
                     if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof FileSystemPathControl) {
+                        File file = new File(((JTextField) ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
+                        if (!file.exists()) {
+                            throw new Exception();
+                        }
+                        boolean directoriesOnly = ((FileSystemPathControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).directoriesOnly;
+                        if (!directoriesOnly && file.isDirectory()) {
+                            throw new Exception();
+                        }
+                        if (directoriesOnly && file.isFile()) {
+                            throw new Exception();
+                        }
                         ((FileSystemPathControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).text = ((JTextField) ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText();
                     }
-                    if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof TextFieldControl) {
-                        ((TextFieldControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).text = ((JTextField) ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText();
+                    if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
+                        ((IntegerFieldControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).value = Integer.parseInt(((JTextField) ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
                     }
                 }
+                
+            } catch (Exception exception) {
+                
+                ClusterNetworkJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+                JustclustJFrame.classInstance.statusBarJLabel.setText("");
+
+                // the clusterNetworkJProgressBar is removed from the
+                // clusterNetworkDialogJPanel
+                ClusterNetworkJDialog.classInstance.clusterNetworkDialogJPanel.remove(ClusterNetworkJDialog.classInstance.clusterNetworkJProgressBar);
+
+                // if ClusterNetworkJDialog.classInstance.clusteringAlgorithmJComboBox.getSelectedIndex() > 0,
+                // then a plug-in has been selected
+                if (ClusterNetworkJDialog.classInstance.clusteringAlgorithmJComboBox.getSelectedIndex() > 0) {
+                    // set the y coordinate of the ClusterNetworkJDialog so that it remains
+                    // centered around the point it currently is around when its height
+                    // is decreased.
+                    // the difference in height between the new height and old height
+                    // is halved and added to the current y coordinate of the
+                    // ClusterNetworkJDialog.
+                    // also, decreased the height of the ClusterNetworkJDialog.
+                    ClusterNetworkJDialog.classInstance.setBounds(
+                            ClusterNetworkJDialog.classInstance.getLocation().x,
+                            ClusterNetworkJDialog.classInstance.getLocation().y
+                            + Math.round((10 + 25) / 2),
+                            ClusterNetworkJDialog.classInstance.getWidth(),
+                            ClusterNetworkJDialog.classInstance.getInsets().top
+                            + 10 + 16 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 1 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 60 + 10 + (25 + 10 + 25 + 10) * ClusterNetworkJDialog.classInstance.pluginConfigurationControls.size() + 1 + 10 + 25 + 10
+                            + ClusterNetworkJDialog.classInstance.getInsets().bottom);
+                } else {
+                    // set the y coordinate of the ClusterNetworkJDialog so that it remains
+                    // centered around the point it currently is around when its height
+                    // is decreased.
+                    // the difference in height between the new height and old height
+                    // is halved and added to the current y coordinate of the
+                    // ClusterNetworkJDialog.
+                    // also, decreased the height of the ClusterNetworkJDialog.
+                    ClusterNetworkJDialog.classInstance.setBounds(
+                            ClusterNetworkJDialog.classInstance.getLocation().x,
+                            ClusterNetworkJDialog.classInstance.getLocation().y
+                            + Math.round((10 + 25) / 2),
+                            ClusterNetworkJDialog.classInstance.getWidth(),
+                            ClusterNetworkJDialog.classInstance.getInsets().top
+                            + 10 + 16 + 10 + 1 + 10 + 25 + 10 + 25 + 10 + 1 + 10 + 25 + 10
+                            + ClusterNetworkJDialog.classInstance.getInsets().bottom);
+                }
+
+                ClusterNetworkJDialog.classInstance.clusterNetworkJButton.setEnabled(true);
+                
+                if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl) {
+                    JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((DoubleFieldControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a double");
+                }
+                if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof FileSystemPathControl) {
+                    boolean directoriesOnly = ((FileSystemPathControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).directoriesOnly;
+                    if (!directoriesOnly) {
+                        JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((FileSystemPathControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a file");
+                    }
+                    if (directoriesOnly) {
+                        JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((FileSystemPathControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a directory");
+                    }
+                }
+                if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof IntegerFieldControl) {
+                    JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((IntegerFieldControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires an integer");
+                }
+
+                return;
+
+            }
+
+            try {
 
                 // This code calls the clusterNetwork method of the class file
                 // for the current clustering algorithm.
@@ -526,8 +624,6 @@ public class ClusterNetworkActionListener implements ActionListener {
 
 
             } catch (Exception exception) {
-                
-                exception.printStackTrace();
                 
                 ClusterNetworkJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
@@ -625,9 +721,9 @@ public class ClusterNetworkActionListener implements ActionListener {
                 node.cluster = null;
             }
             for (Cluster cluster : data.networkClusters) {
-                for (int i = 0; i < cluster.nodes.size(); i++) {
+                for (int j = 0; j < cluster.nodes.size(); j++) {
 
-                    Node node = cluster.nodes.get(i);
+                    Node node = cluster.nodes.get(j);
 
                     if (node.cluster == null) {
                         node.cluster = cluster;
@@ -637,9 +733,9 @@ public class ClusterNetworkActionListener implements ActionListener {
                         nodeCopy.visible = node.visible;
                         nodeCopy.colour = node.colour;
                         nodeCopy.edges = new ArrayList<Edge>();
-                        for (int j = 0; j < node.edges.size(); j++) {
+                        for (int k = 0; k < node.edges.size(); k++) {
 
-                            Edge edge = node.edges.get(j);
+                            Edge edge = node.edges.get(k);
 
                             // when Nodes are duplicated because of overlapping
                             // Clusters, the Node's Edges are also duplicated
@@ -680,8 +776,8 @@ public class ClusterNetworkActionListener implements ActionListener {
                         nodeCopy.otherVersions.add(node);
                         nodeCopy.data = data;
                         data.networkNodes.add(data.networkNodes.indexOf(node) + 1, nodeCopy);
-                        cluster.nodes.remove(i);
-                        cluster.nodes.add(i, nodeCopy);
+                        cluster.nodes.remove(j);
+                        cluster.nodes.add(j, nodeCopy);
                     }
 
                 }
@@ -692,11 +788,11 @@ public class ClusterNetworkActionListener implements ActionListener {
 //            // the two Edge copies which are between an original
 //            // Node and a Node copy are removed here.
 //            // this is so that the graph is not messy.
-//            for (int i = 0; i < data.networkEdges.size(); i++) {
+//            for (int k = 0; k < data.networkEdges.size(); k++) {
 //
-//                System.out.println(i);
+//                System.out.println(k);
 //
-//                Edge edge = data.networkEdges.get(i);
+//                Edge edge = data.networkEdges.get(k);
 //
 //                boolean removeRedundantEdgeCopies = false;
 //                for (Edge otherVersion : edge.otherVersions) {
@@ -708,23 +804,23 @@ public class ClusterNetworkActionListener implements ActionListener {
 //                    }
 //                }
 //                if (removeRedundantEdgeCopies) {
-//                    for (int j = 0; j < edge.otherVersions.size(); j++) {
+//                    for (int k = 0; k < edge.otherVersions.size(); k++) {
 //
-//                        System.out.println(j);
+//                        System.out.println(k);
 //
-//                        Edge otherVersion = edge.otherVersions.get(j);
+//                        Edge otherVersion = edge.otherVersions.get(k);
 //
 //                        if (otherVersion.node1 == edge.node1 || otherVersion.node2 == edge.node2) {
 //                            otherVersion.node1.edges.remove(otherVersion);
 //                            otherVersion.node2.edges.remove(otherVersion);
-//                            if (otherVersion.data.networkEdges.indexOf(otherVersion) < i) {
-//                                i--;
+//                            if (otherVersion.data.networkEdges.indexOf(otherVersion) < k) {
+//                                k--;
 //                            }
 //                            otherVersion.data.networkEdges.remove(otherVersion);
 //                            for (Edge otherVersionOtherVersion : otherVersion.otherVersions) {
 //                                otherVersionOtherVersion.otherVersions.remove(otherVersion);
 //                            }
-//                            j--;
+//                            k--;
 //                        }
 //                    }
 //                }
@@ -735,48 +831,48 @@ public class ClusterNetworkActionListener implements ActionListener {
             // this relies on the previous code setting the cluster field of
             // Nodes which do not belong to the clustering to null, and so must
             // be performed after it.
-            for (int i = 0; i < data.networkNodes.size(); i++) {
-                if (data.networkNodes.get(i).cluster == null) {
-                    for (int j = 0; j < data.networkNodes.get(i).edges.size(); j++) {
-                        Edge edge = data.networkNodes.get(i).edges.get(j);
+            for (int j = 0; j < data.networkNodes.size(); j++) {
+                if (data.networkNodes.get(j).cluster == null) {
+                    for (int k = 0; k < data.networkNodes.get(j).edges.size(); k++) {
+                        Edge edge = data.networkNodes.get(j).edges.get(k);
                         for (Edge otherVersion : edge.otherVersions) {
                             otherVersion.otherVersions.remove(edge);
                         }
                         data.networkEdges.remove(edge);
                         edge.node1.edges.remove(edge);
                         edge.node2.edges.remove(edge);
-                        j--;
+                        k--;
                     }
-                    for (Node otherVersion : data.networkNodes.get(i).otherVersions) {
-                        otherVersion.otherVersions.remove(data.networkNodes.get(i));
+                    for (Node otherVersion : data.networkNodes.get(j).otherVersions) {
+                        otherVersion.otherVersions.remove(data.networkNodes.get(j));
                     }
-                    data.networkNodes.remove(i);
-                    i--;
+                    data.networkNodes.remove(j);
+                    j--;
                 }
             }
-            for (int i = 0; i < data.networkEdges.size(); i++) {
-                if (data.networkEdges.get(i).node1.cluster != data.networkEdges.get(i).node2.cluster) {
-                    Edge edge = data.networkEdges.get(i);
+            for (int j = 0; j < data.networkEdges.size(); j++) {
+                if (data.networkEdges.get(j).node1.cluster != data.networkEdges.get(j).node2.cluster) {
+                    Edge edge = data.networkEdges.get(j);
                     edge.node1.edges.remove(edge);
                     edge.node2.edges.remove(edge);
                     for (Edge otherVersion : edge.otherVersions) {
                         otherVersion.otherVersions.remove(edge);
                     }
-                    data.networkEdges.remove(i);
-                    i--;
+                    data.networkEdges.remove(j);
+                    j--;
                 }
             }
 
             // This code sorts the Clusters in the networkClusters data
             // structure from largest amount of Nodes to smallest amount of
             // Nodes so that they are displayed in this order
-            for (int i = 1; i < data.networkClusters.size(); i++) {
-                Cluster cluster = data.networkClusters.get(i);
-                int j;
-                for (j = i - 1; j >= 0 && cluster.nodes.size() > data.networkClusters.get(j).nodes.size(); j--) {
-                    data.networkClusters.set(j + 1, data.networkClusters.get(j));
+            for (int j = 1; j < data.networkClusters.size(); j++) {
+                Cluster cluster = data.networkClusters.get(j);
+                int k;
+                for (k = j - 1; k >= 0 && cluster.nodes.size() > data.networkClusters.get(k).nodes.size(); k--) {
+                    data.networkClusters.set(k + 1, data.networkClusters.get(k));
                 }
-                data.networkClusters.set(j + 1, cluster);
+                data.networkClusters.set(k + 1, cluster);
             }
 
             // add a new Graph to the justclustTabbedPane.

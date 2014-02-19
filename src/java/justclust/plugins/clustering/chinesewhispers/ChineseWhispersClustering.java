@@ -16,7 +16,8 @@ import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 import justclust.plugins.clustering.ClusteringAlgorithmPluginInterface;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
-import justclust.plugins.configurationcontrols.TextFieldControl;
+import justclust.plugins.configurationcontrols.DoubleFieldControl;
+import justclust.plugins.configurationcontrols.IntegerFieldControl;
 import justclust.toolbar.dendrogram.DendrogramCluster;
 
 /**
@@ -28,7 +29,7 @@ import justclust.toolbar.dendrogram.DendrogramCluster;
 public class ChineseWhispersClustering implements
         ClusteringAlgorithmPluginInterface {
     
-    public TextFieldControl maximumIterationsTextFieldControl;
+    public IntegerFieldControl maximumIterationsIntegerFieldControl;
     List<Integer> l;
     
     public ChineseWhispersClustering() {
@@ -50,10 +51,10 @@ public class ChineseWhispersClustering implements
         
         ArrayList<PluginConfigurationControlInterface> controls = new ArrayList<PluginConfigurationControlInterface>();
         
-        maximumIterationsTextFieldControl = new TextFieldControl();
-        maximumIterationsTextFieldControl.label = "Maximum Number of Iterations:";
-        maximumIterationsTextFieldControl.text = "1000";
-        controls.add(maximumIterationsTextFieldControl);
+        maximumIterationsIntegerFieldControl = new IntegerFieldControl();
+        maximumIterationsIntegerFieldControl.label = "Maximum Number of Iterations:";
+        maximumIterationsIntegerFieldControl.value = 1000;
+        controls.add(maximumIterationsIntegerFieldControl);
 
         return controls;
     }
@@ -100,7 +101,7 @@ public class ChineseWhispersClustering implements
         // 2.- repeat while changes
         boolean changes;
         int numNodes = networkNodes.size();
-        final int NUM_ITERATIONS = Integer.parseInt(maximumIterationsTextFieldControl.text); // this should be enough...
+        final int NUM_ITERATIONS = maximumIterationsIntegerFieldControl.value; // this should be enough...
         i = 0;
         do {
             changes = false;
