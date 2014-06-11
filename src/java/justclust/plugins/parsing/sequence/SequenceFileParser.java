@@ -14,6 +14,7 @@ import justclust.Main;
 import justclust.datastructures.Data;
 import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
+import justclust.plugins.configurationcontrols.ComboBoxControl;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
 import justclust.plugins.configurationcontrols.PluginConfigurationControlInterface;
 import justclust.plugins.configurationcontrols.DoubleFieldControl;
@@ -24,9 +25,11 @@ import justclust.plugins.parsing.FileParserPluginInterface;
  */
 public class SequenceFileParser implements FileParserPluginInterface {
 
-    // fileSystemPathControl allows the getConfigurationControls and parseFile
-    // methods to share the text field of this FileSystemPathControl
+    // fileSystemPathControl and comboBoxControl allow the
+    // getConfigurationControls and parseFile methods to share the text field of
+    // this FileSystemPathControl
     public FileSystemPathControl fileSystemPathControl;
+    public ComboBoxControl comboBoxControl;
 
     public String getFileType() throws Exception {
         return "Sequence (.fasta) (uses BLAST)";
@@ -61,13 +64,20 @@ public class SequenceFileParser implements FileParserPluginInterface {
         fileSystemPathControl.label = "BLAST Binary Files Path:";
         fileSystemPathControl.text = "";
         fileSystemPathControl.directoriesOnly = true;
-
         try {
             Runtime.getRuntime().exec(new String[]{"makeblastdb"});
             Runtime.getRuntime().exec(new String[]{"blastp"});
         } catch (IOException ioException) {
             controls.add(fileSystemPathControl);
         }
+
+        comboBoxControl = new ComboBoxControl();
+        comboBoxControl.label = "Transformation for E-values:";
+        comboBoxControl.options = new ArrayList<String>();
+        comboBoxControl.options.add("Sigmoid");
+        comboBoxControl.options.add("Linear");
+        comboBoxControl.selectedOptionIndex = 0;
+        controls.add(comboBoxControl);
 
         return controls;
 
@@ -122,6 +132,7 @@ public class SequenceFileParser implements FileParserPluginInterface {
         // structures with the results of the execution of the blastp program.
         scanner = new Scanner(new File("output"));
         Hashtable<String, Node> hashTable = new Hashtable<String, Node>();
+        double maximumWeight = 0;
         while (scanner.hasNextLine()) {
 
             Scanner lineScanner = new Scanner(scanner.nextLine());
@@ -138,7 +149,7 @@ public class SequenceFileParser implements FileParserPluginInterface {
                 edge.node1 = hashTable.get(identifier);
             } else {
                 edge.node1 = new Node();
-                edge.node1.label = identifier;
+                edge.node1.nodeSharedAttributes.label = identifier;
                 hashTable.put(identifier, edge.node1);
             }
 
@@ -150,7 +161,7 @@ public class SequenceFileParser implements FileParserPluginInterface {
                 edge.node2 = hashTable.get(identifier);
             } else {
                 edge.node2 = new Node();
-                edge.node2.label = identifier;
+                edge.node2.nodeSharedAttributes.label = identifier;
                 hashTable.put(identifier, edge.node2);
             }
 
@@ -159,13 +170,24 @@ public class SequenceFileParser implements FileParserPluginInterface {
             }
 
             Double weight = Double.valueOf(lineScanner.next());
-            if (weight == 0.0) {
-                edge.weight = 1.0;
+            if (comboBoxControl.options.get(comboBoxControl.selectedOptionIndex).equals("Sigmoid")) {
+                if (weight == 0.0) {
+                    edge.edgeSharedAttributes.weight = 1.0;
+                }
+                edge.edgeSharedAttributes.weight = 1.0 / (1 + Math.pow(weight, 6.1302 / Math.log(10)) * Math.exp(1.2112));
             }
-            edge.weight = 1.0 / (1 + Math.pow(weight, 6.1302 / Math.log(10)) * Math.exp(1.2112));
+            if (comboBoxControl.options.get(comboBoxControl.selectedOptionIndex).equals("Linear")) {
+                edge.edgeSharedAttributes.weight = weight;
+                maximumWeight = Math.max(maximumWeight, weight);
+            }
 
             lineScanner.close();
 
+        }
+        if (comboBoxControl.options.get(comboBoxControl.selectedOptionIndex).equals("Linear")) {
+            for (Edge edge : networkEdges) {
+                edge.edgeSharedAttributes.weight = 1 - (edge.edgeSharedAttributes.weight / maximumWeight);
+            }
         }
         ArrayList<Node> arrayList = new ArrayList<Node>(hashTable.values());
         for (Node node : arrayList) {
@@ -178,7 +200,7 @@ public class SequenceFileParser implements FileParserPluginInterface {
         for (int i = 1; i < networkEdges.size(); i++) {
             Edge edge = networkEdges.get(i);
             int j;
-            for (j = i - 1; j >= 0 && edge.weight > networkEdges.get(j).weight; j--) {
+            for (j = i - 1; j >= 0 && edge.edgeSharedAttributes.weight > networkEdges.get(j).edgeSharedAttributes.weight; j--) {
                 networkEdges.set(j + 1, networkEdges.get(j));
             }
             networkEdges.set(j + 1, edge);

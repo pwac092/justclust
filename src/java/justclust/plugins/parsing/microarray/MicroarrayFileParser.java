@@ -41,6 +41,7 @@ public class MicroarrayFileParser implements FileParserPluginInterface {
      * This method parses a microarray data file.
      */
     public void parseFile(File file, ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges) throws Exception {
+        System.err.println("1");
 
         Scanner scanner = new Scanner(file);
 
@@ -50,6 +51,7 @@ public class MicroarrayFileParser implements FileParserPluginInterface {
         while (lineScanner.hasNext()) {
             microarrayHeaders.add(lineScanner.next());
         }
+        System.err.println("2");
 
         // This code creates a matrix data structure to represent the contents
         // of a file. Each row of the matrix data structure contains the tab
@@ -64,14 +66,14 @@ public class MicroarrayFileParser implements FileParserPluginInterface {
             lineScanner.useDelimiter("\t");
             Node node = new Node();
             node.edges = new ArrayList<Edge>();
-            node.label = lineScanner.next();
-            node.microarrayValues = new ArrayList<Double>();
+            node.nodeSharedAttributes.label = lineScanner.next();
+            node.nodeSharedAttributes.microarrayValues = new ArrayList<Double>();
             ArrayList<Double> arrayList = new ArrayList<Double>();
             for (int i = 0; i < microarrayHeaders.size(); i++) {
                 try {
                     double value = Double.valueOf(lineScanner.next());
                     arrayList.add(value);
-                    node.microarrayValues.add(value);
+                    node.nodeSharedAttributes.microarrayValues.add(value);
                 } catch (NumberFormatException | NoSuchElementException exception) {
                     continue WHILE_LOOP;
                 }
@@ -88,6 +90,7 @@ public class MicroarrayFileParser implements FileParserPluginInterface {
                 array2DRowRealMatrix.setEntry(j, i, matrix.get(i).get(j));
             }
         }
+        System.err.println("3");
 
         scanner.close();
 
@@ -101,30 +104,65 @@ public class MicroarrayFileParser implements FileParserPluginInterface {
         PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation();
         RealMatrix correlationMatrix = pearsonsCorrelation
                 .computeCorrelationMatrix(array2DRowRealMatrix);
-        double minWeight = 0;
-        for (int i = 0; i < networkNodes.size(); i++) {
-            for (int j = 0; j < i; j++) {
-                minWeight = Math.min(minWeight, correlationMatrix.getEntry(i, j));
-            }
-        }
-        for (int i = 0; i < networkNodes.size(); i++) {
-            for (int j = 0; j < i; j++) {
-                Edge edge = new Edge();
-                networkEdges.add(edge);
-                edge.node1 = networkNodes.get(i);
-                networkNodes.get(i).edges.add(edge);
-                edge.node2 = networkNodes.get(j);
-                networkNodes.get(j).edges.add(edge);
-                edge.weight = correlationMatrix.getEntry(i, j) - minWeight;
-            }
-        }
+//        double minWeight = 0;
+//        for (int i = 0; i < networkNodes.size(); i++) {
+//            for (int j = 0; j < i; j++) {
+//                minWeight = Math.min(minWeight, correlationMatrix.getEntry(i, j));
+//            }
+//        }
+        System.err.println("3.5");
 
+        final int numnodes = networkNodes.size();
+        int num_edges = 0;
+        for (int i = 0; i < numnodes; i++) {
+            networkNodes.get(i).edges.ensureCapacity(numnodes - 1);
+            for (int j = 0; j < i; j++) {
+                double raw_weight = correlationMatrix.getEntry(i, j);
+                if (Math.abs(raw_weight) == 0.0) {
+                    ++num_edges;
+                }
+            }
+        }
+        System.err.println("Number of possible edges: " + numnodes * (numnodes - 1) / 2.0);
+        System.err.println("Number of actual edges: " + num_edges);
+
+        System.err.println("3.75");
+
+        // now we resize the vector of edges
+        networkEdges.ensureCapacity(num_edges);
+
+        System.err.println("4");
+        int ignored_edges = 0;
+        for (int i = 0; i < numnodes; i++) {
+            Node node_i = networkNodes.get(i);
+            System.err.println("iteration i=" + i);
+            for (int j = 0; j < i; j++) {
+                double raw_weight = correlationMatrix.getEntry(i, j);
+                if (raw_weight != 0.0) {
+                    Edge edge = new Edge();
+                    networkEdges.add(edge);
+                    edge.node1 = node_i;
+                    node_i.edges.add(edge);
+                    Node node_j = networkNodes.get(j);
+                    edge.node2 = node_j;
+                    node_j.edges.add(edge);
+                    edge.edgeSharedAttributes.weight = (raw_weight + 1.0) / 2.0;
+                } else {
+                    ++ignored_edges;
+                }
+            }
+        }
+        System.err.println("Ignored edges = " + ignored_edges);
+
+        System.err.println("5");
     }
 
+    @Override
     public boolean isMicroarrayData() throws Exception {
         return true;
     }
 
+    @Override
     public ArrayList<String> getMicroarrayHeaders() throws Exception {
         return microarrayHeaders;
     }

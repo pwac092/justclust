@@ -61,6 +61,8 @@ public class CustomGraphEditor extends PCanvas {
     // this variable contains the Clusters which are displayed by this
     // Graph
     public ArrayList<Cluster> networkClusters;
+    // this variable contains whether this graph is shown or not
+    public boolean graphShown;
     // this PLayer contains the labels to be drawn on the Graph
     public PLayer labelLayer;
     // this PLayer contains the nodes to be drawn on the Graph
@@ -106,11 +108,12 @@ public class CustomGraphEditor extends PCanvas {
     // to an image file and the buttons should not be included
     public boolean paintButtons = true;
 
-    public CustomGraphEditor(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) {
+    public CustomGraphEditor(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters, boolean graphShown) {
 
         this.networkNodes = networkNodes;
         this.networkEdges = networkEdges;
         this.networkClusters = networkClusters;
+        this.graphShown = graphShown;
 
         // Initialize, and create a layer for the labels, nodes, and edges
         // (always underneath the nodes)
@@ -489,101 +492,105 @@ public class CustomGraphEditor extends PCanvas {
 //        int columnAmount = (int) Math.round(Math.sqrt(networkNodes.size()));
 //        int rowAmount = (int) Math.ceil((double) networkNodes.size() / columnAmount);
 
-        // the nodes and lables are added to the view
-        for (int i = 0; i < networkNodes.size(); i++) {
+        if (graphShown) {
 
-            PPath node = PPath.createEllipse(0, 0, 20, 20);
-            // add attributes to node so that, given the node, it is
-            // easy to find its edges and labels.
-            // this useful when user interaction is processed and edges need
-            // to be moved with nodes, along with other examples.
-            node.addAttribute("labels", new ArrayList<PText>());
-            node.addAttribute("edges", new ArrayList<PPath>());
+            // the nodes and lables are added to the view
+            for (int i = 0; i < networkNodes.size(); i++) {
 
-            nodeLayer.addChild(node);
+                PPath node = PPath.createEllipse(0, 0, 20, 20);
+                // add attributes to node so that, given the node, it is
+                // easy to find its edges and labels.
+                // this useful when user interaction is processed and edges need
+                // to be moved with nodes, along with other examples.
+                node.addAttribute("labels", new ArrayList<PText>());
+                node.addAttribute("edges", new ArrayList<PPath>());
 
-            // provide a way to access the corresponding network node from the
-            // graphical node and vice versa
-            node.addAttribute("networkNode", networkNodes.get(i));
-            networkNodes.get(i).graphicalNode = node;
+                nodeLayer.addChild(node);
 
-            PText label = new PText();
-            label.setText(networkNodes.get(i).label);
-            label.setPickable(false);
-            label.setFont(new Font("SansSerif", Font.PLAIN, 8));
-            // add attributes to the label and its node so that, given a label,
-            // it is easy to find its nodes, and, given a node, it is easy to
-            // find its labels.
-            // this useful when user interaction is processed and labels need
-            // to be moved with nodes, along with other examples.
-            label.addAttribute("nodes", new ArrayList<PPath>());
-            ((ArrayList<PPath>) label.getAttribute("nodes")).add(node);
-            ((ArrayList<PText>) node.getAttribute("labels")).add(label);
+                // provide a way to access the corresponding network node from the
+                // graphical node and vice versa
+                node.addAttribute("networkNode", networkNodes.get(i));
+                networkNodes.get(i).graphicalNode = node;
 
-            labelLayer.addChild(label);
+                PText label = new PText();
+                label.setText(networkNodes.get(i).nodeSharedAttributes.label);
+                label.setPickable(false);
+                label.setFont(new Font("SansSerif", Font.PLAIN, 8));
+                // add attributes to the label and its node so that, given a label,
+                // it is easy to find its nodes, and, given a node, it is easy to
+                // find its labels.
+                // this useful when user interaction is processed and labels need
+                // to be moved with nodes, along with other examples.
+                label.addAttribute("nodes", new ArrayList<PPath>());
+                ((ArrayList<PPath>) label.getAttribute("nodes")).add(node);
+                ((ArrayList<PText>) node.getAttribute("labels")).add(label);
 
-            // provide a way to access the corresponding network node from the
-            // label and vice versa
-            label.addAttribute("networkNode", networkNodes.get(i));
-            networkNodes.get(i).graphicalLabel = label;
+                labelLayer.addChild(label);
 
-        }
+                // provide a way to access the corresponding network node from the
+                // label and vice versa
+                label.addAttribute("networkNode", networkNodes.get(i));
+                networkNodes.get(i).graphicalLabel = label;
 
-        // the edges are added to the view
-        for (int i = 0; i < networkEdges.size(); i++) {
+            }
 
-            // this code creates an edge which is an object affected by zoom.
-            // this is not used because the edges become invisible when the user
-            // zooms out and this looks bad.
-            // also, they take longer to render and slow down the program.
+            // the edges are added to the view
+            for (int i = 0; i < networkEdges.size(); i++) {
+
+                // this code creates an edge which is an object affected by zoom.
+                // this is not used because the edges become invisible when the user
+                // zooms out and this looks bad.
+                // also, they take longer to render and slow down the program.
 //            PPath edge = PPath.createRectangle(0, 0, 1, 1);
 //            edge.animateToColor(Color.BLACK, 0);
 //            edge.setStroke(null);
 
-            PPath edge = new PPath();
+                PPath edge = new PPath();
 
-            // add attributes to the edge and the nodes it connects so that,
-            // given a node, it is easy to find its edges, and, given an edge,
-            // it is easy to find its nodes.
-            // this useful when user interaction is processed and edges need
-            // to be moved with nodes, along with other examples.
-            PPath node1 = networkEdges.get(i).node1.graphicalNode;
-            PPath node2 = networkEdges.get(i).node2.graphicalNode;
-            edge.addAttribute("node1", node1);
-            edge.addAttribute("node2", node2);
-            ((ArrayList<PPath>) node1.getAttribute("edges")).add(edge);
-            ((ArrayList<PPath>) node2.getAttribute("edges")).add(edge);
+                // add attributes to the edge and the nodes it connects so that,
+                // given a node, it is easy to find its edges, and, given an edge,
+                // it is easy to find its nodes.
+                // this useful when user interaction is processed and edges need
+                // to be moved with nodes, along with other examples.
+                PPath node1 = networkEdges.get(i).node1.graphicalNode;
+                PPath node2 = networkEdges.get(i).node2.graphicalNode;
+                edge.addAttribute("node1", node1);
+                edge.addAttribute("node2", node2);
+                ((ArrayList<PPath>) node1.getAttribute("edges")).add(edge);
+                ((ArrayList<PPath>) node2.getAttribute("edges")).add(edge);
 
-            // allow selection box to appear when cursor is over an edge
+                // allow selection box to appear when cursor is over an edge
 //            edge.setPickable(false);
 
-            edgeLayer.addChild(edge);
+                edgeLayer.addChild(edge);
 
-            // provide a way to access the corresponding network edge from the
-            // graphical edge and vice versa
-            edge.addAttribute("networkEdge", networkEdges.get(i));
-            networkEdges.get(i).graphicalEdge = edge;
+                // provide a way to access the corresponding network edge from the
+                // graphical edge and vice versa
+                edge.addAttribute("networkEdge", networkEdges.get(i));
+                networkEdges.get(i).graphicalEdge = edge;
 
-            PText label = new PText();
-            label.setPickable(false);
-            label.setFont(new Font("SansSerif", Font.PLAIN, 8));
-            // add attributes to the label and the nodes which are connected by
-            // the current edge so that, given the label, it is easy to find the
-            // nodes, and, given a node, it is easy to find the label.
-            // this useful when user interaction is processed and labels need
-            // to be moved with nodes, along with other examples.
-            label.addAttribute("nodes", new ArrayList<PPath>());
-            ((ArrayList<PPath>) label.getAttribute("nodes")).add(node1);
-            ((ArrayList<PPath>) label.getAttribute("nodes")).add(node2);
-            ((ArrayList<PText>) node1.getAttribute("labels")).add(label);
-            ((ArrayList<PText>) node2.getAttribute("labels")).add(label);
+                PText label = new PText();
+                label.setPickable(false);
+                label.setFont(new Font("SansSerif", Font.PLAIN, 8));
+                // add attributes to the label and the nodes which are connected by
+                // the current edge so that, given the label, it is easy to find the
+                // nodes, and, given a node, it is easy to find the label.
+                // this useful when user interaction is processed and labels need
+                // to be moved with nodes, along with other examples.
+                label.addAttribute("nodes", new ArrayList<PPath>());
+                ((ArrayList<PPath>) label.getAttribute("nodes")).add(node1);
+                ((ArrayList<PPath>) label.getAttribute("nodes")).add(node2);
+                ((ArrayList<PText>) node1.getAttribute("labels")).add(label);
+                ((ArrayList<PText>) node2.getAttribute("labels")).add(label);
 
-            labelLayer.addChild(label);
+                labelLayer.addChild(label);
 
-            // provide a way to access the corresponding network edge from the
-            // label and vice versa
-            label.addAttribute("networkEdge", networkEdges.get(i));
-            networkEdges.get(i).graphicalLabel = label;
+                // provide a way to access the corresponding network edge from the
+                // label and vice versa
+                label.addAttribute("networkEdge", networkEdges.get(i));
+                networkEdges.get(i).graphicalLabel = label;
+
+            }
 
         }
 
@@ -706,7 +713,7 @@ public class CustomGraphEditor extends PCanvas {
         // position the edges in the new layout
         ArrayList<PNode> edges = (ArrayList<PNode>) edgeLayer.getAllNodes();
         for (int i = 1; i < edgeLayer.getAllNodes().size(); i++) {
-            
+
             // this code repositioned and rotated the current edge if it was
             // a rectangle affected by zoom.
             // this is not used because the edges become invisible when the user
@@ -776,9 +783,8 @@ public class CustomGraphEditor extends PCanvas {
 
         // all Nodes should be visible
         for (Node node : networkNodes) {
-            node.visible = true;
-            for (Node otherVersion : node.otherVersions) {
-                otherVersion.visible = true;
+            for (Node otherVersion : node.nodeSharedAttributes.otherVersions) {
+                otherVersion.nodeSharedAttributes.visible = true;
             }
         }
 
@@ -786,18 +792,12 @@ public class CustomGraphEditor extends PCanvas {
         // visible, and the other Edges are made invisible
         for (Edge edge : networkEdges) {
             if (edge.node1.cluster == edge.node2.cluster) {
-                edge.visible = true;
-                for (Edge otherVersion : edge.otherVersions) {
-                    if (otherVersion.data != edge.data) {
-                        otherVersion.visible = true;
-                    }
+                for (Edge otherVersion : edge.edgeSharedAttributes.otherVersions) {
+                    otherVersion.edgeSharedAttributes.visible = true;
                 }
             } else {
-                edge.visible = false;
-                for (Edge otherVersion : edge.otherVersions) {
-                    if (otherVersion.data != edge.data) {
-                        otherVersion.visible = false;
-                    }
+                for (Edge otherVersion : edge.edgeSharedAttributes.otherVersions) {
+                    otherVersion.edgeSharedAttributes.visible = false;
                 }
             }
         }
@@ -814,28 +814,32 @@ public class CustomGraphEditor extends PCanvas {
     // this method creates a label for each Cluster in the current network
     public void createLabelsForClusters() {
 
-        for (Cluster cluster : networkClusters) {
+        if (graphShown) {
 
-            PText label = new PText();
-            label.setPickable(false);
-            label.setFont(new Font("SansSerif", Font.PLAIN, 24));
-            // add attributes to the label and the Nodes which belong to the
-            // current Cluster so that, given the label, it is easy to find the
-            // Nodes, and, given a Node, it is easy to find the label.
-            // this useful when user interaction is processed and labels need
-            // to be moved with Nodes, along with other examples.
-            label.addAttribute("nodes", new ArrayList<PPath>());
-            for (Node node : cluster.nodes) {
-                ((ArrayList<PPath>) label.getAttribute("nodes")).add(node.graphicalNode);
-                ((ArrayList<PText>) node.graphicalNode.getAttribute("labels")).add(label);
+            for (Cluster cluster : networkClusters) {
+
+                PText label = new PText();
+                label.setPickable(false);
+                label.setFont(new Font("SansSerif", Font.PLAIN, 24));
+                // add attributes to the label and the Nodes which belong to the
+                // current Cluster so that, given the label, it is easy to find the
+                // Nodes, and, given a Node, it is easy to find the label.
+                // this useful when user interaction is processed and labels need
+                // to be moved with Nodes, along with other examples.
+                label.addAttribute("nodes", new ArrayList<PPath>());
+                for (Node node : cluster.nodes) {
+                    ((ArrayList<PPath>) label.getAttribute("nodes")).add(node.graphicalNode);
+                    ((ArrayList<PText>) node.graphicalNode.getAttribute("labels")).add(label);
+                }
+
+                labelLayer.addChild(label);
+
+                // provide a way to access the corresponding network Cluster from
+                // the label and vice versa
+                label.addAttribute("networkCluster", cluster);
+                cluster.graphicalLabel = label;
+
             }
-
-            labelLayer.addChild(label);
-
-            // provide a way to access the corresponding network Cluster from
-            // the label and vice versa
-            label.addAttribute("networkCluster", cluster);
-            cluster.graphicalLabel = label;
 
         }
 
@@ -846,44 +850,25 @@ public class CustomGraphEditor extends PCanvas {
     // current network
     public void updateGraphLabels() {
 
-        // update Node labels
-        for (Node node : networkNodes) {
-            PText label = (PText) node.graphicalLabel;
-            label.setText(node.label);
-            // set the coordinates of the Node's label
-            PPath graphicaNode = (PPath) node.graphicalNode;
-            label.setX(graphicaNode.getFullBoundsReference().getCenter2D().getX() - label.getWidth() / 2);
-            label.setY(graphicaNode.getFullBoundsReference().getCenter2D().getY() - label.getHeight() / 2);
-        }
+        if (graphShown) {
 
-        // update Edge labels
-        for (Edge edge : networkEdges) {
-            PText label = (PText) edge.graphicalLabel;
-            label.setText(edge.label);
-            // set the coordinates of the Edge's label.
-            // these are the average coordinates of Nodes which the Edge
-            // connects.
-            double x = 0;
-            double y = 0;
-            ArrayList<PPath> labelNodes = (ArrayList<PPath>) label.getAttribute("nodes");
-            for (int j = 0; j < labelNodes.size(); j++) {
-                x += ((PPath) labelNodes.get(j)).getFullBoundsReference().getCenter2D().getX() / labelNodes.size();
-                y += ((PPath) labelNodes.get(j)).getFullBoundsReference().getCenter2D().getY() / labelNodes.size();
+            // update Node labels
+            for (Node node : networkNodes) {
+                PText label = (PText) node.graphicalLabel;
+                label.setText(node.nodeSharedAttributes.label);
+                // set the coordinates of the Node's label
+                PPath graphicaNode = (PPath) node.graphicalNode;
+                label.setX(graphicaNode.getFullBoundsReference().getCenter2D().getX() - label.getWidth() / 2);
+                label.setY(graphicaNode.getFullBoundsReference().getCenter2D().getY() - label.getHeight() / 2);
             }
-            label.setX(x - label.getWidth() / 2);
-            label.setY(y - label.getHeight() / 2);
-        }
 
-        // update Cluster labels.
-        // this code should only be executed if networkClusters is not null
-        // which means that the current network has been clustered.
-        if (networkClusters != null) {
-            for (Cluster cluster : networkClusters) {
-                PText label = (PText) cluster.graphicalLabel;
-                label.setText(cluster.label);
-                // set the coordinates of the Cluster's label.
-                // these are the average coordinates of Nodes contained in the
-                // Cluster.
+            // update Edge labels
+            for (Edge edge : networkEdges) {
+                PText label = (PText) edge.graphicalLabel;
+                label.setText(edge.edgeSharedAttributes.label);
+                // set the coordinates of the Edge's label.
+                // these are the average coordinates of Nodes which the Edge
+                // connects.
                 double x = 0;
                 double y = 0;
                 ArrayList<PPath> labelNodes = (ArrayList<PPath>) label.getAttribute("nodes");
@@ -894,6 +879,29 @@ public class CustomGraphEditor extends PCanvas {
                 label.setX(x - label.getWidth() / 2);
                 label.setY(y - label.getHeight() / 2);
             }
+
+            // update Cluster labels.
+            // this code should only be executed if networkClusters is not null
+            // which means that the current network has been clustered.
+            if (networkClusters != null) {
+                for (Cluster cluster : networkClusters) {
+                    PText label = (PText) cluster.graphicalLabel;
+                    label.setText(cluster.label);
+                    // set the coordinates of the Cluster's label.
+                    // these are the average coordinates of Nodes contained in the
+                    // Cluster.
+                    double x = 0;
+                    double y = 0;
+                    ArrayList<PPath> labelNodes = (ArrayList<PPath>) label.getAttribute("nodes");
+                    for (int j = 0; j < labelNodes.size(); j++) {
+                        x += ((PPath) labelNodes.get(j)).getFullBoundsReference().getCenter2D().getX() / labelNodes.size();
+                        y += ((PPath) labelNodes.get(j)).getFullBoundsReference().getCenter2D().getY() / labelNodes.size();
+                    }
+                    label.setX(x - label.getWidth() / 2);
+                    label.setY(y - label.getHeight() / 2);
+                }
+            }
+
         }
 
     }
@@ -902,29 +910,33 @@ public class CustomGraphEditor extends PCanvas {
     // visible field of each Node and Edge in the current network
     public void updateGraphVisibility() {
 
-        // update the visibilty of each graphical node in accordance with the
-        // visible field of its corresponding network Node
-        for (Node node : networkNodes) {
-            PPath graphicalNode = (PPath) node.graphicalNode;
-            graphicalNode.setVisible(node.visible);
-            PText label = (PText) node.graphicalLabel;
-            label.setVisible(node.visible);
-        }
+        if (graphShown) {
 
-        // update the visibilty of each graphical edge in accordance with the
-        // visible field of its corresponding network Edge
-        for (Edge edge : networkEdges) {
-            PPath graphicalEdge = (PPath) edge.graphicalEdge;
-            PText label = (PText) edge.graphicalLabel;
-            // if either of the Nodes which the Edge connects are invisible, the
-            // Edge is made invisible so that it is not floating with no Node
-            if (!edge.node1.visible || !edge.node2.visible) {
-                graphicalEdge.setVisible(false);
-                label.setVisible(false);
-            } else {
-                graphicalEdge.setVisible(edge.visible);
-                label.setVisible(edge.visible);
+            // update the visibilty of each graphical node in accordance with the
+            // visible field of its corresponding network Node
+            for (Node node : networkNodes) {
+                PPath graphicalNode = (PPath) node.graphicalNode;
+                graphicalNode.setVisible(node.nodeSharedAttributes.visible);
+                PText label = (PText) node.graphicalLabel;
+                label.setVisible(node.nodeSharedAttributes.visible);
             }
+
+            // update the visibilty of each graphical edge in accordance with the
+            // visible field of its corresponding network Edge
+            for (Edge edge : networkEdges) {
+                PPath graphicalEdge = (PPath) edge.graphicalEdge;
+                PText label = (PText) edge.graphicalLabel;
+                // if either of the Nodes which the Edge connects are invisible, the
+                // Edge is made invisible so that it is not floating with no Node
+                if (!edge.node1.nodeSharedAttributes.visible || !edge.node2.nodeSharedAttributes.visible) {
+                    graphicalEdge.setVisible(false);
+                    label.setVisible(false);
+                } else {
+                    graphicalEdge.setVisible(edge.edgeSharedAttributes.visible);
+                    label.setVisible(edge.edgeSharedAttributes.visible);
+                }
+            }
+
         }
 
     }
@@ -933,40 +945,44 @@ public class CustomGraphEditor extends PCanvas {
     // the colour field of each Node and Edge in the current network
     public void updateGraphColour() {
 
-        // update the colour of each graphical node in accordance with the
-        // colour field of its corresponding network Node
-        for (Node node : networkNodes) {
-            PPath graphicalNode = (PPath) node.graphicalNode;
-            if (customPSelectionEventHandler.isSelected(graphicalNode)) {
+        if (graphShown) {
 
-                // the node is selected, therefore, its colour should be changed
-                // slightly to indicate this
+            // update the colour of each graphical node in accordance with the
+            // colour field of its corresponding network Node
+            for (Node node : networkNodes) {
+                PPath graphicalNode = (PPath) node.graphicalNode;
+                if (customPSelectionEventHandler.isSelected(graphicalNode)) {
 
-                Color networkNodeColour = node.colour;
-                int red = networkNodeColour.getRed();
-                int green = networkNodeColour.getGreen();
-                int blue = networkNodeColour.getBlue();
-                if (red + green + blue <= 465) {
-                    red = Math.min(red + 100, 255);
-                    green = Math.min(green + 100, 255);
-                    blue = Math.min(blue + 100, 255);
+                    // the node is selected, therefore, its colour should be changed
+                    // slightly to indicate this
+
+                    Color networkNodeColour = node.nodeSharedAttributes.colour;
+                    int red = networkNodeColour.getRed();
+                    int green = networkNodeColour.getGreen();
+                    int blue = networkNodeColour.getBlue();
+                    if (red + green + blue <= 465) {
+                        red = Math.min(red + 100, 255);
+                        green = Math.min(green + 100, 255);
+                        blue = Math.min(blue + 100, 255);
+                    } else {
+                        red = Math.max(red - 100, 0);
+                        green = Math.max(green - 100, 0);
+                        blue = Math.max(blue - 100, 0);
+                    }
+                    graphicalNode.animateToColor(new Color(red, green, blue), 1000);
+
                 } else {
-                    red = Math.max(red - 100, 0);
-                    green = Math.max(green - 100, 0);
-                    blue = Math.max(blue - 100, 0);
+                    graphicalNode.animateToColor(node.nodeSharedAttributes.colour, 1000);
                 }
-                graphicalNode.animateToColor(new Color(red, green, blue), 1000);
-
-            } else {
-                graphicalNode.animateToColor(node.colour, 1000);
             }
-        }
 
-        // update the colour of each graphical edge in accordance with the
-        // colour field of its corresponding network Edge
-        for (Edge edge : networkEdges) {
-            PPath graphicalEdge = (PPath) edge.graphicalEdge;
-            graphicalEdge.setStrokePaint(edge.colour);
+            // update the colour of each graphical edge in accordance with the
+            // colour field of its corresponding network Edge
+            for (Edge edge : networkEdges) {
+                PPath graphicalEdge = (PPath) edge.graphicalEdge;
+                graphicalEdge.setStrokePaint(edge.edgeSharedAttributes.colour);
+            }
+
         }
 
     }

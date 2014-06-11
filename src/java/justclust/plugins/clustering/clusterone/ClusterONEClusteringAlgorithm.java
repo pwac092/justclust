@@ -49,9 +49,9 @@ public class ClusterONEClusteringAlgorithm implements ClusteringAlgorithmPluginI
         // adding edges between nodes
         UniqueIDGenerator<String> nodeGen = new UniqueIDGenerator<String>(graph);
         for (Edge edge : networkEdges) {
-            int node1 = nodeGen.get(edge.node1.label);
-            int node2 = nodeGen.get(edge.node2.label);
-            graph.createEdge(node1, node2, edge.weight);
+            int node1 = nodeGen.get(edge.node1.nodeSharedAttributes.label);
+            int node2 = nodeGen.get(edge.node2.nodeSharedAttributes.label);
+            graph.createEdge(node1, node2, edge.edgeSharedAttributes.weight);
         }
 
         // this code performs the ClusterONE clustering algorithm on the Graph
@@ -68,7 +68,7 @@ public class ClusterONEClusteringAlgorithm implements ClusteringAlgorithmPluginI
             cluster.nodes = new ArrayList<Node>();
             for (String memberName : valuedNodeSet.getMemberNames()) {
                 for (Node node : networkNodes) {
-                    if (node.label.equals(memberName)) {
+                    if (node.nodeSharedAttributes.label.equals(memberName)) {
                         cluster.nodes.add(node);
                     }
                 }

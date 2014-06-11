@@ -72,7 +72,7 @@ public class ChineseWhispersClustering implements
                 // ignore self-links
                 continue;
             }
-            double weight = e.weight;
+            double weight = e.edgeSharedAttributes.weight;
             if (e.node1 != n) {
                 neighbors.put(e.node1, weight);
             } else {

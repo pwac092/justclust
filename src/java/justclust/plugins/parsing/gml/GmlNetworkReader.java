@@ -273,7 +273,7 @@ public class GmlNetworkReader {
 
                 // Set node attributes
 //                network.getRow(node).set(CyNetwork.NAME, label);
-                node.label = label;
+                node.nodeSharedAttributes.label = label;
 //                setAttributes(node, network, nodeAttributes.get(idx));
 
                 nodeIDMap.put(label, node);
@@ -331,7 +331,7 @@ public class GmlNetworkReader {
 //                network.getRow(edge).set(CyNetwork.NAME, edgeName);
 //                network.getRow(edge).set(CyEdge.INTERACTION, label);
 //                setAttributes(edge, network, edgeAttributes.get(idx));
-                edge.weight = Math.sqrt(Math.pow(nodeXCoordinates.get(sourceNode) - nodeXCoordinates.get(targetNode), 2)
+                edge.edgeSharedAttributes.weight = Math.sqrt(Math.pow(nodeXCoordinates.get(sourceNode) - nodeXCoordinates.get(targetNode), 2)
                         + Math.pow(nodeYCoordinates.get(sourceNode) - nodeYCoordinates.get(targetNode), 2));
 
                 edgeNames.add(idx, edge);

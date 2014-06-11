@@ -26,7 +26,9 @@ import justclust.datastructures.Cluster;
 import justclust.datastructures.Data;
 import justclust.JustclustJFrame;
 import justclust.datastructures.Edge;
+import justclust.datastructures.EdgeSharedAttributes;
 import justclust.datastructures.Node;
+import justclust.datastructures.NodeSharedAttributes;
 import justclust.datastructures.Session;
 import justclust.menubar.filefilters.CSVFileFilter;
 import justclust.plugins.configurationcontrols.FileSystemPathControl;
@@ -110,14 +112,12 @@ public class SaveSessionActionListener implements ActionListener {
                         ArrayList<Double> nodeYCoordinates = new ArrayList<Double>();
                         for (Node node : data.networkNodes) {
                             Node nodeCopy = new Node();
-                            nodeCopy.label = node.label;
-                            nodeCopy.visible = node.visible;
-                            nodeCopy.colour = node.colour;
                             nodeCopy.data = dataCopy;
-                            nodeCopy.microarrayValues = node.microarrayValues;
                             dataCopy.networkNodes.add(nodeCopy);
-                            nodeXCoordinates.add(node.getGraphicalNodeXCoordinate());
-                            nodeYCoordinates.add(node.getGraphicalNodeYCoordinate());
+                            if (data.graphShown) {
+                                nodeXCoordinates.add(node.getGraphicalNodeXCoordinate());
+                                nodeYCoordinates.add(node.getGraphicalNodeYCoordinate());
+                            }
                         }
                         session.nodeXCoordinates.add(nodeXCoordinates);
                         session.nodeYCoordinates.add(nodeYCoordinates);
@@ -126,14 +126,10 @@ public class SaveSessionActionListener implements ActionListener {
                         dataCopy.networkEdges = new ArrayList<Edge>();
                         for (Edge edge : data.networkEdges) {
                             Edge edgeCopy = new Edge();
-                            edgeCopy.label = edge.label;
-                            edgeCopy.visible = edge.visible;
-                            edgeCopy.colour = edge.colour;
                             int i = data.networkNodes.indexOf(edge.node1);
                             edgeCopy.node1 = dataCopy.networkNodes.get(i);
                             i = data.networkNodes.indexOf(edge.node2);
                             edgeCopy.node2 = dataCopy.networkNodes.get(i);
-                            edgeCopy.weight = edge.weight;
                             edgeCopy.data = dataCopy;
                             dataCopy.networkEdges.add(edgeCopy);
                         }
@@ -161,6 +157,7 @@ public class SaveSessionActionListener implements ActionListener {
                     dataCopy.microarrayHeaders = data.microarrayHeaders;
                     dataCopy.hierarchicalClustering = data.hierarchicalClustering;
                     dataCopy.rootDendrogramClusters = data.rootDendrogramClusters;
+                    dataCopy.graphShown = data.graphShown;
                     dataArrayList.add(dataCopy);
                 }
                 // the otherVersion fields for Nodes and Edges are copied.
@@ -168,19 +165,47 @@ public class SaveSessionActionListener implements ActionListener {
                 // their copies exist.
                 for (int i = 0; i < Data.data.size(); i++) {
                     for (int j = 0; j < Data.data.get(i).networkNodes.size(); j++) {
-                        dataArrayList.get(i).networkNodes.get(j).otherVersions = new ArrayList<Node>();
-                        for (Node node : Data.data.get(i).networkNodes.get(j).otherVersions) {
-                            Data dataCopy = dataArrayList.get(Data.data.indexOf(node.data));
-                            Node nodeCopy = dataCopy.networkNodes.get(node.data.networkNodes.indexOf(node));
-                            dataArrayList.get(i).networkNodes.get(j).otherVersions.add(nodeCopy);
+                        Node nodeCopy = dataArrayList.get(i).networkNodes.get(j);
+                        nodeCopy.nodeSharedAttributes = null;
+                    }
+                    for (int j = 0; j < Data.data.get(i).networkNodes.size(); j++) {
+                        Node nodeCopy = dataArrayList.get(i).networkNodes.get(j);
+                        if (nodeCopy.nodeSharedAttributes == null) {
+                            nodeCopy.nodeSharedAttributes = new NodeSharedAttributes();
+                            Node node = Data.data.get(i).networkNodes.get(j);
+                            nodeCopy.nodeSharedAttributes.label = node.nodeSharedAttributes.label;
+                            nodeCopy.nodeSharedAttributes.visible = node.nodeSharedAttributes.visible;
+                            nodeCopy.nodeSharedAttributes.colour = node.nodeSharedAttributes.colour;
+                            nodeCopy.nodeSharedAttributes.microarrayValues = node.nodeSharedAttributes.microarrayValues;
+                            nodeCopy.nodeSharedAttributes.otherVersions = new ArrayList<Node>();
+                            for (Node otherVersion : node.nodeSharedAttributes.otherVersions) {
+                                Data dataCopy = dataArrayList.get(Data.data.indexOf(otherVersion.data));
+                                Node otherVersionCopy = dataCopy.networkNodes.get(otherVersion.data.networkNodes.indexOf(otherVersion));
+                                nodeCopy.nodeSharedAttributes.otherVersions.add(otherVersionCopy);
+                                otherVersionCopy.nodeSharedAttributes = nodeCopy.nodeSharedAttributes;
+                            }
                         }
                     }
                     for (int j = 0; j < Data.data.get(i).networkEdges.size(); j++) {
-                        dataArrayList.get(i).networkEdges.get(j).otherVersions = new ArrayList<Edge>();
-                        for (Edge edge : Data.data.get(i).networkEdges.get(j).otherVersions) {
-                            Data dataCopy = dataArrayList.get(Data.data.indexOf(edge.data));
-                            Edge edgeCopy = dataCopy.networkEdges.get(edge.data.networkEdges.indexOf(edge));
-                            dataArrayList.get(i).networkEdges.get(j).otherVersions.add(edgeCopy);
+                        Edge edgeCopy = dataArrayList.get(i).networkEdges.get(j);
+                        edgeCopy.edgeSharedAttributes = null;
+                    }
+                    for (int j = 0; j < Data.data.get(i).networkEdges.size(); j++) {
+                        Edge edgeCopy = dataArrayList.get(i).networkEdges.get(j);
+                        if (edgeCopy.edgeSharedAttributes == null) {
+                            edgeCopy.edgeSharedAttributes = new EdgeSharedAttributes();
+                            Edge edge = Data.data.get(i).networkEdges.get(j);
+                            edgeCopy.edgeSharedAttributes.label = edge.edgeSharedAttributes.label;
+                            edgeCopy.edgeSharedAttributes.visible = edge.edgeSharedAttributes.visible;
+                            edgeCopy.edgeSharedAttributes.colour = edge.edgeSharedAttributes.colour;
+                            edgeCopy.edgeSharedAttributes.weight = edge.edgeSharedAttributes.weight;
+                            edgeCopy.edgeSharedAttributes.otherVersions = new ArrayList<Edge>();
+                            for (Edge otherVersion : edge.edgeSharedAttributes.otherVersions) {
+                                Data dataCopy = dataArrayList.get(Data.data.indexOf(otherVersion.data));
+                                Edge otherVersionCopy = dataCopy.networkEdges.get(otherVersion.data.networkEdges.indexOf(otherVersion));
+                                edgeCopy.edgeSharedAttributes.otherVersions.add(otherVersionCopy);
+                                otherVersionCopy.edgeSharedAttributes = edgeCopy.edgeSharedAttributes;
+                            }
                         }
                     }
                 }
@@ -189,7 +214,7 @@ public class SaveSessionActionListener implements ActionListener {
                 objectOutputStream.writeObject(session);
 
             } catch (IOException | NullPointerException exception) {
-
+                
                 SaveSessionJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
                 JustclustJFrame.classInstance.statusBarJLabel.setText("");

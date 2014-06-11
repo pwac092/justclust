@@ -100,7 +100,7 @@ public class NetworkNodesTableModel extends AbstractTableModel {
         // if any Node is not visible, this should not be ticked.
         tableData[0][1] = true;
         for (Node node : data.networkNodes) {
-            if (!node.visible) {
+            if (!node.nodeSharedAttributes.visible) {
                 tableData[0][1] = false;
                 break;
             }
@@ -113,10 +113,10 @@ public class NetworkNodesTableModel extends AbstractTableModel {
         // if any Node does not have the same colour as another,
         // this cell should be white (the default Node colour).
         if (data.networkNodes.size() >= 1) {
-            tableData[0][2] = data.networkNodes.get(0).colour;
+            tableData[0][2] = data.networkNodes.get(0).nodeSharedAttributes.colour;
         }
         for (Node node : data.networkNodes) {
-            if (!node.colour.equals(data.networkNodes.get(0).colour)) {
+            if (!node.nodeSharedAttributes.colour.equals(data.networkNodes.get(0).nodeSharedAttributes.colour)) {
                 tableData[0][2] = Color.WHITE;
                 break;
             }
@@ -131,13 +131,13 @@ public class NetworkNodesTableModel extends AbstractTableModel {
             for (int j = 0; j < 4; j++) {
                 switch (j) {
                     case 0:
-                        tableData[i + 1][j] = data.networkNodes.get(i).label;
+                        tableData[i + 1][j] = data.networkNodes.get(i).nodeSharedAttributes.label;
                         break;
                     case 1:
-                        tableData[i + 1][j] = data.networkNodes.get(i).visible;
+                        tableData[i + 1][j] = data.networkNodes.get(i).nodeSharedAttributes.visible;
                         break;
                     case 2:
-                        tableData[i + 1][j] = data.networkNodes.get(i).colour;
+                        tableData[i + 1][j] = data.networkNodes.get(i).nodeSharedAttributes.colour;
                         break;
                     case 3:
                         tableData[i + 1][j] = "";
@@ -202,10 +202,7 @@ public class NetworkNodesTableModel extends AbstractTableModel {
         // the label of a node was changed
         if (col == 0) {
 
-            data.networkNodes.get(row - 1).label = (String) value;
-            for (Node otherVersion : data.networkNodes.get(row - 1).otherVersions) {
-                otherVersion.label = (String) value;
-            }
+            data.networkNodes.get(row - 1).nodeSharedAttributes.label = (String) value;
 
             // update the appearance of all customGraphEditors.
             // all customGraphEditors are included incase a change in a graph, other than
@@ -227,10 +224,7 @@ public class NetworkNodesTableModel extends AbstractTableModel {
                     tableData[i + 1][col] = value;
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
-                    data.networkNodes.get(i).visible = (boolean) value;
-                    for (Node otherVersion : data.networkNodes.get(i).otherVersions) {
-                        otherVersion.visible = (boolean) value;
-                    }
+                    data.networkNodes.get(i).nodeSharedAttributes.visible = (boolean) value;
                 }
 
             }
@@ -243,10 +237,7 @@ public class NetworkNodesTableModel extends AbstractTableModel {
                     tableData[i + 1][col] = value;
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
-                    data.networkNodes.get(i).visible = (boolean) value;
-                    for (Node otherVersion : data.networkNodes.get(i).otherVersions) {
-                        otherVersion.visible = (boolean) value;
-                    }
+                    data.networkNodes.get(i).nodeSharedAttributes.visible = (boolean) value;
 
                 }
             }
@@ -257,7 +248,7 @@ public class NetworkNodesTableModel extends AbstractTableModel {
             // if any node is not visible, this should not be ticked.
             tableData[0][col] = true;
             for (Node node : data.networkNodes) {
-                if (!node.visible) {
+                if (!node.nodeSharedAttributes.visible) {
                     tableData[0][col] = false;
                     break;
                 }
@@ -288,10 +279,7 @@ public class NetworkNodesTableModel extends AbstractTableModel {
                     tableData[i + 1][col] = value;
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
-                    data.networkNodes.get(i).colour = (Color) value;
-                    for (Node otherVersion : data.networkNodes.get(i).otherVersions) {
-                        otherVersion.colour = (Color) value;
-                    }
+                    data.networkNodes.get(i).nodeSharedAttributes.colour = (Color) value;
                 }
 
             }
@@ -304,10 +292,7 @@ public class NetworkNodesTableModel extends AbstractTableModel {
                     tableData[i + 1][col] = value;
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
-                    data.networkNodes.get(i).colour = (Color) value;
-                    for (Node otherVersion : data.networkNodes.get(i).otherVersions) {
-                        otherVersion.colour = (Color) value;
-                    }
+                    data.networkNodes.get(i).nodeSharedAttributes.colour = (Color) value;
 
                 }
             }
@@ -318,10 +303,10 @@ public class NetworkNodesTableModel extends AbstractTableModel {
             // if any node does not have the same colour as another,
             // this cell should be white (the default node colour).
             if (data.networkNodes.size() >= 1) {
-                tableData[0][col] = data.networkNodes.get(0).colour;
+                tableData[0][col] = data.networkNodes.get(0).nodeSharedAttributes.colour;
             }
             for (Node node : data.networkNodes) {
-                if (!node.colour.equals(data.networkNodes.get(0).colour)) {
+                if (!node.nodeSharedAttributes.colour.equals(data.networkNodes.get(0).nodeSharedAttributes.colour)) {
                     tableData[0][col] = Color.WHITE;
                     break;
                 }

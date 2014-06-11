@@ -38,6 +38,7 @@ import java.awt.event.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import justclust.datastructures.Data;
+import justclust.datastructures.Edge;
 import justclust.datastructures.Node;
 
 /**
@@ -124,18 +125,14 @@ public class ButtonTabComponent extends JPanel {
                 // these also include Nodes in different customGraphEditors which represent
                 // the same Node.
                 for (Node node : Data.data.get(i).networkNodes) {
-                    for (Node otherVersion : node.otherVersions) {
-                        otherVersion.otherVersions.remove(node);
-                    }
+                    node.nodeSharedAttributes.otherVersions.remove(node);
                 }
                 // the otherVersions field of each Edge contains other Edges
                 // which represent the same Edge.
                 // these include Edges in different customGraphEditors which represent
                 // the same Edge.
-                for (Node node : Data.data.get(i).networkNodes) {
-                    for (Node otherVersion : node.otherVersions) {
-                        otherVersion.otherVersions.remove(node);
-                    }
+                for (Edge edge : Data.data.get(i).networkEdges) {
+                    edge.edgeSharedAttributes.otherVersions.remove(edge);
                 }
                 Data.data.remove(i);
                 JustclustJFrame.classInstance.customGraphEditors.remove(i);

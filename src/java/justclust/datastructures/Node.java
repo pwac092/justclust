@@ -1,9 +1,7 @@
 package justclust.datastructures;
 
-import edu.umd.cs.piccolo.PNode;
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.nodes.PText;
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -18,12 +16,6 @@ public class Node implements Serializable {
     public PPath graphicalNode;
     // the graphical representation of the node's label
     public PText graphicalLabel;
-    // the text of graphicalLabel
-    public String label;
-    // whether graphicalNode is visible
-    public boolean visible;
-    // the colour of graphicalNode
-    public Color colour;
     /**
      * This field contains the edges of the current node.
      */
@@ -32,19 +24,16 @@ public class Node implements Serializable {
      * This field contains the cluster of the current node.
      */
     public Cluster cluster;
-    // this field contains other Nodes which represent this same Node.
-    // these include Nodes in the same graph which represent the same Node in
-    // different overlapping Clusters (such Nodes need to be duplicated so that
-    // the overlapping Clusters can be represented separately).
-    // these also include Nodes in different graphs which represent the same
-    // Node.
-    public ArrayList<Node> otherVersions;
     // the instance of the Data class which contains this Node.
     // if the Node is saved as part of a session, which graph it belongs to can
     // be discovered easily from this field (each Data instance corresponds to
     // exactly one graph).
     public Data data;
-    public ArrayList<Double> microarrayValues;
+    public NodeSharedAttributes nodeSharedAttributes;
+    
+    public Node() {
+        nodeSharedAttributes = new NodeSharedAttributes();
+    }
 
     public double getGraphicalNodeXCoordinate() {
         // the offset describes how the user has moved the node from its

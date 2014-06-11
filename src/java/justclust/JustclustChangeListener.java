@@ -59,14 +59,14 @@ public class JustclustChangeListener implements ChangeListener {
             JustclustJFrame.classInstance.exportNetworkJMenuItem.setEnabled(true);
             JustclustJFrame.classInstance.exportClusteringJMenuItem.setEnabled(false);
             JustclustJFrame.classInstance.clusterNetworkJMenuItem.setEnabled(true);
-            JustclustJFrame.classInstance.applyLayoutJMenuItem.setEnabled(true);
+            JustclustJFrame.classInstance.applyLayoutJMenuItem.setEnabled(data.graphShown);
             JustclustJFrame.classInstance.colouriseClustersJMenu.setEnabled(false);
         } else {
             JustclustJFrame.classInstance.exportGraphJMenuItem.setEnabled(true);
             JustclustJFrame.classInstance.exportNetworkJMenuItem.setEnabled(false);
             JustclustJFrame.classInstance.exportClusteringJMenuItem.setEnabled(true);
             JustclustJFrame.classInstance.clusterNetworkJMenuItem.setEnabled(false);
-            JustclustJFrame.classInstance.applyLayoutJMenuItem.setEnabled(true);
+            JustclustJFrame.classInstance.applyLayoutJMenuItem.setEnabled(data.graphShown);
             JustclustJFrame.classInstance.colouriseClustersJMenu.setEnabled(true);
         }
 

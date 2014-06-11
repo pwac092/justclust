@@ -400,7 +400,7 @@ public class ClusterNetworkActionListener implements ActionListener {
 
             JustclustJFrame.classInstance.statusBarJLabel.setText("Creating clustering...");
 
-            // get the current Data instance for the code later in this method 
+            // get the current Data instance for the code later in this method
             // to use.
             // a new instance of the Data class is created which is a copy of
             // the current instance, and the new instance is added to the list
@@ -415,22 +415,13 @@ public class ClusterNetworkActionListener implements ActionListener {
             data.networkNodes = new ArrayList<Node>();
             for (Node node : Data.data.get(currentCustomGraphEditorIndex).networkNodes) {
                 Node nodeCopy = new Node();
-                nodeCopy.label = node.label;
-                nodeCopy.visible = node.visible;
-                nodeCopy.colour = node.colour;
-                nodeCopy.otherVersions = (ArrayList<Node>) node.otherVersions.clone();
-                for (Node otherVersion : nodeCopy.otherVersions) {
-                    otherVersion.otherVersions.add(nodeCopy);
-                }
-                node.otherVersions.add(nodeCopy);
-                // the node from the original network (unclustered) is placed at
-                // the start of the otherVersions ArrayList for the nodeCopy so
-                // that the node from the original network can be found easily
-                // at the start of the ArrayList to provide information about
-                // the original network.
-                nodeCopy.otherVersions.add(0, node);
+                nodeCopy.nodeSharedAttributes.label = node.nodeSharedAttributes.label;
+                nodeCopy.nodeSharedAttributes.visible = node.nodeSharedAttributes.visible;
+                nodeCopy.nodeSharedAttributes.colour = node.nodeSharedAttributes.colour;
+                nodeCopy.nodeSharedAttributes = node.nodeSharedAttributes;
+                nodeCopy.nodeSharedAttributes.otherVersions.add(nodeCopy);
                 nodeCopy.data = data;
-                nodeCopy.microarrayValues = node.microarrayValues;
+                nodeCopy.nodeSharedAttributes.microarrayValues = node.nodeSharedAttributes.microarrayValues;
                 data.networkNodes.add(nodeCopy);
             }
 
@@ -438,23 +429,14 @@ public class ClusterNetworkActionListener implements ActionListener {
             data.networkEdges = new ArrayList<Edge>();
             for (Edge edge : Data.data.get(currentCustomGraphEditorIndex).networkEdges) {
                 Edge edgeCopy = new Edge();
-                edgeCopy.label = edge.label;
-                edgeCopy.visible = edge.visible;
-                edgeCopy.colour = edge.colour;
+                edgeCopy.edgeSharedAttributes.label = edge.edgeSharedAttributes.label;
+                edgeCopy.edgeSharedAttributes.visible = edge.edgeSharedAttributes.visible;
+                edgeCopy.edgeSharedAttributes.colour = edge.edgeSharedAttributes.colour;
                 edgeCopy.node1 = data.networkNodes.get(Data.data.get(currentCustomGraphEditorIndex).networkNodes.indexOf(edge.node1));
                 edgeCopy.node2 = data.networkNodes.get(Data.data.get(currentCustomGraphEditorIndex).networkNodes.indexOf(edge.node2));
-                edgeCopy.weight = edge.weight;
-                edgeCopy.otherVersions = (ArrayList<Edge>) edge.otherVersions.clone();
-                for (Edge otherVersion : edgeCopy.otherVersions) {
-                    otherVersion.otherVersions.add(edgeCopy);
-                }
-                edge.otherVersions.add(edgeCopy);
-                // the edge from the original network (unclustered) is placed at
-                // the start of the otherVersions ArrayList for the edgeCopy so
-                // that the edge from the original network can be found easily
-                // at the start of the ArrayList to provide information about
-                // the original network.
-                edgeCopy.otherVersions.add(0, edge);
+                edgeCopy.edgeSharedAttributes.weight = edge.edgeSharedAttributes.weight;
+                edgeCopy.edgeSharedAttributes = edge.edgeSharedAttributes;
+                edgeCopy.edgeSharedAttributes.otherVersions.add(edgeCopy);
                 edgeCopy.data = data;
                 data.networkEdges.add(edgeCopy);
             }
@@ -490,7 +472,7 @@ public class ClusterNetworkActionListener implements ActionListener {
             for (int i = 1; i < data.networkEdges.size(); i++) {
                 Edge edge = data.networkEdges.get(i);
                 int j;
-                for (j = i - 1; j >= 0 && edge.weight > data.networkEdges.get(j).weight; j--) {
+                for (j = i - 1; j >= 0 && edge.edgeSharedAttributes.weight > data.networkEdges.get(j).edgeSharedAttributes.weight; j--) {
                     data.networkEdges.set(j + 1, data.networkEdges.get(j));
                 }
                 data.networkEdges.set(j + 1, edge);
@@ -531,9 +513,9 @@ public class ClusterNetworkActionListener implements ActionListener {
                         ((IntegerFieldControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).value = Integer.parseInt(((JTextField) ClusterNetworkJDialog.classInstance.pluginConfigurationJComponents.get(i).get(1)).getText());
                     }
                 }
-                
+
             } catch (Exception exception) {
-                
+
                 ClusterNetworkJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
                 JustclustJFrame.classInstance.statusBarJLabel.setText("");
@@ -579,7 +561,7 @@ public class ClusterNetworkActionListener implements ActionListener {
                 }
 
                 ClusterNetworkJDialog.classInstance.clusterNetworkJButton.setEnabled(true);
-                
+
                 if (ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i) instanceof DoubleFieldControl) {
                     JOptionPane.showMessageDialog(JustclustJFrame.classInstance, "The field labelled \"" + ((DoubleFieldControl) ClusterNetworkJDialog.classInstance.pluginConfigurationControls.get(i)).label + "\" requires a double");
                 }
@@ -622,9 +604,8 @@ public class ClusterNetworkActionListener implements ActionListener {
                 data.rootDendrogramClusters = (ArrayList<DendrogramCluster>) method.invoke(
                         ClusterNetworkJDialog.classInstance.pluginClassInstance, new Object[]{});
 
-
             } catch (Exception exception) {
-                
+
                 ClusterNetworkJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
                 JustclustJFrame.classInstance.statusBarJLabel.setText("");
@@ -675,6 +656,23 @@ public class ClusterNetworkActionListener implements ActionListener {
 
                 return;
 
+            }
+
+            if (data.networkEdges.size() > 1000000
+                    && JOptionPane.showOptionDialog(
+                    JustclustJFrame.classInstance,
+                    "Including edges in this clustering may not be possible due to the amount of edges that there would be.\n"
+                    + "Would you like to continue without including the edges?",
+                    "",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new Object[]{"Yes", "No"},
+                    "Yes") == 0) {
+                for (Node node : data.networkNodes) {
+                    node.edges = new ArrayList<Edge>();
+                }
+                data.networkEdges.clear();
             }
 
             // remove any open dialogs
@@ -729,9 +727,9 @@ public class ClusterNetworkActionListener implements ActionListener {
                         node.cluster = cluster;
                     } else {
                         Node nodeCopy = new Node();
-                        nodeCopy.label = node.label;
-                        nodeCopy.visible = node.visible;
-                        nodeCopy.colour = node.colour;
+                        nodeCopy.nodeSharedAttributes.label = node.nodeSharedAttributes.label;
+                        nodeCopy.nodeSharedAttributes.visible = node.nodeSharedAttributes.visible;
+                        nodeCopy.nodeSharedAttributes.colour = node.nodeSharedAttributes.colour;
                         nodeCopy.edges = new ArrayList<Edge>();
                         for (int k = 0; k < node.edges.size(); k++) {
 
@@ -740,9 +738,9 @@ public class ClusterNetworkActionListener implements ActionListener {
                             // when Nodes are duplicated because of overlapping
                             // Clusters, the Node's Edges are also duplicated
                             Edge edgeCopy = new Edge();
-                            edgeCopy.label = edge.label;
-                            edgeCopy.visible = edge.visible;
-                            edgeCopy.colour = edge.colour;
+                            edgeCopy.edgeSharedAttributes.label = edge.edgeSharedAttributes.label;
+                            edgeCopy.edgeSharedAttributes.visible = edge.edgeSharedAttributes.visible;
+                            edgeCopy.edgeSharedAttributes.colour = edge.edgeSharedAttributes.colour;
                             if (edge.node1 == node && edge.node2 == node) {
                                 edgeCopy.node1 = nodeCopy;
                                 edgeCopy.node2 = nodeCopy;
@@ -755,25 +753,18 @@ public class ClusterNetworkActionListener implements ActionListener {
                                 edgeCopy.node2 = nodeCopy;
                                 edge.node1.edges.add(edgeCopy);
                             }
-                            edgeCopy.weight = edge.weight;
-                            edgeCopy.otherVersions = (ArrayList<Edge>) edge.otherVersions.clone();
-                            for (Edge otherVersion : edgeCopy.otherVersions) {
-                                otherVersion.otherVersions.add(edgeCopy);
-                            }
-                            edge.otherVersions.add(edgeCopy);
-                            edgeCopy.otherVersions.add(edge);
+                            edgeCopy.edgeSharedAttributes.weight = edge.edgeSharedAttributes.weight;
+                            edgeCopy.edgeSharedAttributes = edge.edgeSharedAttributes;
+                            edgeCopy.edgeSharedAttributes.otherVersions.add(edgeCopy);
+
                             edgeCopy.data = data;
                             nodeCopy.edges.add(edgeCopy);
                             data.networkEdges.add(data.networkEdges.indexOf(edge) + 1, edgeCopy);
 
                         }
                         nodeCopy.cluster = cluster;
-                        nodeCopy.otherVersions = (ArrayList<Node>) node.otherVersions.clone();
-                        for (Node otherVersion : nodeCopy.otherVersions) {
-                            otherVersion.otherVersions.add(nodeCopy);
-                        }
-                        node.otherVersions.add(nodeCopy);
-                        nodeCopy.otherVersions.add(node);
+                        nodeCopy.nodeSharedAttributes = node.nodeSharedAttributes;
+                        nodeCopy.nodeSharedAttributes.otherVersions.add(nodeCopy);
                         nodeCopy.data = data;
                         data.networkNodes.add(data.networkNodes.indexOf(node) + 1, nodeCopy);
                         cluster.nodes.remove(j);
@@ -831,34 +822,27 @@ public class ClusterNetworkActionListener implements ActionListener {
             // this relies on the previous code setting the cluster field of
             // Nodes which do not belong to the clustering to null, and so must
             // be performed after it.
-            for (int j = 0; j < data.networkNodes.size(); j++) {
-                if (data.networkNodes.get(j).cluster == null) {
-                    for (int k = 0; k < data.networkNodes.get(j).edges.size(); k++) {
-                        Edge edge = data.networkNodes.get(j).edges.get(k);
-                        for (Edge otherVersion : edge.otherVersions) {
-                            otherVersion.otherVersions.remove(edge);
-                        }
-                        data.networkEdges.remove(edge);
-                        edge.node1.edges.remove(edge);
-                        edge.node2.edges.remove(edge);
-                        k--;
-                    }
-                    for (Node otherVersion : data.networkNodes.get(j).otherVersions) {
-                        otherVersion.otherVersions.remove(data.networkNodes.get(j));
-                    }
+            int networkNodesAmount = data.networkNodes.size();
+            for (int j = 0; j < networkNodesAmount; j++) {
+                Node node = data.networkNodes.get(j);
+                if (node.cluster == null) {
+                    node.nodeSharedAttributes.otherVersions.remove(node);
                     data.networkNodes.remove(j);
+                    networkNodesAmount--;
                     j--;
                 }
             }
-            for (int j = 0; j < data.networkEdges.size(); j++) {
-                if (data.networkEdges.get(j).node1.cluster != data.networkEdges.get(j).node2.cluster) {
-                    Edge edge = data.networkEdges.get(j);
+            int networkEdgesAmount = data.networkEdges.size();
+            for (int j = 0; j < networkEdgesAmount; j++) {
+                Edge edge = data.networkEdges.get(j);
+                if (edge.node1.cluster != edge.node2.cluster
+                        || edge.node1.cluster == null
+                        || edge.node2.cluster == null) {
                     edge.node1.edges.remove(edge);
                     edge.node2.edges.remove(edge);
-                    for (Edge otherVersion : edge.otherVersions) {
-                        otherVersion.otherVersions.remove(edge);
-                    }
+                    edge.edgeSharedAttributes.otherVersions.remove(edge);
                     data.networkEdges.remove(j);
+                    networkEdgesAmount--;
                     j--;
                 }
             }
@@ -875,9 +859,26 @@ public class ClusterNetworkActionListener implements ActionListener {
                 data.networkClusters.set(k + 1, cluster);
             }
 
+            // the graphShown field of the Data class is set so that the program
+            // can create the graph and display graph related properties or not
+            // as appropriate
+            data.graphShown = true;
+            if (data.networkEdges.size() > 50000) {
+                data.graphShown = JOptionPane.showOptionDialog(
+                        JustclustJFrame.classInstance,
+                        "Displaying the graph for this network may not be possible due to memory constraints.\n"
+                        + "Would you like to continue without displaying the graph?",
+                        "",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new Object[]{"Yes", "No"},
+                        "Yes") == 1;
+            }
+
             // add a new Graph to the justclustTabbedPane.
             // this will be used to show the cluster.
-            CustomGraphEditor customGraphEditor = new CustomGraphEditor(data.networkNodes, data.networkEdges, data.networkClusters);
+            CustomGraphEditor customGraphEditor = new CustomGraphEditor(data.networkNodes, data.networkEdges, data.networkClusters, data.graphShown);
             JustclustJFrame.classInstance.customGraphEditors.add(customGraphEditor);
             // register the customGraphEditor with a
             // JustclustActionListener so that the
@@ -913,20 +914,24 @@ public class ClusterNetworkActionListener implements ActionListener {
             // this method creates a label for each cluster in the current network
             customGraphEditor.createLabelsForClusters();
 
-            // lay out the nodes with the prefuse force layout.
-            // the shouldRepaint field is false while the layout is being
-            // applied so that the customGraphEditor is not repainted during the
-            // layout.
-            // this would cause an error for some unkown reason.
-            customGraphEditor.shouldRepaint = false;
-            customGraphEditor.applyPrefuseForceLayout();
-            customGraphEditor.shouldRepaint = true;
+            if (data.graphShown) {
 
-            // show the Node and Edge properties which were carried over to the
-            // clustering from the network
-            customGraphEditor.updateGraphLabels();
-            customGraphEditor.updateGraphVisibility();
-            customGraphEditor.updateGraphColour();
+                // lay out the nodes with the prefuse force layout.
+                // the shouldRepaint field is false while the layout is being
+                // applied so that the customGraphEditor is not repainted during the
+                // layout.
+                // this would cause an error for some unkown reason.
+                customGraphEditor.shouldRepaint = false;
+                customGraphEditor.applyPrefuseForceLayout();
+                customGraphEditor.shouldRepaint = true;
+
+                // show the Node and Edge properties which were carried over to the
+                // clustering from the network
+                customGraphEditor.updateGraphLabels();
+                customGraphEditor.updateGraphVisibility();
+                customGraphEditor.updateGraphColour();
+
+            }
 
             // the repaint method updates the buttons on the toolbar so that
             // they are no longer disabled now that there is information about

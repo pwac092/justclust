@@ -173,7 +173,7 @@ public class CytoscapeEdgeWeightedSpringEmbeddedVisualisationLayout implements V
             }
             edgeWeights = new double[edgesWithinComponent.size()];
             for (int i = 0; i < edgesWithinComponent.size(); i++) {
-                edgeWeights[i] = edgesWithinComponent.get(i).weight;
+                edgeWeights[i] = edgesWithinComponent.get(i).edgeSharedAttributes.weight;
             }
 
 //        LayoutPoint initialLocation = null;

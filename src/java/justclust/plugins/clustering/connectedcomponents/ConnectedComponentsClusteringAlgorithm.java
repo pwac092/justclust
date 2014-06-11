@@ -72,7 +72,7 @@ public class ConnectedComponentsClusteringAlgorithm implements
      * the set of nodes which have at least that similarity with the given one.
      *
      */
-    private List<Node> connectedComponent(Node seed, double minSimilarity) {
+    private List<Node> connectedComponent(Node seed, double minSimilarity, Map<Node, Boolean> visited) {
         List<Node> neighbourNodes = new ArrayList<Node>();
         Set<Node> added = new HashSet<Node>();
 
@@ -83,7 +83,7 @@ public class ConnectedComponentsClusteringAlgorithm implements
         while (!toProcess.isEmpty()) {
             Node center = toProcess.poll();
             for (Edge incidentEdge : center.edges) {
-                if (incidentEdge.weight >= minSimilarity) {
+                if (incidentEdge.edgeSharedAttributes.weight >= minSimilarity) {
                     Node neighbour;
                     if (incidentEdge.node1 != center) {
                         neighbour = incidentEdge.node1;
@@ -97,6 +97,7 @@ public class ConnectedComponentsClusteringAlgorithm implements
                     }
                 }
             }
+            visited.put(center, Boolean.TRUE);
         }
         return neighbourNodes;
     }
@@ -114,12 +115,13 @@ public class ConnectedComponentsClusteringAlgorithm implements
         }
 
         for (Node n : networkNodes) {
+            
             if (visited.get(n)) {
                 continue;
             }
             visited.put(n, Boolean.TRUE);
 
-            List<Node> component = this.connectedComponent(n, epsilon);
+            List<Node> component = this.connectedComponent(n, epsilon, visited);
 
             if (component.size() >= minPoints) {
                 // we create a cluster
@@ -130,11 +132,6 @@ public class ConnectedComponentsClusteringAlgorithm implements
                 }
                 networkClusters.add(cluster);
             }
-
-            for (Node nei : component) {
-                visited.put(nei, Boolean.TRUE);
-            }
-
         }
 
     }

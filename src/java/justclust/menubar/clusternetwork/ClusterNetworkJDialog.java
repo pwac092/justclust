@@ -39,6 +39,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import justclust.JustclustJFrame;
 
 import justclust.datastructures.Data;
 import justclust.customcomponents.BrowseButton;
@@ -259,8 +260,12 @@ public class ClusterNetworkJDialog extends JDialog {
                                             .replaceAll("/", ".")
                                             .replaceAll(".class", ""));
 
-                                    if (ClusteringAlgorithmPluginInterface.class
-                                            .isAssignableFrom(loadedClass)) {
+                                    // get the current Data instance for the following code to use
+                                    int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
+                                    Data data = Data.data.get(currentCustomGraphEditorIndex);
+
+                                    if (ClusteringAlgorithmPluginInterface.class.isAssignableFrom(loadedClass)
+                                            && (!filename.equals("kmeans_clustering_algorithm.jar") || data.microarrayData)) {
 
                                         Data.clusteringAlgorithmJarNames.add(filename);
                                         Data.clusteringAlgorithmClassNames.add(jarEntry

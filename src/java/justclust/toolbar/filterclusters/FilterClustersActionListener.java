@@ -43,13 +43,13 @@ public class FilterClustersActionListener implements ActionListener {
 
         // cancel the filtering if there are any errors
         try {
-            
+
             Integer.parseInt(FilterClustersJDialog.classInstance.showLargestClustersJTextField.getText());
             Integer.parseInt(FilterClustersJDialog.classInstance.hideSmallestClustersJTextField.getText());
             Integer.parseInt(FilterClustersJDialog.classInstance.hideClustersAboveNodeAmountJTextField.getText());
             Integer.parseInt(FilterClustersJDialog.classInstance.hideClustersBelowNodeAmountJTextField.getText());
             Double.parseDouble(FilterClustersJDialog.classInstance.hideClustersBelowDensityThresholdJTextField.getText());
-            
+
         } catch (NumberFormatException numberFormatException) {
 
             JOptionPane.showMessageDialog(FilterClustersJDialog.classInstance, "Filtering could not be completed due to error");
@@ -65,18 +65,12 @@ public class FilterClustersActionListener implements ActionListener {
         // set all Nodes to be invisible.
         // they will be shown if necessary by the code later.
         for (Node node : data.networkNodes) {
-            node.visible = false;
-            for (Node otherVersion : node.otherVersions) {
-                otherVersion.visible = false;
-            }
+            node.nodeSharedAttributes.visible = false;
         }
 
         // set all Edges to be invisible
         for (Edge edge : data.networkEdges) {
-            edge.visible = false;
-            for (Edge otherVersion : edge.otherVersions) {
-                otherVersion.visible = false;
-            }
+            edge.edgeSharedAttributes.visible = false;
         }
 
         // hide all of the Nodes in any clusters which should be made invisible.
@@ -123,17 +117,11 @@ public class FilterClustersActionListener implements ActionListener {
 
             if (visible) {
                 for (Node node : cluster.nodes) {
-                    node.visible = true;
+                    node.nodeSharedAttributes.visible = true;
                     for (Edge edge : node.edges) {
                         if (edge.node1.cluster == edge.node2.cluster) {
-                            edge.visible = true;
-                            for (Edge otherVersion : edge.otherVersions) {
-                                otherVersion.visible = true;
-                            }
+                            edge.edgeSharedAttributes.visible = true;
                         }
-                    }
-                    for (Node otherVersion : node.otherVersions) {
-                        otherVersion.visible = true;
                     }
                 }
             }

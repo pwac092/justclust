@@ -52,14 +52,14 @@ public class ColouriseClustersJMenuActionListener implements ActionListener {
                             }
                         }
                     }
-                    for (Node node : nodes.get(i).otherVersions) {
+                    for (Node node : nodes.get(i).nodeSharedAttributes.otherVersions) {
                         if (!nodes.contains(node)) {
                             nodes.add(node);
                         }
                     }
                 }
                 for (Node node : nodes) {
-                    node.colour = colour;
+                    node.nodeSharedAttributes.colour = colour;
                 }
             }
 
@@ -91,7 +91,7 @@ public class ColouriseClustersJMenuActionListener implements ActionListener {
                             }
                         }
                     }
-                    for (Node node : nodes.get(i).otherVersions) {
+                    for (Node node : nodes.get(i).nodeSharedAttributes.otherVersions) {
                         if (!nodes.contains(node)) {
                             nodes.add(node);
                         }
@@ -101,9 +101,8 @@ public class ColouriseClustersJMenuActionListener implements ActionListener {
                     if (node.data == data) {
                         for (Edge edge : node.edges) {
                             if (edge.node1.cluster == edge.node2.cluster) {
-                                edge.colour = colour;
-                                for (Edge otherVersion : edge.otherVersions) {
-                                    otherVersion.colour = colour;
+                                for (Edge otherVersion : edge.edgeSharedAttributes.otherVersions) {
+                                    otherVersion.edgeSharedAttributes.colour = colour;
                                 }
                             }
                         }
@@ -139,20 +138,19 @@ public class ColouriseClustersJMenuActionListener implements ActionListener {
                             }
                         }
                     }
-                    for (Node node : nodes.get(i).otherVersions) {
+                    for (Node node : nodes.get(i).nodeSharedAttributes.otherVersions) {
                         if (!nodes.contains(node)) {
                             nodes.add(node);
                         }
                     }
                 }
                 for (Node node : nodes) {
-                    node.colour = colour;
+                    node.nodeSharedAttributes.colour = colour;
                     if (node.data == data) {
                         for (Edge edge : node.edges) {
                             if (edge.node1.cluster == edge.node2.cluster) {
-                                edge.colour = colour;
-                                for (Edge otherVersion : edge.otherVersions) {
-                                    otherVersion.colour = colour;
+                                for (Edge otherVersion : edge.edgeSharedAttributes.otherVersions) {
+                                    otherVersion.edgeSharedAttributes.colour = colour;
                                 }
                             }
                         }

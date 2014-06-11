@@ -190,8 +190,8 @@ public class ExportGraphActionListener implements ActionListener {
                         double height = maxYCoordinate - minYCoordinate;
                         g.setSVGCanvasSize(new Dimension((int) Math.round(10 + 10 + width + 10 + 10), (int) Math.round(10 + 10 + height + 10 + 10)));
                         for (Edge edge : Data.data.get(currentCustomGraphEditorIndex).networkEdges) {
-                            if (edge.visible) {
-                                g.setColor(edge.colour);
+                            if (edge.edgeSharedAttributes.visible) {
+                                g.setColor(edge.edgeSharedAttributes.colour);
                                 g.drawLine(
                                         (int) Math.round(10 + 10 + (edge.node1.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate)),
                                         (int) Math.round(10 + 10 + (edge.node1.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate)),
@@ -200,8 +200,8 @@ public class ExportGraphActionListener implements ActionListener {
                             }
                         }
                         for (Node node : Data.data.get(currentCustomGraphEditorIndex).networkNodes) {
-                            if (node.visible) {
-                                g.setColor(node.colour);
+                            if (node.nodeSharedAttributes.visible) {
+                                g.setColor(node.nodeSharedAttributes.colour);
                                 g.fillOval(
                                         (int) Math.round(10 + 10 + (node.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate) - 10),
                                         (int) Math.round(10 + 10 + (node.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate) - 10),
@@ -217,22 +217,22 @@ public class ExportGraphActionListener implements ActionListener {
                         }
                         g.setColor(Color.BLACK);
                         for (Node node : Data.data.get(currentCustomGraphEditorIndex).networkNodes) {
-                            if (node.visible) {
+                            if (node.nodeSharedAttributes.visible) {
                                 g.setFont(node.graphicalLabel.getFont());
                                 FontMetrics fontMetrics = g.getFontMetrics();
                                 g.drawString(
-                                        node.label,
-                                        (int) Math.round(10 + 10 + ((node.graphicalLabel.getFullBoundsReference().getCenter2D().getX() - fontMetrics.stringWidth(node.label) / 2) - minXCoordinate)),
+                                        node.nodeSharedAttributes.label,
+                                        (int) Math.round(10 + 10 + ((node.graphicalLabel.getFullBoundsReference().getCenter2D().getX() - fontMetrics.stringWidth(node.nodeSharedAttributes.label) / 2) - minXCoordinate)),
                                         (int) Math.round(10 + 10 + ((node.graphicalLabel.getFullBoundsReference().getCenter2D().getY() + (fontMetrics.getAscent() - 2) / 2) - minYCoordinate)));
                             }
                         }
                         for (Edge edge : Data.data.get(currentCustomGraphEditorIndex).networkEdges) {
-                            if (edge.visible && edge.label != null) {
+                            if (edge.edgeSharedAttributes.visible && edge.edgeSharedAttributes.label != null) {
                                 g.setFont(edge.graphicalLabel.getFont());
                                 FontMetrics fontMetrics = g.getFontMetrics();
                                 g.drawString(
-                                        edge.label,
-                                        (int) Math.round(10 + 10 + ((edge.graphicalLabel.getFullBoundsReference().getCenter2D().getX() - fontMetrics.stringWidth(edge.label) / 2) - minXCoordinate)),
+                                        edge.edgeSharedAttributes.label,
+                                        (int) Math.round(10 + 10 + ((edge.graphicalLabel.getFullBoundsReference().getCenter2D().getX() - fontMetrics.stringWidth(edge.edgeSharedAttributes.label) / 2) - minXCoordinate)),
                                         (int) Math.round(10 + 10 + ((edge.graphicalLabel.getFullBoundsReference().getCenter2D().getY() + (fontMetrics.getAscent() - 2) / 2) - minYCoordinate)));
                             }
                         }

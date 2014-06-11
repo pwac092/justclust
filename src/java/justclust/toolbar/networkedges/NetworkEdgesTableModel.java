@@ -89,7 +89,9 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
             // Edges are only shown if their visible field is true, and
             // their nodes' visible fields are true.
             // this is so that Edges are not floating without a Node.
-            if (!edge.visible || !edge.node1.visible || !edge.node2.visible) {
+            if (!edge.edgeSharedAttributes.visible
+                    || !edge.node1.nodeSharedAttributes.visible
+                    || !edge.node2.nodeSharedAttributes.visible) {
                 tableData[0][1] = false;
                 break;
             }
@@ -102,10 +104,10 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
         // if any Edge does not have the same colour as another,
         // this cell should be black (the default Edge colour).
         if (data.networkEdges.size() >= 1) {
-            tableData[0][2] = data.networkEdges.get(0).colour;
+            tableData[0][2] = data.networkEdges.get(0).edgeSharedAttributes.colour;
         }
         for (Edge edge : data.networkEdges) {
-            if (!edge.colour.equals(data.networkEdges.get(0).colour)) {
+            if (!edge.edgeSharedAttributes.colour.equals(data.networkEdges.get(0).edgeSharedAttributes.colour)) {
                 tableData[0][2] = Color.BLACK;
                 break;
             }
@@ -124,28 +126,28 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
             for (int j = 0; j < 6; j++) {
                 switch (j) {
                     case 0:
-                        tableData[i + 1][j] = data.networkEdges.get(i).label;
+                        tableData[i + 1][j] = data.networkEdges.get(i).edgeSharedAttributes.label;
                         break;
                     case 1:
                         // Edges are only shown if their visible field is
                         // true, and their nodes' visible fields are true.
                         // this is so that Edges are not floating without a
                         // Node.
-                        tableData[i + 1][j] = data.networkEdges.get(i).visible
-                                && data.networkEdges.get(i).node1.visible
-                                && data.networkEdges.get(i).node2.visible;
+                        tableData[i + 1][j] = data.networkEdges.get(i).edgeSharedAttributes.visible
+                                && data.networkEdges.get(i).node1.nodeSharedAttributes.visible
+                                && data.networkEdges.get(i).node2.nodeSharedAttributes.visible;
                         break;
                     case 2:
-                        tableData[i + 1][j] = data.networkEdges.get(i).colour;
+                        tableData[i + 1][j] = data.networkEdges.get(i).edgeSharedAttributes.colour;
                         break;
                     case 3:
-                        tableData[i + 1][j] = data.networkEdges.get(i).node1.label;
+                        tableData[i + 1][j] = data.networkEdges.get(i).node1.nodeSharedAttributes.label;
                         break;
                     case 4:
-                        tableData[i + 1][j] = data.networkEdges.get(i).node2.label;
+                        tableData[i + 1][j] = data.networkEdges.get(i).node2.nodeSharedAttributes.label;
                         break;
                     case 5:
-                        tableData[i + 1][j] = new DecimalFormat("#.#####").format(data.networkEdges.get(i).weight);
+                        tableData[i + 1][j] = new DecimalFormat("#.#####").format(data.networkEdges.get(i).edgeSharedAttributes.weight);
                         break;
                 }
             }
@@ -207,10 +209,7 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
         // the label of an Edge was changed
         if (col == 0) {
 
-            data.networkEdges.get(row - 1).label = (String) value;
-            for (Edge otherVersion : data.networkEdges.get(row - 1).otherVersions) {
-                otherVersion.label = (String) value;
-            }
+            data.networkEdges.get(row - 1).edgeSharedAttributes.label = (String) value;
 
             // update the appearance of all customGraphEditors.
             // all customGraphEditors are included incase a change in a graph, other than
@@ -232,19 +231,13 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
                     tableData[i + 1][col] = value;
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
-                    data.networkEdges.get(i).visible = (boolean) value;
-                    for (Edge otherVersion : data.networkEdges.get(i).otherVersions) {
-                        otherVersion.visible = (boolean) value;
-                    }
+                    data.networkEdges.get(i).edgeSharedAttributes.visible = (boolean) value;
                 }
                 // all Nodes which are connected to Edges are made visible
                 // as well so that the Edges are not floating with no Node
                 for (Node node : data.networkNodes) {
                     if (node.edges.size() > 0) {
-                        node.visible = true;
-                        for (Node otherVersion : node.otherVersions) {
-                            otherVersion.visible = true;
-                        }
+                        node.nodeSharedAttributes.visible = true;
                     }
                 }
 
@@ -258,41 +251,26 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
                     tableData[i + 1][col] = value;
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
-                    data.networkEdges.get(i).visible = (boolean) value;
-                    for (Edge otherVersion : data.networkEdges.get(i).otherVersions) {
-                        otherVersion.visible = (boolean) value;
-                    }
+                    data.networkEdges.get(i).edgeSharedAttributes.visible = (boolean) value;
 
                     // if the Edge is now visible and a Node which it connects
                     // isn't, make the Node visible, and make all Edges which
                     // are connected to the Node invisible so that they do not
                     // appear
                     if ((boolean) value == true) {
-                        if (!data.networkEdges.get(i).node1.visible) {
-                            data.networkEdges.get(i).node1.visible = true;
-                            for (Node otherVersion : data.networkEdges.get(i).node1.otherVersions) {
-                                otherVersion.visible = true;
-                            }
+                        if (!data.networkEdges.get(i).node1.nodeSharedAttributes.visible) {
+                            data.networkEdges.get(i).node1.nodeSharedAttributes.visible = true;
                             for (Edge edge : data.networkEdges.get(i).node1.edges) {
                                 if (edge != data.networkEdges.get(i)) {
-                                    edge.visible = false;
-                                    for (Edge otherVersion : edge.otherVersions) {
-                                        otherVersion.visible = false;
-                                    }
+                                    edge.edgeSharedAttributes.visible = false;
                                 }
                             }
                         }
-                        if (!data.networkEdges.get(i).node2.visible) {
-                            data.networkEdges.get(i).node2.visible = true;
-                            for (Node otherVersion : data.networkEdges.get(i).node2.otherVersions) {
-                                otherVersion.visible = true;
-                            }
+                        if (!data.networkEdges.get(i).node2.nodeSharedAttributes.visible) {
+                            data.networkEdges.get(i).node2.nodeSharedAttributes.visible = true;
                             for (Edge edge : data.networkEdges.get(i).node2.edges) {
                                 if (edge != data.networkEdges.get(i)) {
-                                    edge.visible = false;
-                                    for (Edge otherVersion : edge.otherVersions) {
-                                        otherVersion.visible = false;
-                                    }
+                                    edge.edgeSharedAttributes.visible = false;
                                 }
                             }
                         }
@@ -307,7 +285,7 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
             // if any Edge is not visible, this should not be ticked.
             tableData[0][col] = true;
             for (int i = 0; i < data.networkEdges.size(); i++) {
-                if (!data.networkEdges.get(i).visible) {
+                if (!data.networkEdges.get(i).edgeSharedAttributes.visible) {
                     tableData[0][col] = false;
                     break;
                 }
@@ -338,10 +316,7 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
                     tableData[i + 1][col] = value;
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
-                    data.networkEdges.get(i).colour = (Color) value;
-                    for (Edge otherVersion : data.networkEdges.get(i).otherVersions) {
-                        otherVersion.colour = (Color) value;
-                    }
+                    data.networkEdges.get(i).edgeSharedAttributes.colour = (Color) value;
                 }
 
             }
@@ -354,10 +329,7 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
                     tableData[i + 1][col] = value;
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
-                    data.networkEdges.get(i).colour = (Color) value;
-                    for (Edge otherVersion : data.networkEdges.get(i).otherVersions) {
-                        otherVersion.colour = (Color) value;
-                    }
+                    data.networkEdges.get(i).edgeSharedAttributes.colour = (Color) value;
 
                 }
             }
@@ -368,10 +340,10 @@ public class NetworkEdgesTableModel extends AbstractTableModel {
             // if any Edge does not have the same colour as another,
             // this cell should be black (the default Edge colour).
             if (data.networkEdges.size() >= 1) {
-                tableData[0][col] = data.networkEdges.get(0).colour;
+                tableData[0][col] = data.networkEdges.get(0).edgeSharedAttributes.colour;
             }
             for (Edge edge : data.networkEdges) {
-                if (!edge.colour.equals(data.networkEdges.get(0).colour)) {
+                if (!edge.edgeSharedAttributes.colour.equals(data.networkEdges.get(0).edgeSharedAttributes.colour)) {
                     tableData[0][col] = Color.BLACK;
                     break;
                 }

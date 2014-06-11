@@ -48,6 +48,7 @@ public class Data implements Serializable {
     public ArrayList<String> microarrayHeaders;
     public boolean hierarchicalClustering;
     public ArrayList<DendrogramCluster> rootDendrogramClusters;
+    public boolean graphShown;
     
     // //////////////////////////////////////////////////
     // the following fields are global to all graphs in all tabs

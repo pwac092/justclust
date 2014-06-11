@@ -68,7 +68,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
         LOOP:
         for (Cluster cluster : data.networkClusters) {
             for (Node node : cluster.nodes) {
-                if (!node.visible) {
+                if (!node.nodeSharedAttributes.visible) {
                     tableData[0][1] = false;
                     break LOOP;
                 }
@@ -87,7 +87,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     // Edges are only shown if their visible field is true, and
                     // their nodes' visible fields are true.
                     // this is so that Edges are not floating without a Node.
-                    if (!edge.visible || !edge.node1.visible || !edge.node2.visible) {
+                    if (!edge.edgeSharedAttributes.visible || !edge.node1.nodeSharedAttributes.visible || !edge.node2.nodeSharedAttributes.visible) {
                         if (edge.node1 == node && edge.node2.cluster == cluster) {
                             tableData[0][2] = false;
                             break LOOP;
@@ -108,12 +108,12 @@ public class NetworkClustersTableModel extends AbstractTableModel {
         // if any such Node does not have the same colour as another,
         // this cell should be white (the default Node colour).
         if (data.networkClusters.size() >= 1) {
-            tableData[0][3] = data.networkClusters.get(0).nodes.get(0).colour;
+            tableData[0][3] = data.networkClusters.get(0).nodes.get(0).nodeSharedAttributes.colour;
         }
         LOOP:
         for (Cluster cluster : data.networkClusters) {
             for (Node node : cluster.nodes) {
-                if (!node.colour.equals(data.networkClusters.get(0).nodes.get(0).colour)) {
+                if (!node.nodeSharedAttributes.colour.equals(data.networkClusters.get(0).nodes.get(0).nodeSharedAttributes.colour)) {
                     tableData[0][3] = Color.WHITE;
                     break LOOP;
                 }
@@ -143,20 +143,20 @@ public class NetworkClustersTableModel extends AbstractTableModel {
             }
         }
         if (comparisonEdge != null) {
-            tableData[0][4] = comparisonEdge.colour;
+            tableData[0][4] = comparisonEdge.edgeSharedAttributes.colour;
             LOOP:
             for (Cluster cluster : data.networkClusters) {
                 for (Node node : cluster.nodes) {
                     for (Edge edge : node.edges) {
                         if (edge.node1 == node
                                 && edge.node2.cluster == cluster
-                                && !edge.colour.equals(comparisonEdge.colour)) {
+                                && !edge.edgeSharedAttributes.colour.equals(comparisonEdge.edgeSharedAttributes.colour)) {
                             tableData[0][4] = Color.BLACK;
                             break LOOP;
                         }
                         if (edge.node2 == node
                                 && edge.node1.cluster == cluster
-                                && !edge.colour.equals(comparisonEdge.colour)) {
+                                && !edge.edgeSharedAttributes.colour.equals(comparisonEdge.edgeSharedAttributes.colour)) {
                             tableData[0][4] = Color.BLACK;
                             break LOOP;
                         }
@@ -186,7 +186,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     case 1:
                         tableData[i + 1][j] = true;
                         for (Node node : data.networkClusters.get(i).nodes) {
-                            if (!node.visible) {
+                            if (!node.nodeSharedAttributes.visible) {
                                 tableData[i + 1][j] = false;
                                 break;
                             }
@@ -200,7 +200,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                                 // Edges are only shown if their visible field is true, and
                                 // their nodes' visible fields are true.
                                 // this is so that Edges are not floating without a Node.
-                                if (!edge.visible || !edge.node1.visible || !edge.node2.visible) {
+                                if (!edge.edgeSharedAttributes.visible || !edge.node1.nodeSharedAttributes.visible || !edge.node2.nodeSharedAttributes.visible) {
                                     if (edge.node1 == node
                                             && edge.node2.cluster == data.networkClusters.get(i)) {
                                         tableData[i + 1][j] = false;
@@ -216,9 +216,9 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                         }
                         break;
                     case 3:
-                        tableData[i + 1][j] = data.networkClusters.get(i).nodes.get(0).colour;
+                        tableData[i + 1][j] = data.networkClusters.get(i).nodes.get(0).nodeSharedAttributes.colour;
                         for (Node node : data.networkClusters.get(i).nodes) {
-                            if (!node.colour.equals(data.networkClusters.get(i).nodes.get(0).colour)) {
+                            if (!node.nodeSharedAttributes.colour.equals(data.networkClusters.get(i).nodes.get(0).nodeSharedAttributes.colour)) {
                                 tableData[i + 1][j] = Color.WHITE;
                                 break;
                             }
@@ -240,19 +240,19 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                             }
                         }
                         if (comparisonEdge != null) {
-                            tableData[i + 1][j] = comparisonEdge.colour;
+                            tableData[i + 1][j] = comparisonEdge.edgeSharedAttributes.colour;
                             LOOP:
                             for (Node node : data.networkClusters.get(i).nodes) {
                                 for (Edge edge : node.edges) {
                                     if (edge.node1 == node
                                             && edge.node2.cluster == data.networkClusters.get(i)
-                                            && !edge.colour.equals(comparisonEdge.colour)) {
+                                            && !edge.edgeSharedAttributes.colour.equals(comparisonEdge.edgeSharedAttributes.colour)) {
                                         tableData[i + 1][j] = Color.BLACK;
                                         break LOOP;
                                     }
                                     if (edge.node2 == node
                                             && edge.node1.cluster == data.networkClusters.get(i)
-                                            && !edge.colour.equals(comparisonEdge.colour)) {
+                                            && !edge.edgeSharedAttributes.colour.equals(comparisonEdge.edgeSharedAttributes.colour)) {
                                         tableData[i + 1][j] = Color.BLACK;
                                         break LOOP;
                                     }
@@ -275,7 +275,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                         break;
                     default:
                         if (data.networkClusters.get(i).nodes.size() > j - 6) {
-                            tableData[i + 1][j] = data.networkClusters.get(i).nodes.get(j - 6).label;
+                            tableData[i + 1][j] = data.networkClusters.get(i).nodes.get(j - 6).nodeSharedAttributes.label;
                         } else {
                             tableData[i + 1][j] = "";
                         }
@@ -356,10 +356,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
                     for (Node node : data.networkClusters.get(i).nodes) {
-                        node.visible = (boolean) value;
-                        for (Node otherVersion : node.otherVersions) {
-                            otherVersion.visible = (boolean) value;
-                        }
+                        node.nodeSharedAttributes.visible = (boolean) value;
                     }
                 }
 
@@ -374,10 +371,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
                     for (Node node : data.networkClusters.get(i).nodes) {
-                        node.visible = (boolean) value;
-                        for (Node otherVersion : node.otherVersions) {
-                            otherVersion.visible = (boolean) value;
-                        }
+                        node.nodeSharedAttributes.visible = (boolean) value;
                     }
 
                 }
@@ -391,7 +385,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
             LOOP:
             for (Cluster cluster : data.networkClusters) {
                 for (Node node : cluster.nodes) {
-                    if (!node.visible) {
+                    if (!node.nodeSharedAttributes.visible) {
                         tableData[0][col] = false;
                         break LOOP;
                     }
@@ -412,7 +406,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                 LOOP:
                 for (Node node : data.networkClusters.get(i).nodes) {
                     for (Edge edge : node.edges) {
-                        if (!edge.visible || !edge.node1.visible || !edge.node2.visible) {
+                        if (!edge.edgeSharedAttributes.visible || !edge.node1.nodeSharedAttributes.visible || !edge.node2.nodeSharedAttributes.visible) {
                             if (edge.node1.cluster == data.networkClusters.get(i)
                                     && edge.node2.cluster == data.networkClusters.get(i)) {
                                 tableData[0][2] = false;
@@ -460,16 +454,10 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                 if ((boolean) value == true) {
                     for (Cluster cluster : data.networkClusters) {
                         for (Node node : cluster.nodes) {
-                            if (!node.visible) {
-                                node.visible = true;
-                                for (Node otherVersion : node.otherVersions) {
-                                    otherVersion.visible = true;
-                                }
+                            if (!node.nodeSharedAttributes.visible) {
+                                node.nodeSharedAttributes.visible = true;
                                 for (Edge edge : node.edges) {
-                                    edge.visible = false;
-                                    for (Edge otherVersion : edge.otherVersions) {
-                                        otherVersion.visible = false;
-                                    }
+                                    edge.edgeSharedAttributes.visible = false;
                                 }
                             }
                         }
@@ -481,10 +469,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     for (Node node : cluster.nodes) {
                         for (Edge edge : node.edges) {
                             if (edge.node1.cluster == edge.node2.cluster) {
-                                edge.visible = (boolean) value;
-                                for (Edge otherVersion : edge.otherVersions) {
-                                    otherVersion.visible = (boolean) value;
-                                }
+                                edge.edgeSharedAttributes.visible = (boolean) value;
                             }
                         }
                     }
@@ -510,16 +495,10 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     // the original Edge is shown in the code below this code.
                     if ((boolean) value == true) {
                         for (Node node : data.networkClusters.get(row - 1).nodes) {
-                            if (!node.visible) {
-                                node.visible = true;
-                                for (Node otherVersion : node.otherVersions) {
-                                    otherVersion.visible = true;
-                                }
+                            if (!node.nodeSharedAttributes.visible) {
+                                node.nodeSharedAttributes.visible = true;
                                 for (Edge edge : node.edges) {
-                                    edge.visible = false;
-                                    for (Edge otherVersion : edge.otherVersions) {
-                                        otherVersion.visible = false;
-                                    }
+                                    edge.edgeSharedAttributes.visible = false;
                                 }
                             }
                         }
@@ -529,10 +508,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     for (Node node : data.networkClusters.get(row - 1).nodes) {
                         for (Edge edge : node.edges) {
                             if (edge.node1.cluster == edge.node2.cluster) {
-                                edge.visible = (boolean) value;
-                                for (Edge otherVersion : edge.otherVersions) {
-                                    otherVersion.visible = (boolean) value;
-                                }
+                                edge.edgeSharedAttributes.visible = (boolean) value;
                             }
                         }
                     }
@@ -552,7 +528,9 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                         // Edges are only shown if their visible field is true, and
                         // their nodes' visible fields are true.
                         // this is so that Edges are not floating without a Node.
-                        if (!edge.visible || !edge.node1.visible || !edge.node2.visible) {
+                        if (!edge.edgeSharedAttributes.visible
+                                || !edge.node1.nodeSharedAttributes.visible
+                                || !edge.node2.nodeSharedAttributes.visible) {
                             if (edge.node1 == node && edge.node2.cluster == cluster) {
                                 tableData[0][col] = false;
                                 break LOOP;
@@ -580,7 +558,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                 LOOP:
                 for (Node node : data.networkClusters.get(i).nodes) {
                     for (Edge edge : node.edges) {
-                        if (!node.visible) {
+                        if (!node.nodeSharedAttributes.visible) {
                             tableData[0][1] = false;
                             tableData[i + 1][1] = false;
                             break LOOP;
@@ -617,10 +595,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     // fireTableCellUpdated updates the appearance of the cell
                     fireTableCellUpdated(i + 1, col);
                     for (Node node : data.networkClusters.get(i).nodes) {
-                        node.colour = (Color) value;
-                        for (Node otherVersion : node.otherVersions) {
-                            otherVersion.colour = (Color) value;
-                        }
+                        node.nodeSharedAttributes.colour = (Color) value;
                     }
                 }
 
@@ -636,10 +611,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     fireTableCellUpdated(i + 1, col);
 
                     for (Node node : data.networkClusters.get(row - 1).nodes) {
-                        node.colour = (Color) value;
-                        for (Node otherVersion : node.otherVersions) {
-                            otherVersion.colour = (Color) value;
-                        }
+                        node.nodeSharedAttributes.colour = (Color) value;
                     }
 
                 }
@@ -651,12 +623,12 @@ public class NetworkClustersTableModel extends AbstractTableModel {
             // if any such Node does not have the same colour as another,
             // this cell should be white (the default Node colour).
             if (data.networkClusters.size() >= 1) {
-                tableData[0][col] = data.networkClusters.get(0).nodes.get(0).colour;
+                tableData[0][col] = data.networkClusters.get(0).nodes.get(0).nodeSharedAttributes.colour;
             }
             LOOP:
             for (Cluster cluster : data.networkClusters) {
                 for (Node node : cluster.nodes) {
-                    if (!node.colour.equals(data.networkClusters.get(0).nodes.get(0).colour)) {
+                    if (!node.nodeSharedAttributes.colour.equals(data.networkClusters.get(0).nodes.get(0).nodeSharedAttributes.colour)) {
                         tableData[0][col] = Color.WHITE;
                         break LOOP;
                     }
@@ -691,10 +663,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     for (Node node : data.networkClusters.get(i).nodes) {
                         for (Edge edge : node.edges) {
                             if (edge.node1.cluster == edge.node2.cluster) {
-                                edge.colour = (Color) value;
-                                for (Edge otherVersion : edge.otherVersions) {
-                                    otherVersion.colour = (Color) value;
-                                }
+                                edge.edgeSharedAttributes.colour = (Color) value;
                             }
                         }
                     }
@@ -714,10 +683,7 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                     for (Node node : data.networkClusters.get(row - 1).nodes) {
                         for (Edge edge : node.edges) {
                             if (edge.node1.cluster == edge.node2.cluster) {
-                                edge.colour = (Color) value;
-                                for (Edge otherVersion : edge.otherVersions) {
-                                    otherVersion.colour = (Color) value;
-                                }
+                                edge.edgeSharedAttributes.colour = (Color) value;
                             }
                         }
                     }
@@ -747,20 +713,20 @@ public class NetworkClustersTableModel extends AbstractTableModel {
                 }
             }
             if (comparisonEdge != null) {
-                tableData[0][col] = comparisonEdge.colour;
+                tableData[0][col] = comparisonEdge.edgeSharedAttributes.colour;
                 LOOP:
                 for (Cluster cluster : data.networkClusters) {
                     for (Node node : cluster.nodes) {
                         for (Edge edge : node.edges) {
                             if (edge.node1 == node
                                     && edge.node2.cluster == cluster
-                                    && !edge.colour.equals(comparisonEdge.colour)) {
+                                    && !edge.edgeSharedAttributes.colour.equals(comparisonEdge.edgeSharedAttributes.colour)) {
                                 tableData[0][col] = Color.BLACK;
                                 break LOOP;
                             }
                             if (edge.node2 == node
                                     && edge.node1.cluster == cluster
-                                    && !edge.colour.equals(comparisonEdge.colour)) {
+                                    && !edge.edgeSharedAttributes.colour.equals(comparisonEdge.edgeSharedAttributes.colour)) {
                                 tableData[0][col] = Color.BLACK;
                                 break LOOP;
                             }

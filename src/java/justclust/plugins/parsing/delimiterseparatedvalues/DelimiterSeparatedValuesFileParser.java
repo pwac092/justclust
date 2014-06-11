@@ -70,7 +70,7 @@ public class DelimiterSeparatedValuesFileParser implements FileParserPluginInter
                 edge.node1 = hashTable.get(identifier);
             } else {
                 edge.node1 = new Node();
-                edge.node1.label = identifier;
+                edge.node1.nodeSharedAttributes.label = identifier;
                 hashTable.put(identifier, edge.node1);
             }
 
@@ -79,11 +79,11 @@ public class DelimiterSeparatedValuesFileParser implements FileParserPluginInter
                 edge.node2 = hashTable.get(identifier);
             } else {
                 edge.node2 = new Node();
-                edge.node2.label = identifier;
+                edge.node2.nodeSharedAttributes.label = identifier;
                 hashTable.put(identifier, edge.node2);
             }
 
-            edge.weight = Double.valueOf(lineScanner.next().trim());
+            edge.edgeSharedAttributes.weight = Double.valueOf(lineScanner.next().trim());
 
             lineScanner.close();
 
@@ -100,7 +100,7 @@ public class DelimiterSeparatedValuesFileParser implements FileParserPluginInter
             Edge edge = networkEdges.get(i);
             int j;
             for (j = i - 1; j >= 0
-                    && edge.weight > networkEdges.get(j).weight; j--) {
+                    && edge.edgeSharedAttributes.weight > networkEdges.get(j).edgeSharedAttributes.weight; j--) {
                 networkEdges.set(j + 1, networkEdges.get(j));
             }
             networkEdges.set(j + 1, edge);

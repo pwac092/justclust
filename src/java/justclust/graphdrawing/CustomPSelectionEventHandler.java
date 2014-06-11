@@ -250,7 +250,7 @@ public class CustomPSelectionEventHandler extends PDragSequenceEventHandler {
         //PBoundsHandle.addBoundsHandlesTo(node);
         // set the colour of the graphical node to a slightly different colour
         // to that of its corresponding network Node
-        Color networkNodeColour = ((Node) node.getAttribute("networkNode")).colour;
+        Color networkNodeColour = ((Node) node.getAttribute("networkNode")).nodeSharedAttributes.colour;
         int red = networkNodeColour.getRed();
         int green = networkNodeColour.getGreen();
         int blue = networkNodeColour.getBlue();
@@ -322,7 +322,7 @@ public class CustomPSelectionEventHandler extends PDragSequenceEventHandler {
         //PBoundsHandle.removeBoundsHandlesFrom(node);
         // set the colour of the graphical node to the colour of its
         // corresponding network node
-        node.setPaint(((Node) node.getAttribute("networkNode")).colour);
+        node.setPaint(((Node) node.getAttribute("networkNode")).nodeSharedAttributes.colour);
     }
 
     /**
@@ -392,7 +392,7 @@ public class CustomPSelectionEventHandler extends PDragSequenceEventHandler {
         }
 
         // invisible nodes should not be selectable
-        if (!((Node) node.getAttribute("networkNode")).visible) {
+        if (!((Node) node.getAttribute("networkNode")).nodeSharedAttributes.visible) {
             selectable = false;
         }
 

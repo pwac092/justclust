@@ -232,7 +232,7 @@ public class LoadSessionActionListener implements ActionListener {
 
                 // create a new graph to display a graphical representation of the
                 // network
-                CustomGraphEditor customGraphEditor = new CustomGraphEditor(data.networkNodes, data.networkEdges, data.networkClusters);
+                CustomGraphEditor customGraphEditor = new CustomGraphEditor(data.networkNodes, data.networkEdges, data.networkClusters, data.graphShown);
                 JustclustJFrame.classInstance.customGraphEditors.add(customGraphEditor);
                 // register the customGraphEditor with a
                 // JustclustActionListener so that the
@@ -265,36 +265,40 @@ public class LoadSessionActionListener implements ActionListener {
                     customGraphEditor.createLabelsForClusters();
                 }
 
-                // lay out the nodes as they were when the session was
-                // saved.
-                // the shouldRepaint field is false while the layout is being
-                // applied so that the customGraphEditor is not repainted during the
-                // layout.
-                // this would cause an error for some unkown reason.
-                customGraphEditor.shouldRepaint = false;
-                if (data.networkNodes != null) {
-                    i = Data.data.indexOf(data);
-                    for (int j = 0; j < data.networkNodes.size(); j++) {
-                        data.networkNodes.get(j).setGraphicalNodeXCoordinate(session.nodeXCoordinates.get(i).get(j));
-                        data.networkNodes.get(j).setGraphicalNodeYCoordinate(session.nodeYCoordinates.get(i).get(j));
-                    }
-                }
-                customGraphEditor.shouldRepaint = true;
+                if (data.graphShown) {
 
-                // position the edges in the new layout
-                ArrayList<PNode> edges = (ArrayList<PNode>) customGraphEditor.edgeLayer.getAllNodes();
-                for (int j = 1; j < customGraphEditor.edgeLayer.getAllNodes().size(); j++) {
-                    PPath edge = (PPath) edges.get(j);
-                    PPath node1 = (PPath) edge.getAttribute("node1");
-                    PPath node2 = (PPath) edge.getAttribute("node2");
+                    // lay out the nodes as they were when the session was
+                    // saved.
+                    // the shouldRepaint field is false while the layout is being
+                    // applied so that the customGraphEditor is not repainted during the
+                    // layout.
+                    // this would cause an error for some unkown reason.
+                    customGraphEditor.shouldRepaint = false;
+                    if (data.networkNodes != null) {
+                        i = Data.data.indexOf(data);
+                        for (int j = 0; j < data.networkNodes.size(); j++) {
+                            data.networkNodes.get(j).setGraphicalNodeXCoordinate(session.nodeXCoordinates.get(i).get(j));
+                            data.networkNodes.get(j).setGraphicalNodeYCoordinate(session.nodeYCoordinates.get(i).get(j));
+                        }
+                    }
+                    customGraphEditor.shouldRepaint = true;
+
+                    // position the edges in the new layout
+                    ArrayList<PNode> edges = (ArrayList<PNode>) customGraphEditor.edgeLayer.getAllNodes();
+                    for (int j = 1; j < customGraphEditor.edgeLayer.getAllNodes().size(); j++) {
+                        PPath edge = (PPath) edges.get(j);
+                        PPath node1 = (PPath) edge.getAttribute("node1");
+                        PPath node2 = (PPath) edge.getAttribute("node2");
 //                    Point2D start = node1.getFullBoundsReference().getCenter2D();
 //                    Point2D end = node2.getFullBoundsReference().getCenter2D();
 //                    edge.reset();
 //                    edge.moveTo((float) start.getX(), (float) start.getY());
 //                    edge.lineTo((float) end.getX(), (float) end.getY());
-                    edge.reset();
-                    edge.moveTo((float) node1.getX() + 10, (float) node1.getY() + 10);
-                    edge.lineTo((float) node2.getX() + 10, (float) node2.getY() + 10);
+                        edge.reset();
+                        edge.moveTo((float) node1.getX() + 10, (float) node1.getY() + 10);
+                        edge.lineTo((float) node2.getX() + 10, (float) node2.getY() + 10);
+                    }
+
                 }
 
                 // the entire graph is fitted into the main graphical view

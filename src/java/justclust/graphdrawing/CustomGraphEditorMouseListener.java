@@ -154,7 +154,7 @@ public class CustomGraphEditorMouseListener implements MouseListener, MouseMotio
                 && x <= customGraphEditor.getWidth() + customGraphEditor.shrinkNodeSizeButtonCoordinates.x + 39
                 && y - 2 >= customGraphEditor.shrinkNodeSizeButtonCoordinates.y
                 && y - 2 <= customGraphEditor.shrinkNodeSizeButtonCoordinates.y + 39) {
-            if (customGraphEditor.nodeLayer.getAllNodes().size() >= 1) {
+            if (customGraphEditor.nodeLayer.getAllNodes().size() >= 2) {
                 PPath node = ((ArrayList<PPath>) customGraphEditor.nodeLayer.getAllNodes()).get(1);
                 if (node.getWidth() >= 40) {
                     for (int i = 1; i < customGraphEditor.nodeLayer.getAllNodes().size(); i++) {

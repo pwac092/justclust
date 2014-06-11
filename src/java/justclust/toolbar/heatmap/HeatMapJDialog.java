@@ -116,7 +116,7 @@ public class HeatMapJDialog extends JDialog {
                     double[][] matrix = new double[data.networkNodes.size()][data.networkNodes.size()];
                     double maxEdgeWeight = 0;
                     for (Edge edge : data.networkEdges) {
-                        maxEdgeWeight = Math.max(maxEdgeWeight, edge.weight);
+                        maxEdgeWeight = Math.max(maxEdgeWeight, edge.edgeSharedAttributes.weight);
                     }
                     for (int i = 0; i < data.networkNodes.size(); i++) {
                         for (int j = i; j < data.networkNodes.size(); j++) {
@@ -130,8 +130,8 @@ public class HeatMapJDialog extends JDialog {
                             for (Edge edge : node1.edges) {
                                 if (edge.node1 == node1 && edge.node2 == node2
                                         || edge.node1 == node2 && edge.node2 == node1) {
-                                    matrix[i][j] = edge.weight / maxEdgeWeight;
-                                    matrix[j][i] = edge.weight / maxEdgeWeight;
+                                    matrix[i][j] = edge.edgeSharedAttributes.weight / maxEdgeWeight;
+                                    matrix[j][i] = edge.edgeSharedAttributes.weight / maxEdgeWeight;
                                     break;
                                 }
                             }
@@ -141,7 +141,7 @@ public class HeatMapJDialog extends JDialog {
 
                     labels = new String[data.networkNodes.size()];
                     for (int i = 0; i < data.networkNodes.size(); i++) {
-                        labels[i] = data.networkNodes.get(i).label;
+                        labels[i] = data.networkNodes.get(i).nodeSharedAttributes.label;
                     }
 
                     heatMapJPanel = new HeatMapJPanel(heatMapMatrix, labels, null);
@@ -162,8 +162,8 @@ public class HeatMapJDialog extends JDialog {
                     // the edge weights from the original network, which may
                     // have been removed from the current network (a
                     // clustering).
-                    for (Edge edge : data.networkNodes.get(0).otherVersions.get(0).data.networkEdges) {
-                        maxEdgeWeight = Math.max(maxEdgeWeight, edge.weight);
+                    for (Edge edge : data.networkNodes.get(0).nodeSharedAttributes.otherVersions.get(0).data.networkEdges) {
+                        maxEdgeWeight = Math.max(maxEdgeWeight, edge.edgeSharedAttributes.weight);
                     }
                     for (int i = 0; i < nodes.size(); i++) {
                         for (int j = i; j < nodes.size(); j++) {
@@ -172,18 +172,18 @@ public class HeatMapJDialog extends JDialog {
                             if (i == j) {
                                 matrix[i][j] = 1;
                             }
-                            ArrayList<Node> networkNodes = nodes.get(i).otherVersions.get(0).data.networkNodes;
+                            ArrayList<Node> networkNodes = nodes.get(i).nodeSharedAttributes.otherVersions.get(0).data.networkNodes;
                             int nodeIndex1 = data.networkNodes.indexOf(nodes.get(i));
                             int nodeIndex2 = data.networkNodes.indexOf(nodes.get(j));
-                            for (Edge edge : nodes.get(i).otherVersions.get(0).edges) {
+                            for (Edge edge : nodes.get(i).nodeSharedAttributes.otherVersions.get(0).edges) {
                                 int nodeIndex3 = networkNodes.indexOf(edge.node1);
                                 int nodeIndex4 = networkNodes.indexOf(edge.node2);
                                 if (nodeIndex3 == nodeIndex1
                                         && nodeIndex4 == nodeIndex2
                                         || nodeIndex3 == nodeIndex2
                                         && nodeIndex4 == nodeIndex1) {
-                                    matrix[i][j] = edge.weight / maxEdgeWeight;
-                                    matrix[j][i] = edge.weight / maxEdgeWeight;
+                                    matrix[i][j] = edge.edgeSharedAttributes.weight / maxEdgeWeight;
+                                    matrix[j][i] = edge.edgeSharedAttributes.weight / maxEdgeWeight;
                                     break;
                                 }
                             }
@@ -193,7 +193,7 @@ public class HeatMapJDialog extends JDialog {
 
                     labels = new String[nodes.size()];
                     for (int i = 0; i < nodes.size(); i++) {
-                        labels[i] = nodes.get(i).label;
+                        labels[i] = nodes.get(i).nodeSharedAttributes.label;
                     }
 
                     ArrayList<Integer> nodeAmountPerCluster = new ArrayList<Integer>();
