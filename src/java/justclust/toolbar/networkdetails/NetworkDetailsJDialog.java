@@ -108,18 +108,18 @@ public class NetworkDetailsJDialog extends JDialog {
             Double smallestEdgeWeight = null;
             Double largestEdgeWeight = null;
             if (data.networkEdges.size() >= 1) {
-                smallestEdgeWeight = data.networkEdges.get(0).edgeSharedAttributes.weight;
-                largestEdgeWeight = data.networkEdges.get(0).edgeSharedAttributes.weight;
+                smallestEdgeWeight = data.networkEdges.get(0).weight;
+                largestEdgeWeight = data.networkEdges.get(0).weight;
             }
             double totalEdgesWeight = 0;
             for (Edge edge : data.networkEdges) {
-                if (smallestEdgeWeight > edge.edgeSharedAttributes.weight) {
-                    smallestEdgeWeight = edge.edgeSharedAttributes.weight;
+                if (smallestEdgeWeight > edge.weight) {
+                    smallestEdgeWeight = edge.weight;
                 }
-                if (largestEdgeWeight < edge.edgeSharedAttributes.weight) {
-                    largestEdgeWeight = edge.edgeSharedAttributes.weight;
+                if (largestEdgeWeight < edge.weight) {
+                    largestEdgeWeight = edge.weight;
                 }
-                totalEdgesWeight += edge.edgeSharedAttributes.weight;
+                totalEdgesWeight += edge.weight;
             }
             details =
                     "File" + '\n'
@@ -152,18 +152,18 @@ public class NetworkDetailsJDialog extends JDialog {
             Double smallestEdgeWeight = null;
             Double largestEdgeWeight = null;
             if (data.networkEdges.size() >= 1) {
-                smallestEdgeWeight = data.networkEdges.get(0).edgeSharedAttributes.weight;
-                largestEdgeWeight = data.networkEdges.get(0).edgeSharedAttributes.weight;
+                smallestEdgeWeight = data.networkEdges.get(0).weight;
+                largestEdgeWeight = data.networkEdges.get(0).weight;
             }
             double totalEdgesWeight = 0;
             for (Edge edge : data.networkEdges) {
-                if (smallestEdgeWeight > edge.edgeSharedAttributes.weight) {
-                    smallestEdgeWeight = edge.edgeSharedAttributes.weight;
+                if (smallestEdgeWeight > edge.weight) {
+                    smallestEdgeWeight = edge.weight;
                 }
-                if (largestEdgeWeight < edge.edgeSharedAttributes.weight) {
-                    largestEdgeWeight = edge.edgeSharedAttributes.weight;
+                if (largestEdgeWeight < edge.weight) {
+                    largestEdgeWeight = edge.weight;
                 }
-                totalEdgesWeight += edge.edgeSharedAttributes.weight;
+                totalEdgesWeight += edge.weight;
             }
             details =
                     "File" + '\n'

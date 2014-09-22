@@ -83,7 +83,7 @@ public class ConnectedComponentsClusteringAlgorithm implements
         while (!toProcess.isEmpty()) {
             Node center = toProcess.poll();
             for (Edge incidentEdge : center.edges) {
-                if (incidentEdge.edgeSharedAttributes.weight >= minSimilarity) {
+                if (incidentEdge.weight >= minSimilarity) {
                     Node neighbour;
                     if (incidentEdge.node1 != center) {
                         neighbour = incidentEdge.node1;

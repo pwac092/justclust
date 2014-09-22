@@ -90,7 +90,7 @@ public class CompleteLinkageClusteringAlgorithm implements
             Edge edge = edges.get(i);
             int j;
             for (j = i - 1; j >= 0
-                    && edge.edgeSharedAttributes.weight > edges.get(j).edgeSharedAttributes.weight; j--) {
+                    && edge.weight > edges.get(j).weight; j--) {
                 edges.set(j + 1, edges.get(j));
             }
             edges.set(j + 1, edge);
@@ -128,10 +128,10 @@ public class CompleteLinkageClusteringAlgorithm implements
         // weight field.
         int i = 0;
         while (networkClusters.size() > clusterAmountIntegerFieldControl.value
-                && edges.get(i).edgeSharedAttributes.weight >= minimumEdgeWeightIntegerFieldControl.value) {
+                && edges.get(i).weight >= minimumEdgeWeightIntegerFieldControl.value) {
 
             DendrogramCluster dendrogramCluster = new DendrogramCluster();
-            dendrogramCluster.distance = edges.get(i).edgeSharedAttributes.weight;
+            dendrogramCluster.distance = edges.get(i).weight;
             dendrogramCluster.left =
                     dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node1.cluster));
             dendrogramCluster.right =
@@ -161,7 +161,7 @@ public class CompleteLinkageClusteringAlgorithm implements
                                 .get(k).node2.cluster
                                 && edges.get(j).node2.cluster == edges
                                 .get(k).node1.cluster) {
-                            if (edges.get(j).edgeSharedAttributes.weight <= edges.get(k).edgeSharedAttributes.weight) {
+                            if (edges.get(j).weight <= edges.get(k).weight) {
                                 edges.remove(k);
                             } else {
                                 edges.remove(j);
@@ -185,7 +185,7 @@ public class CompleteLinkageClusteringAlgorithm implements
             Edge edgeCopy = new Edge();
             edgeCopy.node1 = networkNodesCopy.get(networkNodes.indexOf(edge.node1));
             edgeCopy.node2 = networkNodesCopy.get(networkNodes.indexOf(edge.node2));
-            edgeCopy.edgeSharedAttributes.weight = edge.edgeSharedAttributes.weight;
+            edgeCopy.weight = edge.weight;
             networkEdgesCopy.add(edgeCopy);
         }
         ArrayList<Cluster> networkClustersCopy = new ArrayList<Cluster>();
@@ -203,7 +203,7 @@ public class CompleteLinkageClusteringAlgorithm implements
         while (networkClustersCopy.size() > 1 && i < networkEdgesCopy.size()) {
 
             DendrogramCluster dendrogramCluster = new DendrogramCluster();
-            dendrogramCluster.distance = networkEdgesCopy.get(i).edgeSharedAttributes.weight;
+            dendrogramCluster.distance = networkEdgesCopy.get(i).weight;
             dendrogramCluster.left =
                     dendrogramClusters.get(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node1.cluster));
             dendrogramCluster.right =
@@ -233,7 +233,7 @@ public class CompleteLinkageClusteringAlgorithm implements
                                 .get(k).node2.cluster
                                 && networkEdgesCopy.get(j).node2.cluster == networkEdgesCopy
                                 .get(k).node1.cluster) {
-                            if (networkEdgesCopy.get(j).edgeSharedAttributes.weight <= networkEdgesCopy.get(k).edgeSharedAttributes.weight) {
+                            if (networkEdgesCopy.get(j).weight <= networkEdgesCopy.get(k).weight) {
                                 networkEdgesCopy.remove(k);
                             } else {
                                 networkEdgesCopy.remove(j);

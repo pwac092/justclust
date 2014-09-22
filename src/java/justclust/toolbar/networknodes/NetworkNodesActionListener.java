@@ -32,10 +32,10 @@ public class NetworkNodesActionListener implements ActionListener {
             try {
                 switch (((JComboBox) ae.getSource()).getSelectedIndex()) {
                     case 1:
-                        desktop.browse(new URI("http://www.uniprot.org/uniprot/?query=" + node.nodeSharedAttributes.label.replace(' ', '+') + "&sort=score"));
+                        desktop.browse(new URI("http://www.uniprot.org/uniprot/?query=" + node.label.replace(' ', '+') + "&sort=score"));
                         break;
                     case 2:
-                        desktop.browse(new URI("http://www.ncbi.nlm.nih.gov/gquery/?term=" + node.nodeSharedAttributes.label.replace(' ', '+')));
+                        desktop.browse(new URI("http://www.ncbi.nlm.nih.gov/gquery/?term=" + node.label.replace(' ', '+')));
                         break;
                 }
             } catch (IOException ex) {

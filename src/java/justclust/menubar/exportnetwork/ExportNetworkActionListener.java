@@ -119,11 +119,11 @@ public class ExportNetworkActionListener implements ActionListener {
                     bufferedWriter.write("Edge "
                             + (i + 1)
                             + ", "
-                            + data.networkEdges.get(i).node1.nodeSharedAttributes.label
+                            + data.networkEdges.get(i).node1.label
                             + ", "
-                            + data.networkEdges.get(i).node2.nodeSharedAttributes.label
+                            + data.networkEdges.get(i).node2.label
                             + ", "
-                            + new DecimalFormat("#.#####").format(data.networkEdges.get(i).edgeSharedAttributes.weight));
+                            + new DecimalFormat("#.#####").format(data.networkEdges.get(i).weight));
                 }
 
                 bufferedWriter.close();

@@ -88,62 +88,92 @@ public class NetworkNodesTableModel extends AbstractTableModel {
         // this code populates the NetworkNodesTableModel with information about
         // the Nodes in the current network
 
-        // create the headers for the table
-        columnNames = new String[]{"Label", "Visible", "Colour", "Search Database"};
+        if (data.graphShown) {
 
-        tableData = new Object[data.networkNodes.size() + 1][4];
-        tableData[0][0] = "";
+            // create the headers for the table
+            columnNames = new String[]{"Label", "Visible", "Colour", "Search Database"};
 
-        // this code handles the check box in the table for the visibility
-        // of all Nodes.
-        // if all Nodes are now visible, this should be ticked.
-        // if any Node is not visible, this should not be ticked.
-        tableData[0][1] = true;
-        for (Node node : data.networkNodes) {
-            if (!node.nodeSharedAttributes.visible) {
-                tableData[0][1] = false;
-                break;
-            }
-        }
+            tableData = new Object[data.networkNodes.size() + 1][4];
+            tableData[0][0] = "";
 
-        // this code handles the cell in the table for the colour of all
-        // Nodes.
-        // if all Nodes have the same colour, this cell should be
-        // that colour.
-        // if any Node does not have the same colour as another,
-        // this cell should be white (the default Node colour).
-        if (data.networkNodes.size() >= 1) {
-            tableData[0][2] = data.networkNodes.get(0).nodeSharedAttributes.colour;
-        }
-        for (Node node : data.networkNodes) {
-            if (!node.nodeSharedAttributes.colour.equals(data.networkNodes.get(0).nodeSharedAttributes.colour)) {
-                tableData[0][2] = Color.WHITE;
-                break;
-            }
-        }
-
-        // the 'All Nodes' row does not have a label to search UniProtKB with
-        tableData[0][3] = "";
-
-        // for each Node in the network, populate the table with the
-        // contents of the Node's label, visible, and colour fields
-        for (int i = 0; i < data.networkNodes.size(); i++) {
-            for (int j = 0; j < 4; j++) {
-                switch (j) {
-                    case 0:
-                        tableData[i + 1][j] = data.networkNodes.get(i).nodeSharedAttributes.label;
-                        break;
-                    case 1:
-                        tableData[i + 1][j] = data.networkNodes.get(i).nodeSharedAttributes.visible;
-                        break;
-                    case 2:
-                        tableData[i + 1][j] = data.networkNodes.get(i).nodeSharedAttributes.colour;
-                        break;
-                    case 3:
-                        tableData[i + 1][j] = "";
-                        break;
+            // this code handles the check box in the table for the visibility
+            // of all Nodes.
+            // if all Nodes are now visible, this should be ticked.
+            // if any Node is not visible, this should not be ticked.
+            tableData[0][1] = true;
+            for (Node node : data.networkNodes) {
+                if (!node.nodeGraphicalAttributes.visible) {
+                    tableData[0][1] = false;
+                    break;
                 }
             }
+
+            // this code handles the cell in the table for the colour of all
+            // Nodes.
+            // if all Nodes have the same colour, this cell should be
+            // that colour.
+            // if any Node does not have the same colour as another,
+            // this cell should be white (the default Node colour).
+            if (data.networkNodes.size() >= 1) {
+                tableData[0][2] = data.networkNodes.get(0).nodeGraphicalAttributes.colour;
+            }
+            for (Node node : data.networkNodes) {
+                if (!node.nodeGraphicalAttributes.colour.equals(data.networkNodes.get(0).nodeGraphicalAttributes.colour)) {
+                    tableData[0][2] = Color.WHITE;
+                    break;
+                }
+            }
+
+            // the 'All Nodes' row does not have a label to search UniProtKB with
+            tableData[0][3] = "";
+
+            // for each Node in the network, populate the table with the
+            // contents of the Node's label, visible, and colour fields
+            for (int i = 0; i < data.networkNodes.size(); i++) {
+                for (int j = 0; j < 4; j++) {
+                    switch (j) {
+                        case 0:
+                            tableData[i + 1][j] = data.networkNodes.get(i).label;
+                            break;
+                        case 1:
+                            tableData[i + 1][j] = data.networkNodes.get(i).nodeGraphicalAttributes.visible;
+                            break;
+                        case 2:
+                            tableData[i + 1][j] = data.networkNodes.get(i).nodeGraphicalAttributes.colour;
+                            break;
+                        case 3:
+                            tableData[i + 1][j] = "";
+                            break;
+                    }
+                }
+            }
+
+        } else {
+
+            // create the headers for the table
+            columnNames = new String[]{"Label", "Search Database"};
+
+            tableData = new Object[data.networkNodes.size() + 1][2];
+            tableData[0][0] = "";
+
+            // the 'All Nodes' row does not have a label to search UniProtKB with
+            tableData[0][1] = "";
+
+            // for each Node in the network, populate the table with the
+            // contents of the Node's label, visible, and colour fields
+            for (int i = 0; i < data.networkNodes.size(); i++) {
+                for (int j = 0; j < 2; j++) {
+                    switch (j) {
+                        case 0:
+                            tableData[i + 1][j] = data.networkNodes.get(i).label;
+                            break;
+                        case 1:
+                            tableData[i + 1][j] = "";
+                            break;
+                    }
+                }
+            }
+
         }
 
     }
@@ -178,13 +208,27 @@ public class NetworkNodesTableModel extends AbstractTableModel {
     }
 
     public boolean isCellEditable(int row, int col) {
+
+        // get the current Data instance for the following code to use
+        int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
+        Data data = Data.data.get(currentCustomGraphEditorIndex);
+
         //Note that the tableData/cell address is constant,
         //no matter where the cell appears onscreen.
-        if (row == 0 && (col == 0 || col == 3)) {
-            return false;
+        if (data.graphShown) {
+            if (row == 0 && (col == 0 || col == 3)) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            if (row == 0) {
+                return false;
+            } else {
+                return true;
+            }
         }
+
     }
 
     // this method is called when the user inputs tableData into the table
@@ -199,181 +243,255 @@ public class NetworkNodesTableModel extends AbstractTableModel {
         // fireTableCellUpdated updates the appearance of the cell
         fireTableCellUpdated(row, col);
 
-        // the label of a node was changed
-        if (col == 0) {
+        if (data.graphShown) {
 
-            data.networkNodes.get(row - 1).nodeSharedAttributes.label = (String) value;
+            // the label of a node was changed
+            if (col == 0) {
 
-            // update the appearance of all customGraphEditors.
-            // all customGraphEditors are included incase a change in a graph, other than
-            // the current graph, has been made.
-            for (CustomGraphEditor customGraphEditor : JustclustJFrame.classInstance.customGraphEditors) {
-                customGraphEditor.updateGraphLabels();
+                data.networkNodes.get(row - 1).label = (String) value;
+                for (Node otherVersion : data.networkNodes.get(row - 1).nodeGraphicalAttributes.otherVersions) {
+                    otherVersion.label = (String) value;
+                }
+
+                // update the appearance of all customGraphEditors.
+                // all customGraphEditors are included incase a change in a graph, other than
+                // the current graph, has been made.
+                for (CustomGraphEditor customGraphEditor : JustclustJFrame.classInstance.customGraphEditors) {
+                    customGraphEditor.updateGraphLabels();
+                }
+
             }
 
-        }
+            // the visibility of a node/all nodes was changed
+            if (col == 1) {
 
-        // the visibility of a node/all nodes was changed
-        if (col == 1) {
+                if (NetworkNodesJDialog.classInstance.networkNodesListSelectionModel.isSelectedIndex(0)) {
 
-            if (NetworkNodesJDialog.classInstance.networkNodesListSelectionModel.isSelectedIndex(0)) {
+                    // the visibility of all nodes was changed
 
-                // the visibility of all nodes was changed
+                    for (int i = 0; i < data.networkNodes.size(); i++) {
+                        tableData[i + 1][col] = value;
+                        // fireTableCellUpdated updates the appearance of the cell
+                        fireTableCellUpdated(i + 1, col);
+                        data.networkNodes.get(i).nodeGraphicalAttributes.visible = (boolean) value;
+                        for (Node otherVersion : data.networkNodes.get(i).nodeGraphicalAttributes.otherVersions) {
+                            otherVersion.nodeGraphicalAttributes.visible = (boolean) value;
+                        }
+                    }
+
+                }
 
                 for (int i = 0; i < data.networkNodes.size(); i++) {
-                    tableData[i + 1][col] = value;
-                    // fireTableCellUpdated updates the appearance of the cell
-                    fireTableCellUpdated(i + 1, col);
-                    data.networkNodes.get(i).nodeSharedAttributes.visible = (boolean) value;
+                    if (NetworkNodesJDialog.classInstance.networkNodesListSelectionModel.isSelectedIndex(i + 1)) {
+
+                        // the visibility of a node was changed
+
+                        tableData[i + 1][col] = value;
+                        // fireTableCellUpdated updates the appearance of the cell
+                        fireTableCellUpdated(i + 1, col);
+                        data.networkNodes.get(i).nodeGraphicalAttributes.visible = (boolean) value;
+                        for (Node otherVersion : data.networkNodes.get(i).nodeGraphicalAttributes.otherVersions) {
+                            otherVersion.nodeGraphicalAttributes.visible = (boolean) value;
+                        }
+
+                    }
+                }
+
+                // update the check box in the table for the visibility of
+                // all nodes.
+                // if all nodes are now visible, this should be ticked.
+                // if any node is not visible, this should not be ticked.
+                tableData[0][col] = true;
+                for (Node node : data.networkNodes) {
+                    if (!node.nodeGraphicalAttributes.visible) {
+                        tableData[0][col] = false;
+                        break;
+                    }
+                }
+                // fireTableCellUpdated updates the appearance of the cell
+                fireTableCellUpdated(0, col);
+
+                // update the appearance of all customGraphEditors.
+                // all customGraphEditors are included incase a change in a graph, other than
+                // the current graph, has been made.
+                for (CustomGraphEditor customGraphEditor : JustclustJFrame.classInstance.customGraphEditors) {
+                    customGraphEditor.updateGraphVisibility();
                 }
 
             }
 
-            for (int i = 0; i < data.networkNodes.size(); i++) {
-                if (NetworkNodesJDialog.classInstance.networkNodesListSelectionModel.isSelectedIndex(i + 1)) {
+            // the colour of a node/all nodes was changed.
+            // if the OK button of the NetworkNodesColorJDialog was clicked,
+            // changes should be made.
+            // if the Cancel button was clicked, no changes should be made.
+            if (col == 2 && NetworkNodesTableCellEditor.classInstance.okButtonClicked) {
 
-                    // the visibility of a node was changed
+                if (NetworkNodesJDialog.classInstance.networkNodesListSelectionModel.isSelectedIndex(0)) {
 
-                    tableData[i + 1][col] = value;
-                    // fireTableCellUpdated updates the appearance of the cell
-                    fireTableCellUpdated(i + 1, col);
-                    data.networkNodes.get(i).nodeSharedAttributes.visible = (boolean) value;
+                    // the colour of all nodes was changed
+
+                    for (int i = 0; i < data.networkNodes.size(); i++) {
+                        tableData[i + 1][col] = value;
+                        // fireTableCellUpdated updates the appearance of the cell
+                        fireTableCellUpdated(i + 1, col);
+                        data.networkNodes.get(i).nodeGraphicalAttributes.colour = (Color) value;
+                        for (Node otherVersion : data.networkNodes.get(i).nodeGraphicalAttributes.otherVersions) {
+                            otherVersion.nodeGraphicalAttributes.colour = (Color) value;
+                        }
+                    }
 
                 }
-            }
-
-            // update the check box in the table for the visibility of
-            // all nodes.
-            // if all nodes are now visible, this should be ticked.
-            // if any node is not visible, this should not be ticked.
-            tableData[0][col] = true;
-            for (Node node : data.networkNodes) {
-                if (!node.nodeSharedAttributes.visible) {
-                    tableData[0][col] = false;
-                    break;
-                }
-            }
-            // fireTableCellUpdated updates the appearance of the cell
-            fireTableCellUpdated(0, col);
-
-            // update the appearance of all customGraphEditors.
-            // all customGraphEditors are included incase a change in a graph, other than
-            // the current graph, has been made.
-            for (CustomGraphEditor customGraphEditor : JustclustJFrame.classInstance.customGraphEditors) {
-                customGraphEditor.updateGraphVisibility();
-            }
-
-        }
-
-        // the colour of a node/all nodes was changed.
-        // if the OK button of the NetworkNodesColorJDialog was clicked,
-        // changes should be made.
-        // if the Cancel button was clicked, no changes should be made.
-        if (col == 2 && NetworkNodesTableCellEditor.classInstance.okButtonClicked) {
-
-            if (NetworkNodesJDialog.classInstance.networkNodesListSelectionModel.isSelectedIndex(0)) {
-
-                // the colour of all nodes was changed
 
                 for (int i = 0; i < data.networkNodes.size(); i++) {
-                    tableData[i + 1][col] = value;
-                    // fireTableCellUpdated updates the appearance of the cell
-                    fireTableCellUpdated(i + 1, col);
-                    data.networkNodes.get(i).nodeSharedAttributes.colour = (Color) value;
+                    if (NetworkNodesJDialog.classInstance.networkNodesListSelectionModel.isSelectedIndex(i + 1)) {
+
+                        // the colour of a node was changed
+
+                        tableData[i + 1][col] = value;
+                        // fireTableCellUpdated updates the appearance of the cell
+                        fireTableCellUpdated(i + 1, col);
+                        data.networkNodes.get(i).nodeGraphicalAttributes.colour = (Color) value;
+                        for (Node otherVersion : data.networkNodes.get(i).nodeGraphicalAttributes.otherVersions) {
+                            otherVersion.nodeGraphicalAttributes.colour = (Color) value;
+                        }
+
+                    }
+                }
+
+                // update the cell in the table for the colour of all nodes.
+                // if all nodes have the same colour, this cell should be
+                // that colour.
+                // if any node does not have the same colour as another,
+                // this cell should be white (the default node colour).
+                if (data.networkNodes.size() >= 1) {
+                    tableData[0][col] = data.networkNodes.get(0).nodeGraphicalAttributes.colour;
+                }
+                for (Node node : data.networkNodes) {
+                    if (!node.nodeGraphicalAttributes.colour.equals(data.networkNodes.get(0).nodeGraphicalAttributes.colour)) {
+                        tableData[0][col] = Color.WHITE;
+                        break;
+                    }
+                }
+                // fireTableCellUpdated updates the appearance of the cell
+                fireTableCellUpdated(0, col);
+
+                // update the appearance of all customGraphEditors.
+                // all customGraphEditors are included incase a change in a graph, other than
+                // the current graph, has been made.
+                for (CustomGraphEditor customGraphEditor : JustclustJFrame.classInstance.customGraphEditors) {
+                    customGraphEditor.updateGraphColour();
                 }
 
             }
 
-            for (int i = 0; i < data.networkNodes.size(); i++) {
-                if (NetworkNodesJDialog.classInstance.networkNodesListSelectionModel.isSelectedIndex(i + 1)) {
+            // unselect all nodes so that any invisible nodes cannot be moved
+            CustomGraphEditor currentCustomGraphEditor = JustclustJFrame.classInstance.customGraphEditors.get(currentCustomGraphEditorIndex);
+            for (int i = 1; i < currentCustomGraphEditor.nodeLayer.getAllNodes().size(); i++) {
+                PNode pNode = ((ArrayList<PNode>) currentCustomGraphEditor.nodeLayer.getAllNodes()).get(i);
+                currentCustomGraphEditor.customPSelectionEventHandler.unselect(pNode);
+            }
 
-                    // the colour of a node was changed
+            // update any dialogs which are open
+            if (NetworkNodesJDialog.classInstance != null && NetworkNodesJDialog.classInstance.isShowing()) {
+                ((NetworkNodesTableModel) NetworkNodesJDialog.classInstance.networkNodesDialogJTable.getModel()).updateTable();
+                NetworkNodesJDialog.classInstance.networkNodesDialogJTable.repaint();
+            }
+            if (NetworkEdgesJDialog.classInstance != null && NetworkNodesJDialog.classInstance.isShowing()) {
+                ((NetworkEdgesTableModel) NetworkEdgesJDialog.classInstance.networkEdgesDialogJTable.getModel()).updateTable();
+                NetworkEdgesJDialog.classInstance.networkEdgesDialogJTable.repaint();
+            }
+            if (NetworkClustersJDialog.classInstance != null && data.networkClusters != null && NetworkNodesJDialog.classInstance.isShowing()) {
+                ((NetworkClustersTableModel) NetworkClustersJDialog.classInstance.networkClustersDialogJTable.getModel()).updateTable();
+                NetworkClustersJDialog.classInstance.networkClustersDialogJTable.repaint();
+            }
+            if (SearchNetworkJDialog.classInstance != null && NetworkNodesJDialog.classInstance.isShowing()) {
 
-                    tableData[i + 1][col] = value;
-                    // fireTableCellUpdated updates the appearance of the cell
-                    fireTableCellUpdated(i + 1, col);
-                    data.networkNodes.get(i).nodeSharedAttributes.colour = (Color) value;
-
+                String[] columnNames;
+                String[][] tableData;
+                columnNames = new String[]{"Label"};
+                tableData = new String[0][columnNames.length];
+                SearchNetworkJDialog.classInstance.nodesJTable.setModel(new DefaultTableModel(tableData, columnNames));
+                columnNames = new String[]{"Label", "Node 1", "Node 2", "Weight"};
+                tableData = new String[0][columnNames.length];
+                SearchNetworkJDialog.classInstance.edgesJTable.setModel(new DefaultTableModel(tableData, columnNames));
+                // create the headers for the table
+                columnNames = new String[]{"Label"};
+                tableData = new String[0][columnNames.length];
+                SearchNetworkJDialog.classInstance.clustersJTable.setModel(new DefaultTableModel(tableData, columnNames));
+                for (int i = 0; i < SearchNetworkJDialog.classInstance.clustersJTable.getColumnCount(); i++) {
+                    SearchNetworkJDialog.classInstance.clustersJTable.getColumnModel().getColumn(i).setPreferredWidth(100);
                 }
+
+                // disable the 'node options', 'edge options', and 'cluster options'
+                // buttons because the tables have been repopulated and so no rows
+                // are selected
+                SearchNetworkJDialog.classInstance.nodeOptionsJButton.setEnabled(false);
+                SearchNetworkJDialog.classInstance.edgeOptionsJButton.setEnabled(false);
+                SearchNetworkJDialog.classInstance.clusterOptionsJButton.setEnabled(false);
+
+            }
+            if (HeatMapJDialog.classInstance != null && NetworkNodesJDialog.classInstance.isShowing()) {
+                HeatMapJDialog.classInstance.dispose();
+            }
+            if (DendrogramJDialog.classInstance != null && NetworkNodesJDialog.classInstance.isShowing()) {
+                DendrogramJDialog.classInstance.dispose();
             }
 
-            // update the cell in the table for the colour of all nodes.
-            // if all nodes have the same colour, this cell should be
-            // that colour.
-            // if any node does not have the same colour as another,
-            // this cell should be white (the default node colour).
-            if (data.networkNodes.size() >= 1) {
-                tableData[0][col] = data.networkNodes.get(0).nodeSharedAttributes.colour;
+        } else {
+
+            // the label of a node was changed
+            if (col == 0) {
+
+                data.networkNodes.get(row - 1).label = (String) value;
+
             }
-            for (Node node : data.networkNodes) {
-                if (!node.nodeSharedAttributes.colour.equals(data.networkNodes.get(0).nodeSharedAttributes.colour)) {
-                    tableData[0][col] = Color.WHITE;
-                    break;
+
+            // update any dialogs which are open
+            if (NetworkNodesJDialog.classInstance != null && NetworkNodesJDialog.classInstance.isShowing()) {
+                ((NetworkNodesTableModel) NetworkNodesJDialog.classInstance.networkNodesDialogJTable.getModel()).updateTable();
+                NetworkNodesJDialog.classInstance.networkNodesDialogJTable.repaint();
+            }
+            if (NetworkEdgesJDialog.classInstance != null && NetworkEdgesJDialog.classInstance.isShowing()) {
+                ((NetworkEdgesTableModel) NetworkEdgesJDialog.classInstance.networkEdgesDialogJTable.getModel()).updateTable();
+                NetworkEdgesJDialog.classInstance.networkEdgesDialogJTable.repaint();
+            }
+            if (NetworkClustersJDialog.classInstance != null && data.networkClusters != null && NetworkClustersJDialog.classInstance.isShowing()) {
+                ((NetworkClustersTableModel) NetworkClustersJDialog.classInstance.networkClustersDialogJTable.getModel()).updateTable();
+                NetworkClustersJDialog.classInstance.networkClustersDialogJTable.repaint();
+            }
+            if (SearchNetworkJDialog.classInstance != null && SearchNetworkJDialog.classInstance.isShowing()) {
+
+                String[] columnNames;
+                String[][] tableData;
+                columnNames = new String[]{"Label"};
+                tableData = new String[0][columnNames.length];
+                SearchNetworkJDialog.classInstance.nodesJTable.setModel(new DefaultTableModel(tableData, columnNames));
+                columnNames = new String[]{"Node 1", "Node 2", "Weight"};
+                tableData = new String[0][columnNames.length];
+                SearchNetworkJDialog.classInstance.edgesJTable.setModel(new DefaultTableModel(tableData, columnNames));
+                // create the headers for the table
+                columnNames = new String[]{};
+                tableData = new String[0][columnNames.length];
+                SearchNetworkJDialog.classInstance.clustersJTable.setModel(new DefaultTableModel(tableData, columnNames));
+                for (int i = 0; i < SearchNetworkJDialog.classInstance.clustersJTable.getColumnCount(); i++) {
+                    SearchNetworkJDialog.classInstance.clustersJTable.getColumnModel().getColumn(i).setPreferredWidth(100);
                 }
+
+                // disable the 'node options', 'edge options', and 'cluster options'
+                // buttons because the tables have been repopulated and so no rows
+                // are selected
+                SearchNetworkJDialog.classInstance.nodeOptionsJButton.setEnabled(false);
+                SearchNetworkJDialog.classInstance.edgeOptionsJButton.setEnabled(false);
+                SearchNetworkJDialog.classInstance.clusterOptionsJButton.setEnabled(false);
+
             }
-            // fireTableCellUpdated updates the appearance of the cell
-            fireTableCellUpdated(0, col);
-
-            // update the appearance of all customGraphEditors.
-            // all customGraphEditors are included incase a change in a graph, other than
-            // the current graph, has been made.
-            for (CustomGraphEditor customGraphEditor : JustclustJFrame.classInstance.customGraphEditors) {
-                customGraphEditor.updateGraphColour();
+            if (HeatMapJDialog.classInstance != null && HeatMapJDialog.classInstance.isShowing()) {
+                HeatMapJDialog.classInstance.dispose();
             }
-
-        }
-        
-        // unselect all nodes so that any invisible nodes cannot be moved
-        CustomGraphEditor currentCustomGraphEditor = JustclustJFrame.classInstance.customGraphEditors.get(currentCustomGraphEditorIndex);
-        for (int i = 1; i < currentCustomGraphEditor.nodeLayer.getAllNodes().size(); i++) {
-            PNode pNode = ((ArrayList<PNode>) currentCustomGraphEditor.nodeLayer.getAllNodes()).get(i);
-            currentCustomGraphEditor.customPSelectionEventHandler.unselect(pNode);
-        }
-
-        // update any dialogs which are open
-        if (NetworkNodesJDialog.classInstance != null) {
-            ((NetworkNodesTableModel) NetworkNodesJDialog.classInstance.networkNodesDialogJTable.getModel()).updateTable();
-            NetworkNodesJDialog.classInstance.networkNodesDialogJTable.repaint();
-        }
-        if (NetworkEdgesJDialog.classInstance != null) {
-            ((NetworkEdgesTableModel) NetworkEdgesJDialog.classInstance.networkEdgesDialogJTable.getModel()).updateTable();
-            NetworkEdgesJDialog.classInstance.networkEdgesDialogJTable.repaint();
-        }
-        if (NetworkClustersJDialog.classInstance != null && data.networkClusters != null) {
-            ((NetworkClustersTableModel) NetworkClustersJDialog.classInstance.networkClustersDialogJTable.getModel()).updateTable();
-            NetworkClustersJDialog.classInstance.networkClustersDialogJTable.repaint();
-        }
-        if (SearchNetworkJDialog.classInstance != null) {
-
-            String[] columnNames;
-            String[][] tableData;
-            columnNames = new String[]{"Label"};
-            tableData = new String[0][columnNames.length];
-            SearchNetworkJDialog.classInstance.nodesJTable.setModel(new DefaultTableModel(tableData, columnNames));
-            columnNames = new String[]{"Label", "Node 1", "Node 2", "Weight"};
-            tableData = new String[0][columnNames.length];
-            SearchNetworkJDialog.classInstance.edgesJTable.setModel(new DefaultTableModel(tableData, columnNames));
-            // create the headers for the table
-            columnNames = new String[]{"Label"};
-            tableData = new String[0][columnNames.length];
-            SearchNetworkJDialog.classInstance.clustersJTable.setModel(new DefaultTableModel(tableData, columnNames));
-            for (int i = 0; i < SearchNetworkJDialog.classInstance.clustersJTable.getColumnCount(); i++) {
-                SearchNetworkJDialog.classInstance.clustersJTable.getColumnModel().getColumn(i).setPreferredWidth(100);
+            if (DendrogramJDialog.classInstance != null && DendrogramJDialog.classInstance.isShowing()) {
+                DendrogramJDialog.classInstance.dispose();
             }
 
-            // disable the 'node options', 'edge options', and 'cluster options'
-            // buttons because the tables have been repopulated and so no rows
-            // are selected
-            SearchNetworkJDialog.classInstance.nodeOptionsJButton.setEnabled(false);
-            SearchNetworkJDialog.classInstance.edgeOptionsJButton.setEnabled(false);
-            SearchNetworkJDialog.classInstance.clusterOptionsJButton.setEnabled(false);
-
-        }
-        if (HeatMapJDialog.classInstance != null) {
-            HeatMapJDialog.classInstance.dispose();
-        }
-        if (DendrogramJDialog.classInstance != null) {
-            DendrogramJDialog.classInstance.dispose();
         }
 
     }

@@ -80,6 +80,10 @@ public class NetworkClustersJDialog extends JDialog {
         networkClustersHelpButton.addMouseListener(networkClustersMouseListener);
         networkClustersDialogJPanel.add(networkClustersHelpButton);
 
+        // get the current Data instance for the following code to use
+        int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
+        Data data = Data.data.get(currentCustomGraphEditorIndex);
+
         networkClustersRowHeaderJTable = new JTable(new NetworkClustersRowHeaderTableModel());
         networkClustersRowHeaderJTable.setPreferredScrollableViewportSize(new Dimension(50, 0));
         networkClustersRowHeaderJTable.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -93,12 +97,14 @@ public class NetworkClustersJDialog extends JDialog {
         networkClustersDialogJTable = new JTable();
         networkClustersDialogJTable.setModel(new NetworkClustersTableModel());
         //Set up renderer and editor
-        NetworkClustersTableCellEditor networkClustersTableCellEditor = new NetworkClustersTableCellEditor();
-        NetworkClustersTableCellRenderer networkClustersTableCellRenderer = new NetworkClustersTableCellRenderer(true);
-        networkClustersDialogJTable.getColumnModel().getColumn(3).setCellEditor(networkClustersTableCellEditor);
-        networkClustersDialogJTable.getColumnModel().getColumn(3).setCellRenderer(networkClustersTableCellRenderer);
-        networkClustersDialogJTable.getColumnModel().getColumn(4).setCellEditor(networkClustersTableCellEditor);
-        networkClustersDialogJTable.getColumnModel().getColumn(4).setCellRenderer(networkClustersTableCellRenderer);
+        if (data.graphShown) {
+            NetworkClustersTableCellEditor networkClustersTableCellEditor = new NetworkClustersTableCellEditor();
+            NetworkClustersTableCellRenderer networkClustersTableCellRenderer = new NetworkClustersTableCellRenderer(true);
+            networkClustersDialogJTable.getColumnModel().getColumn(3).setCellEditor(networkClustersTableCellEditor);
+            networkClustersDialogJTable.getColumnModel().getColumn(3).setCellRenderer(networkClustersTableCellRenderer);
+            networkClustersDialogJTable.getColumnModel().getColumn(4).setCellEditor(networkClustersTableCellEditor);
+            networkClustersDialogJTable.getColumnModel().getColumn(4).setCellRenderer(networkClustersTableCellRenderer);
+        }
         networkClustersListSelectionModel = new NetworkClustersListSelectionModel();
         networkClustersDialogJTable.setSelectionModel(networkClustersListSelectionModel);
         networkClustersDialogJTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

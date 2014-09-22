@@ -88,7 +88,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
             Edge averageLinkageEdge = new Edge();
             averageLinkageEdge.node1 = edge.node1;
             averageLinkageEdge.node2 = edge.node2;
-            averageLinkageEdge.edgeSharedAttributes.weight = edge.edgeSharedAttributes.weight;
+            averageLinkageEdge.weight = edge.weight;
             edges.add(averageLinkageEdge);
         }
 
@@ -98,7 +98,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
             Edge edge = edges.get(i);
             int j;
             for (j = i - 1; j >= 0
-                    && edge.edgeSharedAttributes.weight > edges.get(j).edgeSharedAttributes.weight; j--) {
+                    && edge.weight > edges.get(j).weight; j--) {
                 edges.set(j + 1, edges.get(j));
             }
             edges.set(j + 1, edge);
@@ -134,7 +134,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
         // single Cluster they form and every other Cluster are computed.
         int i = 0;
         while (networkClusters.size() > clusterAmountIntegerFieldControl.value
-                && edges.get(i).edgeSharedAttributes.weight >= minimumEdgeWeightIntegerFieldControl.value) {
+                && edges.get(i).weight >= minimumEdgeWeightIntegerFieldControl.value) {
             for (int j = i + 1; j < edges.size(); j++) {
                 if (edges.get(j).node1.cluster == edges
                         .get(i).node1.cluster
@@ -163,15 +163,15 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                             if (edges.get(i).node1.cluster == edges
                                     .get(j).node1.cluster
                                     || edges.get(i).node1.cluster == edges.get(j).node2.cluster) {
-                                edges.get(j).edgeSharedAttributes.weight =
-                                        edges.get(j).edgeSharedAttributes.weight
+                                edges.get(j).weight =
+                                        edges.get(j).weight
                                         * edges.get(i).node1.cluster.nodes
                                         .size()
                                         / (edges.get(i).node1.cluster.nodes
                                         .size() + edges
                                         .get(i).node2.cluster.nodes
                                         .size())
-                                        + edges.get(k).edgeSharedAttributes.weight
+                                        + edges.get(k).weight
                                         * edges.get(i).node2.cluster.nodes
                                         .size()
                                         / (edges.get(i).node1.cluster.nodes
@@ -179,15 +179,15 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                                         .get(i).node2.cluster.nodes
                                         .size());
                             } else {
-                                edges.get(j).edgeSharedAttributes.weight =
-                                        edges.get(j).edgeSharedAttributes.weight
+                                edges.get(j).weight =
+                                        edges.get(j).weight
                                         * edges.get(i).node2.cluster.nodes
                                         .size()
                                         / (edges.get(i).node1.cluster.nodes
                                         .size() + edges
                                         .get(i).node2.cluster.nodes
                                         .size())
-                                        + edges.get(k).edgeSharedAttributes.weight
+                                        + edges.get(k).weight
                                         * edges.get(i).node1.cluster.nodes
                                         .size()
                                         / (edges.get(i).node1.cluster.nodes
@@ -198,7 +198,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                             edges.remove(k);
                             int l = j + 1;
                             while (l < edges.size()
-                                    && edges.get(j).edgeSharedAttributes.weight < edges.get(l).edgeSharedAttributes.weight) {
+                                    && edges.get(j).weight < edges.get(l).weight) {
                                 l++;
                             }
                             edges.add(l, edges.get(j));
@@ -211,7 +211,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
             }
 
             DendrogramCluster dendrogramCluster = new DendrogramCluster();
-            dendrogramCluster.distance = edges.get(i).edgeSharedAttributes.weight;
+            dendrogramCluster.distance = edges.get(i).weight;
             dendrogramCluster.left =
                     dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node1.cluster));
             dendrogramCluster.right =
@@ -241,7 +241,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
             Edge edgeCopy = new Edge();
             edgeCopy.node1 = networkNodesCopy.get(networkNodes.indexOf(edge.node1));
             edgeCopy.node2 = networkNodesCopy.get(networkNodes.indexOf(edge.node2));
-            edgeCopy.edgeSharedAttributes.weight = edge.edgeSharedAttributes.weight;
+            edgeCopy.weight = edge.weight;
             networkEdgesCopy.add(edgeCopy);
         }
         ArrayList<Cluster> networkClustersCopy = new ArrayList<Cluster>();
@@ -285,15 +285,15 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                             if (networkEdgesCopy.get(i).node1.cluster == networkEdgesCopy
                                     .get(j).node1.cluster
                                     || networkEdgesCopy.get(i).node1.cluster == networkEdgesCopy.get(j).node2.cluster) {
-                                networkEdgesCopy.get(j).edgeSharedAttributes.weight =
-                                        networkEdgesCopy.get(j).edgeSharedAttributes.weight
+                                networkEdgesCopy.get(j).weight =
+                                        networkEdgesCopy.get(j).weight
                                         * networkEdgesCopy.get(i).node1.cluster.nodes
                                         .size()
                                         / (networkEdgesCopy.get(i).node1.cluster.nodes
                                         .size() + networkEdgesCopy
                                         .get(i).node2.cluster.nodes
                                         .size())
-                                        + networkEdgesCopy.get(k).edgeSharedAttributes.weight
+                                        + networkEdgesCopy.get(k).weight
                                         * networkEdgesCopy.get(i).node2.cluster.nodes
                                         .size()
                                         / (networkEdgesCopy.get(i).node1.cluster.nodes
@@ -301,15 +301,15 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                                         .get(i).node2.cluster.nodes
                                         .size());
                             } else {
-                                networkEdgesCopy.get(j).edgeSharedAttributes.weight =
-                                        networkEdgesCopy.get(j).edgeSharedAttributes.weight
+                                networkEdgesCopy.get(j).weight =
+                                        networkEdgesCopy.get(j).weight
                                         * networkEdgesCopy.get(i).node2.cluster.nodes
                                         .size()
                                         / (networkEdgesCopy.get(i).node1.cluster.nodes
                                         .size() + networkEdgesCopy
                                         .get(i).node2.cluster.nodes
                                         .size())
-                                        + networkEdgesCopy.get(k).edgeSharedAttributes.weight
+                                        + networkEdgesCopy.get(k).weight
                                         * networkEdgesCopy.get(i).node1.cluster.nodes
                                         .size()
                                         / (networkEdgesCopy.get(i).node1.cluster.nodes
@@ -320,7 +320,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
                             networkEdgesCopy.remove(k);
                             int l = j + 1;
                             while (l < networkEdgesCopy.size()
-                                    && networkEdgesCopy.get(j).edgeSharedAttributes.weight < networkEdgesCopy.get(l).edgeSharedAttributes.weight) {
+                                    && networkEdgesCopy.get(j).weight < networkEdgesCopy.get(l).weight) {
                                 l++;
                             }
                             networkEdgesCopy.add(l, networkEdgesCopy.get(j));
@@ -333,7 +333,7 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
             }
 
             DendrogramCluster dendrogramCluster = new DendrogramCluster();
-            dendrogramCluster.distance = networkEdgesCopy.get(i).edgeSharedAttributes.weight;
+            dendrogramCluster.distance = networkEdgesCopy.get(i).weight;
             dendrogramCluster.left =
                     dendrogramClusters.get(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node1.cluster));
             dendrogramCluster.right =

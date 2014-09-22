@@ -82,7 +82,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a NetworkDetailsJDialog is already open, this gets
                         // the focus
+                        NetworkDetailsJDialog.classInstance.setAlwaysOnTop(true);
+                        NetworkDetailsJDialog.classInstance.toFront();
                         NetworkDetailsJDialog.classInstance.requestFocus();
+                        NetworkDetailsJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -100,7 +103,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a NetworkNodesJDialog is already open, this gets
                         // the focus
+                        NetworkNodesJDialog.classInstance.setAlwaysOnTop(true);
+                        NetworkNodesJDialog.classInstance.toFront();
                         NetworkNodesJDialog.classInstance.requestFocus();
+                        NetworkNodesJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -118,7 +124,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a NetworkEdgesJDialog is already open, this gets
                         // the focus
+                        NetworkEdgesJDialog.classInstance.setAlwaysOnTop(true);
+                        NetworkEdgesJDialog.classInstance.toFront();
                         NetworkEdgesJDialog.classInstance.requestFocus();
+                        NetworkEdgesJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -136,7 +145,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a NetworkClustersJDialog is already open, this gets
                         // the focus
+                        NetworkClustersJDialog.classInstance.setAlwaysOnTop(true);
+                        NetworkClustersJDialog.classInstance.toFront();
                         NetworkClustersJDialog.classInstance.requestFocus();
+                        NetworkClustersJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -154,7 +166,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a SearchNetworkJDialog is already open, this gets
                         // the focus
+                        SearchNetworkJDialog.classInstance.setAlwaysOnTop(true);
+                        SearchNetworkJDialog.classInstance.toFront();
                         SearchNetworkJDialog.classInstance.requestFocus();
+                        SearchNetworkJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -164,7 +179,7 @@ public class JustclustMouseListener implements MouseListener {
                     && y - 2 <= JustclustJFrame.classInstance.justclustJPanel.filterButtonCoordinates.y + 39) {
                 // the filter Clusters button will only be accessible when the
                 // current network has been clustered
-                if (data.networkClusters != null) {
+                if (data.networkClusters != null && data.graphShown) {
                     if (FilterClustersJDialog.classInstance == null || !FilterClustersJDialog.classInstance.isShowing()) {
                         // if there has never been a FilterClustersJDialog or
                         // the last one was closed, a new one is created
@@ -172,7 +187,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a FilterClustersJDialog is already open, this gets
                         // the focus
+                        FilterClustersJDialog.classInstance.setAlwaysOnTop(true);
+                        FilterClustersJDialog.classInstance.toFront();
                         FilterClustersJDialog.classInstance.requestFocus();
+                        FilterClustersJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -190,7 +208,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a OverrepresentationAnalysisJDialog is already open, this gets
                         // the focus
+                        OverrepresentationAnalysisJDialog.classInstance.setAlwaysOnTop(true);
+                        OverrepresentationAnalysisJDialog.classInstance.toFront();
                         OverrepresentationAnalysisJDialog.classInstance.requestFocus();
+                        OverrepresentationAnalysisJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -208,7 +229,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a HeatMapJDialog is already open, this gets
                         // the focus
+                        HeatMapJDialog.classInstance.setAlwaysOnTop(true);
+                        HeatMapJDialog.classInstance.toFront();
                         HeatMapJDialog.classInstance.requestFocus();
+                        HeatMapJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -226,7 +250,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a MicroarrayHeatMapJDialog is already open, this gets
                         // the focus
+                        MicroarrayHeatMapJDialog.classInstance.setAlwaysOnTop(true);
+                        MicroarrayHeatMapJDialog.classInstance.toFront();
                         MicroarrayHeatMapJDialog.classInstance.requestFocus();
+                        MicroarrayHeatMapJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -244,7 +271,10 @@ public class JustclustMouseListener implements MouseListener {
                     } else {
                         // if a DendrogramJDialog is already open, this gets
                         // the focus
+                        DendrogramJDialog.classInstance.setAlwaysOnTop(true);
+                        DendrogramJDialog.classInstance.toFront();
                         DendrogramJDialog.classInstance.requestFocus();
+                        DendrogramJDialog.classInstance.setAlwaysOnTop(false);
                     }
                 }
             }
@@ -259,7 +289,10 @@ public class JustclustMouseListener implements MouseListener {
                 } else {
                     // if a ManagePluginsJDialog is already open, this gets
                     // the focus
+                    ManagePluginsJDialog.classInstance.setAlwaysOnTop(true);
+                    ManagePluginsJDialog.classInstance.toFront();
                     ManagePluginsJDialog.classInstance.requestFocus();
+                    ManagePluginsJDialog.classInstance.setAlwaysOnTop(false);
                 }
             }
 

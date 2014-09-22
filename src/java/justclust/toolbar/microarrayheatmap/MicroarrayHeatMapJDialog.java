@@ -117,14 +117,14 @@ public class MicroarrayHeatMapJDialog extends JDialog {
                     double[][] matrix = new double[data.networkNodes.size()][data.microarrayHeaders.size()];
                     for (int i = 0; i < data.networkNodes.size(); i++) {
                         for (int j = 0; j < data.microarrayHeaders.size(); j++) {
-                            matrix[i][j] = data.networkNodes.get(i).nodeSharedAttributes.microarrayValues.get(j);
+                            matrix[i][j] = data.networkNodes.get(i).microarrayValues.get(j);
                         }
                     }
                     microarrayHeatMapMatrix = new MicroarrayHeatMapMatrix(matrix);
 
                     labels = new String[data.networkNodes.size()];
                     for (int i = 0; i < data.networkNodes.size(); i++) {
-                        labels[i] = data.networkNodes.get(i).nodeSharedAttributes.label;
+                        labels[i] = data.networkNodes.get(i).label;
                     }
 
                     microarrayHeatMapJPanel = new MicroarrayHeatMapJPanel(microarrayHeatMapMatrix, labels, data.microarrayHeaders, null);
@@ -138,14 +138,14 @@ public class MicroarrayHeatMapJDialog extends JDialog {
                     double[][] matrix = new double[nodes.size()][data.microarrayHeaders.size()];
                     for (int i = 0; i < nodes.size(); i++) {
                         for (int j = 0; j < data.microarrayHeaders.size(); j++) {
-                            matrix[i][j] = nodes.get(i).nodeSharedAttributes.microarrayValues.get(j);
+                            matrix[i][j] = nodes.get(i).microarrayValues.get(j);
                         }
                     }
                     microarrayHeatMapMatrix = new MicroarrayHeatMapMatrix(matrix);
 
                     labels = new String[nodes.size()];
                     for (int i = 0; i < nodes.size(); i++) {
-                        labels[i] = nodes.get(i).nodeSharedAttributes.label;
+                        labels[i] = nodes.get(i).label;
                     }
                     
                     ArrayList<Integer> nodeAmountPerCluster = new ArrayList<Integer>();

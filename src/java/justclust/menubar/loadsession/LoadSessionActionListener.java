@@ -260,12 +260,12 @@ public class LoadSessionActionListener implements ActionListener {
                 // current network for the Graph in the first tab
                 customGraphEditor.createGraph();
 
-                if (data.networkClusters != null) {
-                    // this method creates a label for each cluster in the current network
-                    customGraphEditor.createLabelsForClusters();
-                }
-
                 if (data.graphShown) {
+
+                    if (data.networkClusters != null) {
+                        // this method creates a label for each cluster in the current network
+                        customGraphEditor.createLabelsForClusters();
+                    }
 
                     // lay out the nodes as they were when the session was
                     // saved.
@@ -299,20 +299,20 @@ public class LoadSessionActionListener implements ActionListener {
                         edge.lineTo((float) node2.getX() + 10, (float) node2.getY() + 10);
                     }
 
+                    // the entire graph is fitted into the main graphical view
+                    final Rectangle2D drag_bounds = customGraphEditor.getCamera().getUnionOfLayerFullBounds();
+                    customGraphEditor.getCamera().animateViewToCenterBounds(drag_bounds, true, 0);
+
+                    // due to zooming the graph cannot be more than 2 times smaller or more
+                    // than 50 times bigger than its initial size
+                    customGraphEditor.customPZoomEventHandler.setMinScale(customGraphEditor.getCamera().getViewScale() / 2);
+                    customGraphEditor.customPZoomEventHandler.setMaxScale(customGraphEditor.getCamera().getViewScale() * 50);
+
+                    customGraphEditor.updateGraphLabels();
+                    customGraphEditor.updateGraphVisibility();
+                    customGraphEditor.updateGraphColour();
+
                 }
-
-                // the entire graph is fitted into the main graphical view
-                final Rectangle2D drag_bounds = customGraphEditor.getCamera().getUnionOfLayerFullBounds();
-                customGraphEditor.getCamera().animateViewToCenterBounds(drag_bounds, true, 0);
-
-                // due to zooming the graph cannot be more than 2 times smaller or more
-                // than 50 times bigger than its initial size
-                customGraphEditor.customPZoomEventHandler.setMinScale(customGraphEditor.getCamera().getViewScale() / 2);
-                customGraphEditor.customPZoomEventHandler.setMaxScale(customGraphEditor.getCamera().getViewScale() * 50);
-
-                customGraphEditor.updateGraphLabels();
-                customGraphEditor.updateGraphVisibility();
-                customGraphEditor.updateGraphColour();
 
                 // the repaint method updates the buttons on the toolbar so that
                 // they are no longer disabled now that there is information about

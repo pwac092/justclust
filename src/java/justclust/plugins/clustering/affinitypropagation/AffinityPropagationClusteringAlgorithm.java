@@ -127,7 +127,7 @@ public class AffinityPropagationClusteringAlgorithm implements ClusteringAlgorit
         }
 
         for (Edge e : edges) {
-            this.similarity.put(e, e.edgeSharedAttributes.weight + (1e-16 * e.edgeSharedAttributes.weight + 1e-300) * Math.random());
+            this.similarity.put(e, e.weight + (1e-16 * e.weight + 1e-300) * Math.random());
             this.availability.put(e, 0.0);
             this.responsibility.put(e, 0.0);
             Node n1 = e.node1;
@@ -281,12 +281,12 @@ public class AffinityPropagationClusteringAlgorithm implements ClusteringAlgorit
         if (prefType == 1) {
             Collections.sort(edges);
             int mm = edges.size();
-            pref = (mm % 2 != 0) ? edges.get(mm / 2).edgeSharedAttributes.weight : (edges.get(mm / 2 - 1).edgeSharedAttributes.weight + edges.get(mm / 2).edgeSharedAttributes.weight) / 2.0;
+            pref = (mm % 2 != 0) ? edges.get(mm / 2).weight : (edges.get(mm / 2 - 1).weight + edges.get(mm / 2).weight) / 2.0;
         } else if (prefType == 2) {
-            pref = Collections.min(edges).edgeSharedAttributes.weight;
+            pref = Collections.min(edges).weight;
         } else if (prefType == 3) {
-            double minValue = Collections.min(edges).edgeSharedAttributes.weight;
-            double maxValue = Collections.max(edges).edgeSharedAttributes.weight;
+            double minValue = Collections.min(edges).weight;
+            double maxValue = Collections.max(edges).weight;
             pref = 2 * minValue - maxValue;
         }
         return pref;

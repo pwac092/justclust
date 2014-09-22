@@ -135,7 +135,7 @@ public class SPICi implements
         }
 
         for (Node neighbor : neighbors.keySet()) {
-            double wnorm = neighbors.get(neighbor).edgeSharedAttributes.weight / this.maxWeight;
+            double wnorm = neighbors.get(neighbor).weight / this.maxWeight;
             int bucket_id = this.getBucketId(wnorm);
             nodesPerBucket.get(bucket_id).add(neighbor);
         }
@@ -163,7 +163,7 @@ public class SPICi implements
         this.Td = this.densityThreshold.value;
 
         for (Edge e : networkEdges) {
-            this.maxWeight = Math.max(this.maxWeight, e.edgeSharedAttributes.weight);
+            this.maxWeight = Math.max(this.maxWeight, e.weight);
         }
 
         while (!DegreeQ.isEmpty()) {
@@ -237,7 +237,7 @@ public class SPICi implements
             Node neighbor = neighs.getKey();
             Edge edge = neighs.getValue();
             if (subgraph.contains(neighbor)) {
-                support += edge.edgeSharedAttributes.weight;
+                support += edge.weight;
             }
         }
         return support;
@@ -247,7 +247,7 @@ public class SPICi implements
         double deg = 0.0;
         for (Edge e : n.edges) {
             if (e.node1 != e.node2) {
-                deg += e.edgeSharedAttributes.weight;
+                deg += e.weight;
             }
         }
         return deg;
@@ -266,7 +266,7 @@ public class SPICi implements
                 Edge e = neighbor.getValue();
                 Node nei = neighbor.getKey();
                 if (subgraph.contains(nei) && !visitedEdges.contains(e)) {
-                    density += e.edgeSharedAttributes.weight;
+                    density += e.weight;
                     visitedEdges.add(e);
                 }
             }

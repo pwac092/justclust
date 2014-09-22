@@ -89,7 +89,7 @@ public class DendrogramJDialog extends JDialog {
                 Data data = Data.data.get(currentCustomGraphEditorIndex);
                 String[] labels = new String[data.networkNodes.size()];
                 for (int i = 0; i < data.networkNodes.size(); i++) {
-                    labels[i] = data.networkNodes.get(i).nodeSharedAttributes.label;
+                    labels[i] = data.networkNodes.get(i).label;
                 }
                 Dendrogram dendrogram = new Dendrogram(data.rootDendrogramClusters, labels, data.networkNodes.size());
                 dendrogramJPanel = new DendrogramJPanel();

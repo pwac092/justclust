@@ -79,17 +79,25 @@ public class NetworkNodesTableCellEditor extends AbstractCellEditor implements T
      */
     public void actionPerformed(ActionEvent e) {
 
-        if (NetworkNodesJDialog.classInstance.networkNodesDialogJTable.getEditingColumn() == 2) {
+        // get the current Data instance for the following code to use
+        int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
+        Data data = Data.data.get(currentCustomGraphEditorIndex);
 
-            //The user has clicked the cell, so
-            //bring up the dialog.
-            NetworkNodesColourJDialog networkNodesColourJDialog = new NetworkNodesColourJDialog();
+        if (data.graphShown) {
 
-            if (okButtonClicked) {
-                currentColor = networkNodesColourJDialog.jColorChooser.getColor();
+            if (NetworkNodesJDialog.classInstance.networkNodesDialogJTable.getEditingColumn() == 2) {
+
+                //The user has clicked the cell, so
+                //bring up the dialog.
+                NetworkNodesColourJDialog networkNodesColourJDialog = new NetworkNodesColourJDialog();
+
+                if (okButtonClicked) {
+                    currentColor = networkNodesColourJDialog.jColorChooser.getColor();
+                }
+
+                button.setBackground(currentColor);
+
             }
-
-            button.setBackground(currentColor);
 
         }
 
@@ -110,19 +118,38 @@ public class NetworkNodesTableCellEditor extends AbstractCellEditor implements T
             int row,
             int column) {
 
-        if (column == 2) {
-            currentColor = (Color) value;
-            button.setBackground(currentColor);
-            currentRow = row;
-            return button;
-        }
-        if (column == 3) {
-            JComboBox jComboBox = new JComboBox();
-            jComboBox.addItem("Link to...");
-            jComboBox.addItem("UniProtKB...");
-            jComboBox.addItem("NCBI...");
-            jComboBox.addActionListener(new NetworkNodesActionListener());
-            return jComboBox;
+        // get the current Data instance for the following code to use
+        int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
+        Data data = Data.data.get(currentCustomGraphEditorIndex);
+
+        if (data.graphShown) {
+
+            if (column == 2) {
+                currentColor = (Color) value;
+                button.setBackground(currentColor);
+                currentRow = row;
+                return button;
+            }
+            if (column == 3) {
+                JComboBox jComboBox = new JComboBox();
+                jComboBox.addItem("Link to...");
+                jComboBox.addItem("UniProtKB...");
+                jComboBox.addItem("NCBI...");
+                jComboBox.addActionListener(new NetworkNodesActionListener());
+                return jComboBox;
+            }
+
+        } else {
+            
+            if (column == 1) {
+                JComboBox jComboBox = new JComboBox();
+                jComboBox.addItem("Link to...");
+                jComboBox.addItem("UniProtKB...");
+                jComboBox.addItem("NCBI...");
+                jComboBox.addActionListener(new NetworkNodesActionListener());
+                return jComboBox;
+            }
+            
         }
         return null;
 

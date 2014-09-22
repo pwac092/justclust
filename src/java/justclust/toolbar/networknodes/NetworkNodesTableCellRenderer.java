@@ -64,42 +64,18 @@ public class NetworkNodesTableCellRenderer implements TableCellRenderer {
             boolean isSelected, boolean hasFocus,
             int row, int column) {
 
-        if (column == 2) {
+        // get the current Data instance for the following code to use
+        int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
+        Data data = Data.data.get(currentCustomGraphEditorIndex);
 
-            JLabel jlabel = new JLabel();
-            jlabel.setOpaque(true);
-            Color newColor = (Color) color;
-            jlabel.setBackground(newColor);
-            if (isBordered) {
-                if (isSelected) {
-                    if (selectedBorder == null) {
-                        selectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
-                                table.getSelectionBackground());
-                    }
-                    jlabel.setBorder(selectedBorder);
-                } else {
-                    if (unselectedBorder == null) {
-                        unselectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
-                                table.getBackground());
-                    }
-                    jlabel.setBorder(unselectedBorder);
-                }
-            }
+        if (data.graphShown) {
 
-            if (color != null) {
-                jlabel.setToolTipText("RGB value: " + newColor.getRed() + ", "
-                        + newColor.getGreen() + ", "
-                        + newColor.getBlue());
-            }
-
-            return jlabel;
-
-        }
-
-        if (column == 3) {
-            if (row == 0) {
+            if (column == 2) {
 
                 JLabel jlabel = new JLabel();
+                jlabel.setOpaque(true);
+                Color newColor = (Color) color;
+                jlabel.setBackground(newColor);
                 if (isBordered) {
                     if (isSelected) {
                         if (selectedBorder == null) {
@@ -107,42 +83,125 @@ public class NetworkNodesTableCellRenderer implements TableCellRenderer {
                                     table.getSelectionBackground());
                         }
                         jlabel.setBorder(selectedBorder);
-                        jlabel.setOpaque(true);
-                        jlabel.setBackground(table.getSelectionBackground());
                     } else {
                         if (unselectedBorder == null) {
                             unselectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
                                     table.getBackground());
                         }
                         jlabel.setBorder(unselectedBorder);
-                        jlabel.setOpaque(true);
-                        jlabel.setBackground(table.getBackground());
                     }
                 }
+
+                if (color != null) {
+                    jlabel.setToolTipText("RGB value: " + newColor.getRed() + ", "
+                            + newColor.getGreen() + ", "
+                            + newColor.getBlue());
+                }
+
                 return jlabel;
 
-            } else {
-
-                JComboBox jComboBox = new JComboBox();
-                jComboBox.addItem("Link to...");
-                jComboBox.addItem("UniProtKB...");
-                jComboBox.addItem("NCBI...");
-                if (isSelected) {
-                    if (selectedBorder == null) {
-                        selectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
-                                table.getSelectionBackground());
-                    }
-                    jComboBox.setBorder(selectedBorder);
-                } else {
-                    if (unselectedBorder == null) {
-                        unselectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
-                                table.getBackground());
-                    }
-                    jComboBox.setBorder(unselectedBorder);
-                }
-                return jComboBox;
-
             }
+
+            if (column == 3) {
+                if (row == 0) {
+
+                    JLabel jlabel = new JLabel();
+                    if (isBordered) {
+                        if (isSelected) {
+                            if (selectedBorder == null) {
+                                selectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
+                                        table.getSelectionBackground());
+                            }
+                            jlabel.setBorder(selectedBorder);
+                            jlabel.setOpaque(true);
+                            jlabel.setBackground(table.getSelectionBackground());
+                        } else {
+                            if (unselectedBorder == null) {
+                                unselectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
+                                        table.getBackground());
+                            }
+                            jlabel.setBorder(unselectedBorder);
+                            jlabel.setOpaque(true);
+                            jlabel.setBackground(table.getBackground());
+                        }
+                    }
+                    return jlabel;
+
+                } else {
+
+                    JComboBox jComboBox = new JComboBox();
+                    jComboBox.addItem("Link to...");
+                    jComboBox.addItem("UniProtKB...");
+                    jComboBox.addItem("NCBI...");
+                    if (isSelected) {
+                        if (selectedBorder == null) {
+                            selectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
+                                    table.getSelectionBackground());
+                        }
+                        jComboBox.setBorder(selectedBorder);
+                    } else {
+                        if (unselectedBorder == null) {
+                            unselectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
+                                    table.getBackground());
+                        }
+                        jComboBox.setBorder(unselectedBorder);
+                    }
+                    return jComboBox;
+
+                }
+            }
+
+        } else {
+
+            if (column == 1) {
+                if (row == 0) {
+
+                    JLabel jlabel = new JLabel();
+                    if (isBordered) {
+                        if (isSelected) {
+                            if (selectedBorder == null) {
+                                selectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
+                                        table.getSelectionBackground());
+                            }
+                            jlabel.setBorder(selectedBorder);
+                            jlabel.setOpaque(true);
+                            jlabel.setBackground(table.getSelectionBackground());
+                        } else {
+                            if (unselectedBorder == null) {
+                                unselectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
+                                        table.getBackground());
+                            }
+                            jlabel.setBorder(unselectedBorder);
+                            jlabel.setOpaque(true);
+                            jlabel.setBackground(table.getBackground());
+                        }
+                    }
+                    return jlabel;
+
+                } else {
+
+                    JComboBox jComboBox = new JComboBox();
+                    jComboBox.addItem("Link to...");
+                    jComboBox.addItem("UniProtKB...");
+                    jComboBox.addItem("NCBI...");
+                    if (isSelected) {
+                        if (selectedBorder == null) {
+                            selectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
+                                    table.getSelectionBackground());
+                        }
+                        jComboBox.setBorder(selectedBorder);
+                    } else {
+                        if (unselectedBorder == null) {
+                            unselectedBorder = BorderFactory.createMatteBorder(1, 1, 1, 1,
+                                    table.getBackground());
+                        }
+                        jComboBox.setBorder(unselectedBorder);
+                    }
+                    return jComboBox;
+
+                }
+            }
+
         }
 
         return null;

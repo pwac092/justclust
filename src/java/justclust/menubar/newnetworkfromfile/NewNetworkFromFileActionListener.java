@@ -43,8 +43,8 @@ import justclust.datastructures.Node;
 import justclust.ButtonTabComponent;
 import justclust.JustclustMouseListener;
 import justclust.customcomponents.BrowseButton;
-import justclust.datastructures.EdgeSharedAttributes;
-import justclust.datastructures.NodeSharedAttributes;
+import justclust.datastructures.EdgeGraphicalAttributes;
+import justclust.datastructures.NodeGraphicalAttributes;
 import justclust.graphdrawing.CustomGraphEditor;
 import justclust.plugins.configurationcontrols.CheckBoxControl;
 import justclust.plugins.configurationcontrols.ComboBoxControl;
@@ -443,7 +443,7 @@ public class NewNetworkFromFileActionListener implements ActionListener {
                 }
 
             } catch (Exception exception) {
-                
+
                 NewNetworkFromFileJDialog.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
                 JustclustJFrame.classInstance.statusBarJLabel.setText("");
@@ -623,6 +623,23 @@ public class NewNetworkFromFileActionListener implements ActionListener {
 
             Data.data.add(data);
 
+            // the graphShown field of the Data class is set so that the program
+            // can create the graph and display graph related properties or not
+            // as appropriate
+            data.graphShown = true;
+            if (data.networkEdges.size() > 50000) {
+                data.graphShown = JOptionPane.showOptionDialog(
+                        JustclustJFrame.classInstance,
+                        "Displaying the graph for this network may not be possible due to memory constraints.\n"
+                        + "Would you like to continue without displaying the graph?",
+                        "",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new Object[]{"Yes", "No"},
+                        "Yes") == 1;
+            }
+
             // networkClusters is set to null so that Graph will not treat a new network
             // as though it has clusters because the last network did
             data.networkClusters = null;
@@ -645,37 +662,43 @@ public class NewNetworkFromFileActionListener implements ActionListener {
 
             // iterate through each Node
             for (Node node : data.networkNodes) {
-                // set the visible field to true for the Node because all nodes
-                // are visible initially
-                node.nodeSharedAttributes.visible = true;
-                // set the colour field to Color.WHITE for the Node because all
-                // nodes are white initially
-                node.nodeSharedAttributes.colour = Color.WHITE;
-                // initialize the otherVersions field for the Node so that an
-                // error does not occur when some code tries to update the other
-                // versions of this Node (when this Node is updated)
-                node.nodeSharedAttributes.otherVersions = new ArrayList<Node>();
-                node.nodeSharedAttributes.otherVersions.add(node);
+                if (data.graphShown) {
+                    node.nodeGraphicalAttributes = new NodeGraphicalAttributes();
+                    // set the visible field to true for the Node because all nodes
+                    // are visible initially
+                    node.nodeGraphicalAttributes.visible = true;
+                    // set the colour field to Color.WHITE for the Node because all
+                    // nodes are white initially
+                    node.nodeGraphicalAttributes.colour = Color.WHITE;
+                    // initialize the otherVersions field for the Node so that an
+                    // error does not occur when some code tries to update the other
+                    // versions of this Node (when this Node is updated)
+                    node.nodeGraphicalAttributes.otherVersions = new ArrayList<Node>();
+                }
                 // initialize the data field for the Node so that, if the Node
                 // is saved as part of a session, which graph it belongs to can
                 // be discovered easily (each Data instance corresponds to
                 // exactly one graph)
                 node.data = data;
+                node.equivalentNodeInOriginalNetwork = node;
             }
 
             // iterate through each Edge
             for (Edge edge : data.networkEdges) {
-                // set the visible field to true for the Edge because all edges
-                // are visible initially
-                edge.edgeSharedAttributes.visible = true;
-                // set the colour field to Color.BLACK for the Edge because all
-                // edges are black initially
-                edge.edgeSharedAttributes.colour = Color.BLACK;
-                // initialize the otherVersions field for the Edge so that an
-                // error does not occur when some code tries to update the other
-                // versions of this Edge (when this Edge is updated)
-                edge.edgeSharedAttributes.otherVersions = new ArrayList<Edge>();
-                edge.edgeSharedAttributes.otherVersions.add(edge);
+                if (data.graphShown) {
+                    edge.edgeGraphicalAttributes = new EdgeGraphicalAttributes();
+                    edge.edgeGraphicalAttributes.label = "";
+                    // set the visible field to true for the Edge because all edges
+                    // are visible initially
+                    edge.edgeGraphicalAttributes.visible = true;
+                    // set the colour field to Color.BLACK for the Edge because all
+                    // edges are black initially
+                    edge.edgeGraphicalAttributes.colour = Color.BLACK;
+                    // initialize the otherVersions field for the Edge so that an
+                    // error does not occur when some code tries to update the other
+                    // versions of this Edge (when this Edge is updated)
+                    edge.edgeGraphicalAttributes.otherVersions = new ArrayList<Edge>();
+                }
                 // initialize the data field for the Edge so that, if the Edge
                 // is saved as part of a session, which graph it belongs to can
                 // be discovered easily (each Data instance corresponds to
@@ -695,7 +718,7 @@ public class NewNetworkFromFileActionListener implements ActionListener {
                 Node node = data.networkNodes.get(j);
                 int k;
                 for (k = j - 1; k >= 0
-                        && node.nodeSharedAttributes.label.compareTo(data.networkNodes.get(k).nodeSharedAttributes.label) < 0; k--) {
+                        && node.label.compareTo(data.networkNodes.get(k).label) < 0; k--) {
                     data.networkNodes.set(k + 1, data.networkNodes.get(k));
                 }
                 data.networkNodes.set(k + 1, node);
@@ -721,29 +744,12 @@ public class NewNetworkFromFileActionListener implements ActionListener {
 //            }
             Collections.sort(data.networkEdges, new Comparator<Edge>() {
                 public int compare(Edge o1, Edge o2) {
-                    if (o1.edgeSharedAttributes.weight == o2.edgeSharedAttributes.weight) {
+                    if (o1.weight == o2.weight) {
                         return 0;
                     }
-                    return o1.edgeSharedAttributes.weight > o2.edgeSharedAttributes.weight ? -1 : 1;
+                    return o1.weight > o2.weight ? -1 : 1;
                 }
             });
-
-            // the graphShown field of the Data class is set so that the program
-            // can create the graph and display graph related properties or not
-            // as appropriate
-            data.graphShown = true;
-            if (data.networkEdges.size() > 50000) {
-                data.graphShown = JOptionPane.showOptionDialog(
-                        JustclustJFrame.classInstance,
-                        "Displaying the graph for this network may not be possible due to memory constraints.\n"
-                        + "Would you like to continue without displaying the graph?",
-                        "",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        new Object[]{"Yes", "No"},
-                        "Yes") == 1;
-            }
 
             // create a new graph to display a graphical representation of the
             // network
@@ -779,9 +785,11 @@ public class NewNetworkFromFileActionListener implements ActionListener {
             // applied so that the customGraphEditor is not repainted during the
             // layout.
             // this would cause an error for some unkown reason.
-            customGraphEditor.shouldRepaint = false;
-            customGraphEditor.applyCytoscapeGridLayout();
-            customGraphEditor.shouldRepaint = true;
+            if (data.graphShown) {
+                customGraphEditor.shouldRepaint = false;
+                customGraphEditor.applyCytoscapeGridLayout();
+                customGraphEditor.shouldRepaint = true;
+            }
 
             // the repaint method updates the buttons on the toolbar so that
             // they are no longer disabled now that there is information about

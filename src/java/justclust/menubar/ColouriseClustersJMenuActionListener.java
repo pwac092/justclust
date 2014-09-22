@@ -52,14 +52,14 @@ public class ColouriseClustersJMenuActionListener implements ActionListener {
                             }
                         }
                     }
-                    for (Node node : nodes.get(i).nodeSharedAttributes.otherVersions) {
+                    for (Node node : nodes.get(i).nodeGraphicalAttributes.otherVersions) {
                         if (!nodes.contains(node)) {
                             nodes.add(node);
                         }
                     }
                 }
                 for (Node node : nodes) {
-                    node.nodeSharedAttributes.colour = colour;
+                    node.nodeGraphicalAttributes.colour = colour;
                 }
             }
 
@@ -91,7 +91,7 @@ public class ColouriseClustersJMenuActionListener implements ActionListener {
                             }
                         }
                     }
-                    for (Node node : nodes.get(i).nodeSharedAttributes.otherVersions) {
+                    for (Node node : nodes.get(i).nodeGraphicalAttributes.otherVersions) {
                         if (!nodes.contains(node)) {
                             nodes.add(node);
                         }
@@ -101,8 +101,9 @@ public class ColouriseClustersJMenuActionListener implements ActionListener {
                     if (node.data == data) {
                         for (Edge edge : node.edges) {
                             if (edge.node1.cluster == edge.node2.cluster) {
-                                for (Edge otherVersion : edge.edgeSharedAttributes.otherVersions) {
-                                    otherVersion.edgeSharedAttributes.colour = colour;
+                                edge.edgeGraphicalAttributes.colour = colour;
+                                for (Edge otherVersion : edge.edgeGraphicalAttributes.otherVersions) {
+                                    otherVersion.edgeGraphicalAttributes.colour = colour;
                                 }
                             }
                         }
@@ -138,19 +139,20 @@ public class ColouriseClustersJMenuActionListener implements ActionListener {
                             }
                         }
                     }
-                    for (Node node : nodes.get(i).nodeSharedAttributes.otherVersions) {
+                    for (Node node : nodes.get(i).nodeGraphicalAttributes.otherVersions) {
                         if (!nodes.contains(node)) {
                             nodes.add(node);
                         }
                     }
                 }
                 for (Node node : nodes) {
-                    node.nodeSharedAttributes.colour = colour;
+                    node.nodeGraphicalAttributes.colour = colour;
                     if (node.data == data) {
                         for (Edge edge : node.edges) {
                             if (edge.node1.cluster == edge.node2.cluster) {
-                                for (Edge otherVersion : edge.edgeSharedAttributes.otherVersions) {
-                                    otherVersion.edgeSharedAttributes.colour = colour;
+                                edge.edgeGraphicalAttributes.colour = colour;
+                                for (Edge otherVersion : edge.edgeGraphicalAttributes.otherVersions) {
+                                    otherVersion.edgeGraphicalAttributes.colour = colour;
                                 }
                             }
                         }

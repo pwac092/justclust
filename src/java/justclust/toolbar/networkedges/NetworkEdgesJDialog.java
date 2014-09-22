@@ -2,6 +2,7 @@ package justclust.toolbar.networkedges;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import justclust.menubar.applylayout.ApplyLayoutMouseListener;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -61,78 +62,102 @@ public class NetworkEdgesJDialog extends JDialog {
     public JScrollPane networkEdgesDialogJScrollPane;
     NetworkEdgesComponentListener networkEdgesComponentListener;
 
-    public NetworkEdgesJDialog(JFrame parent, int rowToScrollTo, ArrayList<Integer> rowsToHighlight) {
-        
+    public NetworkEdgesJDialog(JFrame parent, final int rowToScrollTo, final ArrayList<Integer> rowsToHighlight) {
+
         super(parent, "Network Edges");
 
         classInstance = this;
 
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        ImageIcon img = new ImageIcon("img/justclust_icon.png");
-        setIconImage(img.getImage());
+        JustclustJFrame.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        JustclustJFrame.classInstance.statusBarJLabel.setText("Loading network edges dialog...");
+        JustclustJFrame.classInstance.statusBarJLabel.repaint();
 
-        networkEdgesDialogJPanel = new JPanel();
-        add(networkEdgesDialogJPanel);
-        networkEdgesDialogJPanel.setLayout(null);
+        // creating the dialog in the event dispatch thread allows the
+        // statusBarJLabel to update before
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
 
-        networkEdgesHelpButton = new HelpButton();
-        NetworkEdgesMouseListener networkEdgesMouseListener = new NetworkEdgesMouseListener();
-        networkEdgesHelpButton.addMouseListener(networkEdgesMouseListener);
-        networkEdgesDialogJPanel.add(networkEdgesHelpButton);
+                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                ImageIcon img = new ImageIcon("img/justclust_icon.png");
+                setIconImage(img.getImage());
 
-        networkEdgesRowHeaderJTable = new JTable(new NetworkEdgesRowHeaderTableModel());
-        networkEdgesRowHeaderJTable.setPreferredScrollableViewportSize(new Dimension(50, 0));
-        networkEdgesRowHeaderJTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-        networkEdgesRowHeaderJTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        networkEdgesRowHeaderJTable.setRowHeight(20);
-        networkEdgesRowHeaderJTable.setBackground(new Color(238, 238, 238));
-        DefaultTableCellRenderer defaultTableCellRenderer = new DefaultTableCellRenderer();
-        defaultTableCellRenderer.setHorizontalAlignment(JLabel.CENTER);
-        networkEdgesRowHeaderJTable.getColumnModel().getColumn(0).setCellRenderer(defaultTableCellRenderer);
-        networkEdgesRowHeaderJTable.setEnabled(false);
-        networkEdgesDialogJTable = new JTable();
-        networkEdgesDialogJTable.setModel(new NetworkEdgesTableModel());
-        //Set up renderer and editor
-        NetworkEdgesTableCellEditor networkEdgesTableCellEditor = new NetworkEdgesTableCellEditor();
-        NetworkEdgesTableCellRenderer networkEdgesTableCellRenderer = new NetworkEdgesTableCellRenderer(true);
-        networkEdgesDialogJTable.getColumnModel().getColumn(2).setCellEditor(networkEdgesTableCellEditor);
-        networkEdgesDialogJTable.getColumnModel().getColumn(2).setCellRenderer(networkEdgesTableCellRenderer);
-        networkEdgesListSelectionModel = new NetworkEdgesListSelectionModel();
-        networkEdgesDialogJTable.setSelectionModel(networkEdgesListSelectionModel);
-        networkEdgesDialogJTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        for (int i = 0; i < networkEdgesDialogJTable.getColumnCount(); i++) {
-            networkEdgesDialogJTable.getColumnModel().getColumn(i).setPreferredWidth(100);
-        }
-        networkEdgesDialogJTable.getColumnModel().getColumn(1).setMaxWidth(50);
-        networkEdgesDialogJTable.getColumnModel().getColumn(2).setMaxWidth(50);
-        networkEdgesDialogJTable.setRowHeight(20);
-        networkEdgesDialogJScrollPane = new JScrollPane(networkEdgesDialogJTable);
-        networkEdgesDialogJScrollPane.setRowHeaderView(networkEdgesRowHeaderJTable);
-        NetworkEdgesChangeListener networkEdgesChangeListener = new NetworkEdgesChangeListener();
-        networkEdgesDialogJScrollPane.getViewport().addChangeListener(networkEdgesChangeListener);
-        networkEdgesDialogJPanel.add(networkEdgesDialogJScrollPane);
+                networkEdgesDialogJPanel = new JPanel();
+                add(networkEdgesDialogJPanel);
+                networkEdgesDialogJPanel.setLayout(null);
 
-        scrollToRowAndHighlightRows(rowToScrollTo, rowsToHighlight);
+                networkEdgesHelpButton = new HelpButton();
+                NetworkEdgesMouseListener networkEdgesMouseListener = new NetworkEdgesMouseListener();
+                networkEdgesHelpButton.addMouseListener(networkEdgesMouseListener);
+                networkEdgesDialogJPanel.add(networkEdgesHelpButton);
 
-        networkEdgesComponentListener = new NetworkEdgesComponentListener();
-        addComponentListener(networkEdgesComponentListener);
+                // get the current Data instance for the following code to use
+                int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
+                Data data = Data.data.get(currentCustomGraphEditorIndex);
 
-        // the setBounds method must be called after the
-        // NetworkEdgesComponentListener is registered so that the
-        // networkEdgesDialogJTable is always visible within the
-        // networkEdgesDialogJScrollPane.
-        // this is for unkown reasons.
-        GraphicsEnvironment g = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] devices = g.getScreenDevices();
-        NetworkEdgesJDialog.classInstance.setBounds(
-                DialogSizesAndPositions.networkEdgesXCoordinate,
-                DialogSizesAndPositions.networkEdgesYCoordinate,
-                DialogSizesAndPositions.networkEdgesWidth,
-                DialogSizesAndPositions.networkEdgesHeight);
+                networkEdgesRowHeaderJTable = new JTable(new NetworkEdgesRowHeaderTableModel());
+                networkEdgesRowHeaderJTable.setPreferredScrollableViewportSize(new Dimension(50, 0));
+                networkEdgesRowHeaderJTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+                networkEdgesRowHeaderJTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                networkEdgesRowHeaderJTable.setRowHeight(20);
+                networkEdgesRowHeaderJTable.setBackground(new Color(238, 238, 238));
+                DefaultTableCellRenderer defaultTableCellRenderer = new DefaultTableCellRenderer();
+                defaultTableCellRenderer.setHorizontalAlignment(JLabel.CENTER);
+                networkEdgesRowHeaderJTable.getColumnModel().getColumn(0).setCellRenderer(defaultTableCellRenderer);
+                networkEdgesRowHeaderJTable.setEnabled(false);
+                networkEdgesDialogJTable = new JTable();
+                networkEdgesDialogJTable.setModel(new NetworkEdgesTableModel());
+                //Set up renderer and editor
+                if (data.graphShown) {
+                    NetworkEdgesTableCellEditor networkEdgesTableCellEditor = new NetworkEdgesTableCellEditor();
+                    NetworkEdgesTableCellRenderer networkEdgesTableCellRenderer = new NetworkEdgesTableCellRenderer(true);
+                    networkEdgesDialogJTable.getColumnModel().getColumn(2).setCellEditor(networkEdgesTableCellEditor);
+                    networkEdgesDialogJTable.getColumnModel().getColumn(2).setCellRenderer(networkEdgesTableCellRenderer);
+                }
+                networkEdgesListSelectionModel = new NetworkEdgesListSelectionModel();
+                networkEdgesDialogJTable.setSelectionModel(networkEdgesListSelectionModel);
+                networkEdgesDialogJTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                for (int i = 0; i < networkEdgesDialogJTable.getColumnCount(); i++) {
+                    networkEdgesDialogJTable.getColumnModel().getColumn(i).setPreferredWidth(100);
+                }
+                if (data.graphShown) {
+                    networkEdgesDialogJTable.getColumnModel().getColumn(1).setMaxWidth(50);
+                    networkEdgesDialogJTable.getColumnModel().getColumn(2).setMaxWidth(50);
+                }
+                networkEdgesDialogJTable.setRowHeight(20);
+                networkEdgesDialogJScrollPane = new JScrollPane(networkEdgesDialogJTable);
+                networkEdgesDialogJScrollPane.setRowHeaderView(networkEdgesRowHeaderJTable);
+                NetworkEdgesChangeListener networkEdgesChangeListener = new NetworkEdgesChangeListener();
+                networkEdgesDialogJScrollPane.getViewport().addChangeListener(networkEdgesChangeListener);
+                networkEdgesDialogJPanel.add(networkEdgesDialogJScrollPane);
 
-        // the setVisible method is called to make the NetworkEdgesJDialog
-        // appear
-        setVisible(true);
+                scrollToRowAndHighlightRows(rowToScrollTo, rowsToHighlight);
+
+                networkEdgesComponentListener = new NetworkEdgesComponentListener();
+                addComponentListener(networkEdgesComponentListener);
+
+                // the setBounds method must be called after the
+                // NetworkEdgesComponentListener is registered so that the
+                // networkEdgesDialogJTable is always visible within the
+                // networkEdgesDialogJScrollPane.
+                // this is for unkown reasons.
+                GraphicsEnvironment g = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                GraphicsDevice[] devices = g.getScreenDevices();
+                NetworkEdgesJDialog.classInstance.setBounds(
+                        DialogSizesAndPositions.networkEdgesXCoordinate,
+                        DialogSizesAndPositions.networkEdgesYCoordinate,
+                        DialogSizesAndPositions.networkEdgesWidth,
+                        DialogSizesAndPositions.networkEdgesHeight);
+
+                JustclustJFrame.classInstance.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                JustclustJFrame.classInstance.statusBarJLabel.setText("Network edges dialog loaded");
+                JustclustJFrame.classInstance.statusBarJLabel.repaint();
+
+                // the setVisible method is called to make the NetworkEdgesJDialog
+                // appear
+                setVisible(true);
+
+            }
+        });
 
     }
 

@@ -57,9 +57,9 @@ public class MicroarrayHeatMapHelpJDialog extends JDialog {
 
         String details = "The colours in the heat map represent the values in the microarray data."
                 + "<br>"
-                + "Green represents a high value."
+                + "Red represents a high value."
                 + "<br>"
-                + "Red represent a low value.";
+                + "Green represent a low value.";
         jEditorPane.setText(details);
         // this makes the scrollbar of the jScrollPane start at the top
         jEditorPane.setCaretPosition(0);

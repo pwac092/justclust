@@ -125,7 +125,7 @@ public class ExportClusteringActionListener implements ActionListener {
                     bufferedWriter.write("Cluster " + (i + 1));
                     for (int j = 0; j < data.networkClusters.get(i).nodes.size(); j++) {
                         bufferedWriter.write(", "
-                                + data.networkClusters.get(i).nodes.get(j).nodeSharedAttributes.label);
+                                + data.networkClusters.get(i).nodes.get(j).label);
                     }
                 }
 

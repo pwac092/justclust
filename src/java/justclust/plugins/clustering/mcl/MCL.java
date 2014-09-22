@@ -95,7 +95,7 @@ public class MCL {
                 double dist = 0;
                 for (Edge edge : x.edges) {
                     if (edge.node1 == y || edge.node2 == y) {
-                        dist = edge.edgeSharedAttributes.weight;
+                        dist = edge.weight;
                     }
                 }
                 if (dist > maxZero) {

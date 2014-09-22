@@ -133,7 +133,7 @@ public class MicroarrayHeatMapJPanel extends JPanel {
         if (MicroarrayHeatMapJDialog.classInstance.includeLabelsJCheckBox.isSelected()) {
             squareHeight = fm.getHeight();
         } else {
-            squareHeight = 3;
+            squareHeight = 1;
         }
 
         AffineTransform transform = g2d.getTransform();
@@ -189,10 +189,10 @@ public class MicroarrayHeatMapJPanel extends JPanel {
                 double val = (matrix.get(y, x) - minValue) / (maxValue - minValue);
 
                 double correlThreshold = 0;
-                Color posCorrelColorMax = Color.GREEN;
-                Color posCorrelColorMin = Color.RED;
-                Color negCorrelColorMax = Color.RED;
-                Color negCorrelColorMin = Color.GREEN;
+                Color posCorrelColorMax = Color.RED;
+                Color posCorrelColorMin = Color.GREEN;
+                Color negCorrelColorMax = Color.GREEN;
+                Color negCorrelColorMin = Color.RED;
 
 //            if (val >= Diagram.correlThreshold) {
                 if (val >= correlThreshold) {

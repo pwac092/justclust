@@ -53,7 +53,7 @@ public class SearchNetworkActionListener implements ActionListener {
             // them, their Edges, and their Clusters to the ArrayLists of found
             // items
             for (Node node : data.networkNodes) {
-                if (node.nodeSharedAttributes.label.toLowerCase().contains(SearchNetworkJDialog.classInstance.searchJTextField.getText().toLowerCase())) {
+                if (node.label.toLowerCase().contains(SearchNetworkJDialog.classInstance.searchJTextField.getText().toLowerCase())) {
                     foundNodes.add(node);
                     for (Edge edge : node.edges) {
                         if (!foundEdges.contains(edge)) {
@@ -66,34 +66,38 @@ public class SearchNetworkActionListener implements ActionListener {
                 }
             }
 
-            // find any Edges whose labels each contain the search term and add
-            // them to the ArrayLists of found items
-            for (Edge edge : data.networkEdges) {
-                // an edge may have a label field containing null and this should
-                // count as an empty string because they have the same appearance
-                // graphically
-                if (edge.edgeSharedAttributes.label == null && SearchNetworkJDialog.classInstance.searchJTextField.getText().equals("")
-                        || edge.edgeSharedAttributes.label != null && edge.edgeSharedAttributes.label.toLowerCase().contains(SearchNetworkJDialog.classInstance.searchJTextField.getText().toLowerCase())) {
-                    if (!foundEdges.contains(edge)) {
-                        foundEdges.add(edge);
-                    }
-                }
-            }
+            if (data.graphShown) {
 
-            // find any Clusters whose labels each contain the search term and add
-            // them to the ArrayLists of found items
-            if (data.networkClusters != null) {
-                for (Cluster cluster : data.networkClusters) {
-                    // a cluster may have a label field containing null and this should
+                // find any Edges whose labels each contain the search term and add
+                // them to the ArrayLists of found items
+                for (Edge edge : data.networkEdges) {
+                    // an edge may have a label field containing null and this should
                     // count as an empty string because they have the same appearance
                     // graphically
-                    if (cluster.label == null && SearchNetworkJDialog.classInstance.searchJTextField.getText().equals("")
-                            || cluster.label != null && cluster.label.toLowerCase().contains(SearchNetworkJDialog.classInstance.searchJTextField.getText().toLowerCase())) {
-                        if (!foundClusters.contains(cluster)) {
-                            foundClusters.add(cluster);
+                    if (edge.edgeGraphicalAttributes.label == null && SearchNetworkJDialog.classInstance.searchJTextField.getText().equals("")
+                            || edge.edgeGraphicalAttributes.label != null && edge.edgeGraphicalAttributes.label.toLowerCase().contains(SearchNetworkJDialog.classInstance.searchJTextField.getText().toLowerCase())) {
+                        if (!foundEdges.contains(edge)) {
+                            foundEdges.add(edge);
                         }
                     }
                 }
+
+                // find any Clusters whose labels each contain the search term and add
+                // them to the ArrayLists of found items
+                if (data.networkClusters != null) {
+                    for (Cluster cluster : data.networkClusters) {
+                        // a cluster may have a label field containing null and this should
+                        // count as an empty string because they have the same appearance
+                        // graphically
+                        if (cluster.label == null && SearchNetworkJDialog.classInstance.searchJTextField.getText().equals("")
+                                || cluster.label != null && cluster.label.toLowerCase().contains(SearchNetworkJDialog.classInstance.searchJTextField.getText().toLowerCase())) {
+                            if (!foundClusters.contains(cluster)) {
+                                foundClusters.add(cluster);
+                            }
+                        }
+                    }
+                }
+
             }
 
             // populate the tables with the found nodes, edges, and clusters
@@ -106,7 +110,7 @@ public class SearchNetworkActionListener implements ActionListener {
             columnNames = new String[]{"Label"};
             tableData = new String[foundNodes.size()][columnNames.length];
             for (int i = 0; i < foundNodes.size(); i++) {
-                tableData[i][0] = foundNodes.get(i).nodeSharedAttributes.label;
+                tableData[i][0] = foundNodes.get(i).label;
             }
             SearchNetworkJDialog.classInstance.nodesJTable.setModel(new DefaultTableModel(tableData, columnNames));
             tableColumnModel = SearchNetworkJDialog.classInstance.nodesJTable.getColumnModel();
@@ -114,13 +118,23 @@ public class SearchNetworkActionListener implements ActionListener {
                 TableColumn tableColumn = tableColumnModel.getColumn(i);
                 tableColumn.setCellEditor(searchNetworkTableCellEditor);
             }
-            columnNames = new String[]{"Label", "Node 1", "Node 2", "Weight"};
-            tableData = new String[foundEdges.size()][columnNames.length];
-            for (int i = 0; i < foundEdges.size(); i++) {
-                tableData[i][0] = foundEdges.get(i).edgeSharedAttributes.label;
-                tableData[i][1] = foundEdges.get(i).node1.nodeSharedAttributes.label;
-                tableData[i][2] = foundEdges.get(i).node2.nodeSharedAttributes.label;
-                tableData[i][3] = new DecimalFormat("#.#####").format(foundEdges.get(i).edgeSharedAttributes.weight);;
+            if (data.graphShown) {
+                columnNames = new String[]{"Label", "Node 1", "Node 2", "Weight"};
+                tableData = new String[foundEdges.size()][columnNames.length];
+                for (int i = 0; i < foundEdges.size(); i++) {
+                    tableData[i][0] = foundEdges.get(i).edgeGraphicalAttributes.label;
+                    tableData[i][1] = foundEdges.get(i).node1.label;
+                    tableData[i][2] = foundEdges.get(i).node2.label;
+                    tableData[i][3] = new DecimalFormat("#.#####").format(foundEdges.get(i).weight);;
+                }
+            } else {
+                columnNames = new String[]{"Node 1", "Node 2", "Weight"};
+                tableData = new String[foundEdges.size()][columnNames.length];
+                for (int i = 0; i < foundEdges.size(); i++) {
+                    tableData[i][0] = foundEdges.get(i).node1.label;
+                    tableData[i][1] = foundEdges.get(i).node2.label;
+                    tableData[i][2] = new DecimalFormat("#.#####").format(foundEdges.get(i).weight);;
+                }
             }
             SearchNetworkJDialog.classInstance.edgesJTable.setModel(new DefaultTableModel(tableData, columnNames));
             tableColumnModel = SearchNetworkJDialog.classInstance.edgesJTable.getColumnModel();
@@ -138,19 +152,36 @@ public class SearchNetworkActionListener implements ActionListener {
                 }
             }
             // create the headers for the table
-            columnNames = new String[maxClusterSize + 1];
-            columnNames[0] = "Label";
-            for (int i = 0; i < maxClusterSize; i++) {
-                columnNames[i + 1] = "Node " + (i + 1);
-            }
-            tableData = new String[foundClusters.size()][columnNames.length];
-            for (int i = 0; i < foundClusters.size(); i++) {
-                tableData[i][0] = foundClusters.get(i).label;
-                for (int j = 0; j < maxClusterSize; j++) {
-                    if (foundClusters.get(i).nodes.size() > j) {
-                        tableData[i][j + 1] = foundClusters.get(i).nodes.get(j).nodeSharedAttributes.label;
-                    } else {
-                        tableData[i][j + 1] = "";
+            if (data.graphShown) {
+                columnNames = new String[maxClusterSize + 1];
+                columnNames[0] = "Label";
+                for (int i = 0; i < maxClusterSize; i++) {
+                    columnNames[i + 1] = "Node " + (i + 1);
+                }
+                tableData = new String[foundClusters.size()][columnNames.length];
+                for (int i = 0; i < foundClusters.size(); i++) {
+                    tableData[i][0] = foundClusters.get(i).label;
+                    for (int j = 0; j < maxClusterSize; j++) {
+                        if (foundClusters.get(i).nodes.size() > j) {
+                            tableData[i][j + 1] = foundClusters.get(i).nodes.get(j).label;
+                        } else {
+                            tableData[i][j + 1] = "";
+                        }
+                    }
+                }
+            } else {
+                columnNames = new String[maxClusterSize];
+                for (int i = 0; i < maxClusterSize; i++) {
+                    columnNames[i] = "Node " + i;
+                }
+                tableData = new String[foundClusters.size()][columnNames.length];
+                for (int i = 0; i < foundClusters.size(); i++) {
+                    for (int j = 0; j < maxClusterSize; j++) {
+                        if (foundClusters.get(i).nodes.size() > j) {
+                            tableData[i][j] = foundClusters.get(i).nodes.get(j).label;
+                        } else {
+                            tableData[i][j] = "";
+                        }
                     }
                 }
             }

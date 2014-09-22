@@ -97,6 +97,7 @@ public class JustclustJFrame extends JFrame {
     public JMenuItem aboutJMenuItem;
     public JustclustChangeListener justclustChangeListener;
     public JTabbedPane justclustJTabbedPane;
+    public TabTitleEditListener tabTitleEditListener;
     public ArrayList<String> tabTitles;
     public ArrayList<CustomGraphEditor> customGraphEditors;
     /**
@@ -280,7 +281,7 @@ public class JustclustJFrame extends JFrame {
         justclustJTabbedPane = new JTabbedPane();
         justclustJTabbedPane.setFont(font);
         justclustJTabbedPane.addChangeListener(justclustChangeListener);
-        TabTitleEditListener tabTitleEditListener = new TabTitleEditListener(justclustJTabbedPane);
+        tabTitleEditListener = new TabTitleEditListener(justclustJTabbedPane);
         justclustJTabbedPane.addChangeListener(tabTitleEditListener);
         justclustJTabbedPane.addMouseListener(tabTitleEditListener);
         justclustJPanel.add(justclustJTabbedPane);

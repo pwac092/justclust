@@ -105,7 +105,7 @@ public class OverrepresentationAnalysisActionListener implements ActionListener 
                 int networkNodesWithFunction = 0;
                 int clusterNodesWithFunction = 0;
                 for (Node node : data.networkNodes) {
-                    if (propagated_annotations.getScoreForProteinAndGOterm(node.nodeSharedAttributes.label, goTerm) >= 1) {
+                    if (propagated_annotations.getScoreForProteinAndGOterm(node.label, goTerm) >= 1) {
                         networkNodesWithFunction++;
                         if (cluster.nodes.contains(node)) {
                             clusterNodesWithFunction++;

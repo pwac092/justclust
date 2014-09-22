@@ -75,7 +75,7 @@ public class DBScan implements
     private List<Node> regionQuery(double epsilon, Node center) {
         List<Node> neighbourNodes = new ArrayList<Node>();
         for (Edge incidentEdge : center.edges) {
-            if (incidentEdge.edgeSharedAttributes.weight >= epsilon) {
+            if (incidentEdge.weight >= epsilon) {
                 Node neighbour;
                 if (incidentEdge.node1 != center) {
                     neighbour = incidentEdge.node1;

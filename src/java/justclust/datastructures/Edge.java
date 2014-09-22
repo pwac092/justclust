@@ -2,7 +2,9 @@ package justclust.datastructures;
 
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.nodes.PText;
+import java.awt.Color;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * This class has instances which represent edges.
@@ -11,10 +13,6 @@ import java.io.Serializable;
 // to a file when the user saves their session.
 public class Edge implements Serializable, Comparable<Edge> {
 
-    // the graphical representation of the edge
-    public PPath graphicalEdge;
-    // the graphical representation of the edge's label
-    public PText graphicalLabel;
     /**
      * This field contains a node of the current edge.
      */
@@ -28,23 +26,26 @@ public class Edge implements Serializable, Comparable<Edge> {
     // be discovered easily from this field (each Data instance corresponds to
     // exactly one graph).
     public Data data;
-    public EdgeSharedAttributes edgeSharedAttributes;
+    /**
+     * This field contains the weight of the current edge.
+     */
+    public double weight;
+    public EdgeGraphicalAttributes edgeGraphicalAttributes;
 
     public Edge() {
-        edgeSharedAttributes = new EdgeSharedAttributes();
     }
 
     public Edge(Node node1, Node node2, double weight) {
         this.node1 = node1;
         this.node2 = node2;
-        this.edgeSharedAttributes.weight = weight;
+        this.weight = weight;
     }
 
     @Override
     public int compareTo(Edge t) {
-        if (this.edgeSharedAttributes.weight < t.edgeSharedAttributes.weight) {
+        if (this.weight < t.weight) {
             return -1;
-        } else if (this.edgeSharedAttributes.weight == t.edgeSharedAttributes.weight) {
+        } else if (this.weight == t.weight) {
             return 0;
         } else {
             return 1;

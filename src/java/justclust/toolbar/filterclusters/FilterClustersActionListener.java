@@ -65,12 +65,18 @@ public class FilterClustersActionListener implements ActionListener {
         // set all Nodes to be invisible.
         // they will be shown if necessary by the code later.
         for (Node node : data.networkNodes) {
-            node.nodeSharedAttributes.visible = false;
+            node.nodeGraphicalAttributes.visible = false;
+            for (Node otherVersion : node.nodeGraphicalAttributes.otherVersions) {
+                otherVersion.nodeGraphicalAttributes.visible = false;
+            }
         }
 
         // set all Edges to be invisible
         for (Edge edge : data.networkEdges) {
-            edge.edgeSharedAttributes.visible = false;
+            edge.edgeGraphicalAttributes.visible = false;
+            for (Edge otherVersion : edge.edgeGraphicalAttributes.otherVersions) {
+                otherVersion.edgeGraphicalAttributes.visible = false;
+            }
         }
 
         // hide all of the Nodes in any clusters which should be made invisible.
@@ -117,11 +123,17 @@ public class FilterClustersActionListener implements ActionListener {
 
             if (visible) {
                 for (Node node : cluster.nodes) {
-                    node.nodeSharedAttributes.visible = true;
+                    node.nodeGraphicalAttributes.visible = true;
                     for (Edge edge : node.edges) {
                         if (edge.node1.cluster == edge.node2.cluster) {
-                            edge.edgeSharedAttributes.visible = true;
+                            edge.edgeGraphicalAttributes.visible = true;
+                            for (Edge otherVersion : edge.edgeGraphicalAttributes.otherVersions) {
+                                otherVersion.edgeGraphicalAttributes.visible = true;
+                            }
                         }
+                    }
+                    for (Node otherVersion : node.nodeGraphicalAttributes.otherVersions) {
+                        otherVersion.nodeGraphicalAttributes.visible = true;
                     }
                 }
             }

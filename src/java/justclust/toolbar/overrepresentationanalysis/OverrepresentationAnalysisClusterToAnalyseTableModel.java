@@ -101,7 +101,7 @@ public class OverrepresentationAnalysisClusterToAnalyseTableModel extends Abstra
             tableData[i][0] = data.networkClusters.get(i).label;
             for (int j = 0; j < maxClusterSize; j++) {
                 if (data.networkClusters.get(i).nodes.size() > j) {
-                    tableData[i][j + 1] = data.networkClusters.get(i).nodes.get(j).nodeSharedAttributes.label;
+                    tableData[i][j + 1] = data.networkClusters.get(i).nodes.get(j).label;
                 } else {
                     tableData[i][j + 1] = "";
                 }

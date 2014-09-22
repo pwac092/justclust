@@ -176,64 +176,64 @@ public class ExportGraphActionListener implements ActionListener {
                     if (Data.data.get(currentCustomGraphEditorIndex).networkNodes.size() >= 1) {
 
                         // Do some drawing.
-                        double minXCoordinate = Data.data.get(currentCustomGraphEditorIndex).networkNodes.get(0).graphicalNode.getFullBoundsReference().getCenter2D().getX();
-                        double maxXCoordinate = Data.data.get(currentCustomGraphEditorIndex).networkNodes.get(0).graphicalNode.getFullBoundsReference().getCenter2D().getX();
-                        double minYCoordinate = Data.data.get(currentCustomGraphEditorIndex).networkNodes.get(0).graphicalNode.getFullBoundsReference().getCenter2D().getY();
-                        double maxYCoordinate = Data.data.get(currentCustomGraphEditorIndex).networkNodes.get(0).graphicalNode.getFullBoundsReference().getCenter2D().getY();
+                        double minXCoordinate = Data.data.get(currentCustomGraphEditorIndex).networkNodes.get(0).nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX();
+                        double maxXCoordinate = Data.data.get(currentCustomGraphEditorIndex).networkNodes.get(0).nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX();
+                        double minYCoordinate = Data.data.get(currentCustomGraphEditorIndex).networkNodes.get(0).nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY();
+                        double maxYCoordinate = Data.data.get(currentCustomGraphEditorIndex).networkNodes.get(0).nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY();
                         for (Node node : Data.data.get(currentCustomGraphEditorIndex).networkNodes) {
-                            minXCoordinate = Math.min(minXCoordinate, node.graphicalNode.getFullBoundsReference().getCenter2D().getX());
-                            maxXCoordinate = Math.max(maxXCoordinate, node.graphicalNode.getFullBoundsReference().getCenter2D().getX());
-                            minYCoordinate = Math.min(minYCoordinate, node.graphicalNode.getFullBoundsReference().getCenter2D().getY());
-                            maxYCoordinate = Math.max(maxYCoordinate, node.graphicalNode.getFullBoundsReference().getCenter2D().getY());
+                            minXCoordinate = Math.min(minXCoordinate, node.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX());
+                            maxXCoordinate = Math.max(maxXCoordinate, node.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX());
+                            minYCoordinate = Math.min(minYCoordinate, node.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY());
+                            maxYCoordinate = Math.max(maxYCoordinate, node.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY());
                         }
                         double width = maxXCoordinate - minXCoordinate;
                         double height = maxYCoordinate - minYCoordinate;
                         g.setSVGCanvasSize(new Dimension((int) Math.round(10 + 10 + width + 10 + 10), (int) Math.round(10 + 10 + height + 10 + 10)));
                         for (Edge edge : Data.data.get(currentCustomGraphEditorIndex).networkEdges) {
-                            if (edge.edgeSharedAttributes.visible) {
-                                g.setColor(edge.edgeSharedAttributes.colour);
+                            if (edge.edgeGraphicalAttributes.visible) {
+                                g.setColor(edge.edgeGraphicalAttributes.colour);
                                 g.drawLine(
-                                        (int) Math.round(10 + 10 + (edge.node1.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate)),
-                                        (int) Math.round(10 + 10 + (edge.node1.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate)),
-                                        (int) Math.round(10 + 10 + (edge.node2.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate)),
-                                        (int) Math.round(10 + 10 + (edge.node2.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate)));
+                                        (int) Math.round(10 + 10 + (edge.node1.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate)),
+                                        (int) Math.round(10 + 10 + (edge.node1.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate)),
+                                        (int) Math.round(10 + 10 + (edge.node2.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate)),
+                                        (int) Math.round(10 + 10 + (edge.node2.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate)));
                             }
                         }
                         for (Node node : Data.data.get(currentCustomGraphEditorIndex).networkNodes) {
-                            if (node.nodeSharedAttributes.visible) {
-                                g.setColor(node.nodeSharedAttributes.colour);
+                            if (node.nodeGraphicalAttributes.visible) {
+                                g.setColor(node.nodeGraphicalAttributes.colour);
                                 g.fillOval(
-                                        (int) Math.round(10 + 10 + (node.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate) - 10),
-                                        (int) Math.round(10 + 10 + (node.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate) - 10),
+                                        (int) Math.round(10 + 10 + (node.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate) - 10),
+                                        (int) Math.round(10 + 10 + (node.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate) - 10),
                                         20,
                                         20);
                                 g.setColor(Color.BLACK);
                                 g.drawOval(
-                                        (int) Math.round(10 + 10 + (node.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate) - 10),
-                                        (int) Math.round(10 + 10 + (node.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate) - 10),
+                                        (int) Math.round(10 + 10 + (node.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX() - minXCoordinate) - 10),
+                                        (int) Math.round(10 + 10 + (node.nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY() - minYCoordinate) - 10),
                                         20,
                                         20);
                             }
                         }
                         g.setColor(Color.BLACK);
                         for (Node node : Data.data.get(currentCustomGraphEditorIndex).networkNodes) {
-                            if (node.nodeSharedAttributes.visible) {
-                                g.setFont(node.graphicalLabel.getFont());
+                            if (node.nodeGraphicalAttributes.visible) {
+                                g.setFont(node.nodeGraphicalAttributes.graphicalLabel.getFont());
                                 FontMetrics fontMetrics = g.getFontMetrics();
                                 g.drawString(
-                                        node.nodeSharedAttributes.label,
-                                        (int) Math.round(10 + 10 + ((node.graphicalLabel.getFullBoundsReference().getCenter2D().getX() - fontMetrics.stringWidth(node.nodeSharedAttributes.label) / 2) - minXCoordinate)),
-                                        (int) Math.round(10 + 10 + ((node.graphicalLabel.getFullBoundsReference().getCenter2D().getY() + (fontMetrics.getAscent() - 2) / 2) - minYCoordinate)));
+                                        node.label,
+                                        (int) Math.round(10 + 10 + ((node.nodeGraphicalAttributes.graphicalLabel.getFullBoundsReference().getCenter2D().getX() - fontMetrics.stringWidth(node.label) / 2) - minXCoordinate)),
+                                        (int) Math.round(10 + 10 + ((node.nodeGraphicalAttributes.graphicalLabel.getFullBoundsReference().getCenter2D().getY() + (fontMetrics.getAscent() - 2) / 2) - minYCoordinate)));
                             }
                         }
                         for (Edge edge : Data.data.get(currentCustomGraphEditorIndex).networkEdges) {
-                            if (edge.edgeSharedAttributes.visible && edge.edgeSharedAttributes.label != null) {
-                                g.setFont(edge.graphicalLabel.getFont());
+                            if (edge.edgeGraphicalAttributes.visible && edge.edgeGraphicalAttributes.label != null) {
+                                g.setFont(edge.edgeGraphicalAttributes.graphicalLabel.getFont());
                                 FontMetrics fontMetrics = g.getFontMetrics();
                                 g.drawString(
-                                        edge.edgeSharedAttributes.label,
-                                        (int) Math.round(10 + 10 + ((edge.graphicalLabel.getFullBoundsReference().getCenter2D().getX() - fontMetrics.stringWidth(edge.edgeSharedAttributes.label) / 2) - minXCoordinate)),
-                                        (int) Math.round(10 + 10 + ((edge.graphicalLabel.getFullBoundsReference().getCenter2D().getY() + (fontMetrics.getAscent() - 2) / 2) - minYCoordinate)));
+                                        edge.edgeGraphicalAttributes.label,
+                                        (int) Math.round(10 + 10 + ((edge.edgeGraphicalAttributes.graphicalLabel.getFullBoundsReference().getCenter2D().getX() - fontMetrics.stringWidth(edge.edgeGraphicalAttributes.label) / 2) - minXCoordinate)),
+                                        (int) Math.round(10 + 10 + ((edge.edgeGraphicalAttributes.graphicalLabel.getFullBoundsReference().getCenter2D().getY() + (fontMetrics.getAscent() - 2) / 2) - minYCoordinate)));
                             }
                         }
                         if (Data.data.get(currentCustomGraphEditorIndex).networkClusters != null) {

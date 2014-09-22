@@ -88,6 +88,10 @@ public class NetworkNodesJDialog extends JDialog {
         networkNodesHelpButton.addMouseListener(networkNodesMouseListener);
         networkNodesDialogJPanel.add(networkNodesHelpButton);
 
+        // get the current Data instance for the following code to use
+        int currentCustomGraphEditorIndex = JustclustJFrame.classInstance.justclustJTabbedPane.getSelectedIndex();
+        Data data = Data.data.get(currentCustomGraphEditorIndex);
+
         networkNodesRowHeaderJTable = new JTable(new NetworkNodesRowHeaderTableModel());
         networkNodesRowHeaderJTable.setPreferredScrollableViewportSize(new Dimension(50, 0));
         networkNodesRowHeaderJTable.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -103,14 +107,21 @@ public class NetworkNodesJDialog extends JDialog {
         //Set up renderer and editor
         NetworkNodesTableCellEditor networkNodesTableCellEditor = new NetworkNodesTableCellEditor();
         NetworkNodesTableCellRenderer networkNodesTableCellRenderer = new NetworkNodesTableCellRenderer(true);
-        networkNodesDialogJTable.getColumnModel().getColumn(2).setCellEditor(networkNodesTableCellEditor);
-        networkNodesDialogJTable.getColumnModel().getColumn(2).setCellRenderer(networkNodesTableCellRenderer);
-        networkNodesDialogJTable.getColumnModel().getColumn(3).setCellEditor(networkNodesTableCellEditor);
-        networkNodesDialogJTable.getColumnModel().getColumn(3).setCellRenderer(networkNodesTableCellRenderer);
+        if (data.graphShown) {
+            networkNodesDialogJTable.getColumnModel().getColumn(2).setCellEditor(networkNodesTableCellEditor);
+            networkNodesDialogJTable.getColumnModel().getColumn(2).setCellRenderer(networkNodesTableCellRenderer);
+            networkNodesDialogJTable.getColumnModel().getColumn(3).setCellEditor(networkNodesTableCellEditor);
+            networkNodesDialogJTable.getColumnModel().getColumn(3).setCellRenderer(networkNodesTableCellRenderer);
+        } else {
+            networkNodesDialogJTable.getColumnModel().getColumn(1).setCellEditor(networkNodesTableCellEditor);
+            networkNodesDialogJTable.getColumnModel().getColumn(1).setCellRenderer(networkNodesTableCellRenderer);
+        }
         networkNodesListSelectionModel = new NetworkNodesListSelectionModel();
         networkNodesDialogJTable.setSelectionModel(networkNodesListSelectionModel);
-        networkNodesDialogJTable.getColumnModel().getColumn(1).setMaxWidth(50);
-        networkNodesDialogJTable.getColumnModel().getColumn(2).setMaxWidth(50);
+        if (data.graphShown) {
+            networkNodesDialogJTable.getColumnModel().getColumn(1).setMaxWidth(50);
+            networkNodesDialogJTable.getColumnModel().getColumn(2).setMaxWidth(50);
+        }
         networkNodesDialogJTable.setRowHeight(20);
         networkNodesDialogJScrollPane = new JScrollPane(networkNodesDialogJTable);
         networkNodesDialogJScrollPane.setRowHeaderView(networkNodesRowHeaderJTable);

@@ -104,6 +104,7 @@ public class ButtonTabComponent extends JPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
+            JustclustJFrame.classInstance.tabTitleEditListener.stateChanged(changeEvent);
             int i = pane.indexOfTabComponent(ButtonTabComponent.this);
             if (i != -1) {
                 // the PanningAndZoomingThread is killed before the
@@ -116,23 +117,29 @@ public class ButtonTabComponent extends JPanel {
                 } catch (InterruptedException ex) {
                 }
                 pane.remove(i);
-                // the otherVersions field of each Node contains other Nodes
-                // which represent the same Node.
-                // these include Nodes in the same graph which represent the
-                // same Node in different overlapping Clusters (such Nodes need
-                // to be duplicated so that the overlapping Clusters can be
-                // represented separately).
-                // these also include Nodes in different customGraphEditors which represent
-                // the same Node.
-                for (Node node : Data.data.get(i).networkNodes) {
-                    node.nodeSharedAttributes.otherVersions.remove(node);
-                }
-                // the otherVersions field of each Edge contains other Edges
-                // which represent the same Edge.
-                // these include Edges in different customGraphEditors which represent
-                // the same Edge.
-                for (Edge edge : Data.data.get(i).networkEdges) {
-                    edge.edgeSharedAttributes.otherVersions.remove(edge);
+                if (Data.data.get(i).graphShown) {
+                    // the otherVersions field of each Node contains other Nodes
+                    // which represent the same Node.
+                    // these include Nodes in the same graph which represent the
+                    // same Node in different overlapping Clusters (such Nodes need
+                    // to be duplicated so that the overlapping Clusters can be
+                    // represented separately).
+                    // these also include Nodes in different customGraphEditors which represent
+                    // the same Node.
+                    for (Node node : Data.data.get(i).networkNodes) {
+                        for (Node otherVersion : node.nodeGraphicalAttributes.otherVersions) {
+                            otherVersion.nodeGraphicalAttributes.otherVersions.remove(node);
+                        }
+                    }
+                    // the otherVersions field of each Edge contains other Edges
+                    // which represent the same Edge.
+                    // these include Edges in different customGraphEditors which represent
+                    // the same Edge.
+                    for (Edge edge : Data.data.get(i).networkEdges) {
+                        for (Edge otherVersion : edge.edgeGraphicalAttributes.otherVersions) {
+                            otherVersion.edgeGraphicalAttributes.otherVersions.remove(edge);
+                        }
+                    }
                 }
                 Data.data.remove(i);
                 JustclustJFrame.classInstance.customGraphEditors.remove(i);

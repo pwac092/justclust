@@ -89,7 +89,7 @@ public class SingleLinkageClusteringAlgorithm implements
             Edge edge = edges.get(i);
             int j;
             for (j = i - 1; j >= 0
-                    && edge.edgeSharedAttributes.weight > edges.get(j).edgeSharedAttributes.weight; j--) {
+                    && edge.weight > edges.get(j).weight; j--) {
                 edges.set(j + 1, edges.get(j));
             }
             edges.set(j + 1, edge);
@@ -124,11 +124,11 @@ public class SingleLinkageClusteringAlgorithm implements
         // two Clusters are merged.
         int i = 0;
         while (networkClusters.size() > clusterAmountIntegerFieldControl.value
-                && edges.get(i).edgeSharedAttributes.weight >= minimumEdgeWeightIntegerFieldControl.value) {
+                && edges.get(i).weight >= minimumEdgeWeightIntegerFieldControl.value) {
             if (edges.get(i).node1.cluster != edges.get(i).node2.cluster) {
 
                 DendrogramCluster dendrogramCluster = new DendrogramCluster();
-                dendrogramCluster.distance = edges.get(i).edgeSharedAttributes.weight;
+                dendrogramCluster.distance = edges.get(i).weight;
                 dendrogramCluster.left =
                         dendrogramClusters.get(networkClusters.indexOf(edges.get(i).node1.cluster));
                 dendrogramCluster.right =
@@ -157,7 +157,7 @@ public class SingleLinkageClusteringAlgorithm implements
             Edge edgeCopy = new Edge();
             edgeCopy.node1 = networkNodesCopy.get(networkNodes.indexOf(edge.node1));
             edgeCopy.node2 = networkNodesCopy.get(networkNodes.indexOf(edge.node2));
-            edgeCopy.edgeSharedAttributes.weight = edge.edgeSharedAttributes.weight;
+            edgeCopy.weight = edge.weight;
             networkEdgesCopy.add(edgeCopy);
         }
         ArrayList<Cluster> networkClustersCopy = new ArrayList<Cluster>();
@@ -176,7 +176,7 @@ public class SingleLinkageClusteringAlgorithm implements
             if (networkEdgesCopy.get(i).node1.cluster != networkEdgesCopy.get(i).node2.cluster) {
 
                 DendrogramCluster dendrogramCluster = new DendrogramCluster();
-                dendrogramCluster.distance = networkEdgesCopy.get(i).edgeSharedAttributes.weight;
+                dendrogramCluster.distance = networkEdgesCopy.get(i).weight;
                 dendrogramCluster.left =
                         dendrogramClusters.get(networkClustersCopy.indexOf(networkEdgesCopy.get(i).node1.cluster));
                 dendrogramCluster.right =

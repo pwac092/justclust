@@ -2,6 +2,7 @@ package justclust.datastructures;
 
 import edu.umd.cs.piccolo.nodes.PPath;
 import edu.umd.cs.piccolo.nodes.PText;
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -12,10 +13,8 @@ import java.util.ArrayList;
 // to a file when the user saves their session.
 public class Node implements Serializable {
 
-    // the graphical representation of the node
-    public PPath graphicalNode;
-    // the graphical representation of the node's label
-    public PText graphicalLabel;
+    // the text of graphicalLabel
+    public String label;
     /**
      * This field contains the edges of the current node.
      */
@@ -29,16 +28,17 @@ public class Node implements Serializable {
     // be discovered easily from this field (each Data instance corresponds to
     // exactly one graph).
     public Data data;
-    public NodeSharedAttributes nodeSharedAttributes;
-    
+    public Node equivalentNodeInOriginalNetwork;
+    public ArrayList<Double> microarrayValues;
+    public NodeGraphicalAttributes nodeGraphicalAttributes;
+
     public Node() {
-        nodeSharedAttributes = new NodeSharedAttributes();
     }
 
     public double getGraphicalNodeXCoordinate() {
         // the offset describes how the user has moved the node from its
         // initial position which is described by graphNode.getX.
-        return graphicalNode.getX() + graphicalNode.getOffset().getX();
+        return nodeGraphicalAttributes.graphicalNode.getX() + nodeGraphicalAttributes.graphicalNode.getOffset().getX();
     }
 
     public void setGraphicalNodeXCoordinate(double xCoordinate) {
@@ -47,16 +47,16 @@ public class Node implements Serializable {
         // the x coordinate of the offset is set to 0 so that the new x
         // coordinate of the node is not affected by the x coordinate of the
         // offset.
-        graphicalNode.setOffset(0, graphicalNode.getOffset().getY());
-        graphicalNode.setX(xCoordinate);
+        nodeGraphicalAttributes.graphicalNode.setOffset(0, nodeGraphicalAttributes.graphicalNode.getOffset().getY());
+        nodeGraphicalAttributes.graphicalNode.setX(xCoordinate);
         // set the x coordinate of the node.s label
-        graphicalLabel.setX(graphicalNode.getFullBoundsReference().getCenter2D().getX() - graphicalLabel.getWidth() / 2);
+        nodeGraphicalAttributes.graphicalLabel.setX(nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getX() - nodeGraphicalAttributes.graphicalLabel.getWidth() / 2);
     }
 
     public double getGraphicalNodeYCoordinate() {
         // the offset describes how the user has moved the node from its
         // initial position which is described by graphNode.getY.
-        return graphicalNode.getY() + graphicalNode.getOffset().getY();
+        return nodeGraphicalAttributes.graphicalNode.getY() + nodeGraphicalAttributes.graphicalNode.getOffset().getY();
     }
 
     public void setGraphicalNodeYCoordinate(double yCoordinate) {
@@ -65,9 +65,9 @@ public class Node implements Serializable {
         // the y coordinate of the offset is set to 0 so that the new y
         // coordinate of the node is not affected by the y coordinate of the
         // offset.
-        graphicalNode.setOffset(graphicalNode.getOffset().getX(), 0);
-        graphicalNode.setY(yCoordinate);
+        nodeGraphicalAttributes.graphicalNode.setOffset(nodeGraphicalAttributes.graphicalNode.getOffset().getX(), 0);
+        nodeGraphicalAttributes.graphicalNode.setY(yCoordinate);
         // set the y coordinate of the node's label
-        graphicalLabel.setY(graphicalNode.getFullBoundsReference().getCenter2D().getY() - graphicalLabel.getHeight() / 2);
+        nodeGraphicalAttributes.graphicalLabel.setY(nodeGraphicalAttributes.graphicalNode.getFullBoundsReference().getCenter2D().getY() - nodeGraphicalAttributes.graphicalLabel.getHeight() / 2);
     }
 }

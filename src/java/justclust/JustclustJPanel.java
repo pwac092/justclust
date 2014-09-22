@@ -214,7 +214,11 @@ public class JustclustJPanel extends JPanel {
             edgesButton = this.edgesButton;
             clustersButton = this.clustersButton;
             searchButton = this.searchButton;
-            filterButton = this.filterButton;
+            if (data.graphShown) {
+                filterButton = this.filterButton;
+            } else {
+                filterButton = this.filterButtonDisabled;
+            }
             overrepresentationAnalysisButton = this.overrepresentationAnalysisButton;
             heatMapButton = this.heatMapButton;
             if (data.microarrayData) {
